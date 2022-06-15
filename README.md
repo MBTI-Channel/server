@@ -1,1 +1,1 @@
-# server
+# MBTI Channel Server
