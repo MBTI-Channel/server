@@ -25,6 +25,15 @@ export class DatabaseService implements IDatabaseService {
 
     return DatabaseService.myDataSource;
   }
+  public async init() {
+    await appDataSource
+      .initialize()
+      .then(() => {
+        this.logger.info("typeorm initialize success");
+      })
+      .catch((err) => this.logger.error("typeorm initialize error :", err));
+    return;
+  }
 
   public async getRepository(
     entity: ObjectType<any>
