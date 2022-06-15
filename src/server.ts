@@ -1,4 +1,4 @@
-import express from "express";
+import express, { NextFunction, Request, Response } from "express";
 import helmet from "helmet";
 import morgan from "morgan";
 import { InversifyExpressServer } from "inversify-express-utils";
@@ -6,6 +6,7 @@ import container from "./core/container.core";
 import { TYPES } from "./core/type.core";
 import { DatabaseService } from "./core/services/database.service";
 import { Logger } from "./utils/logger.util";
+import { HttpException } from "./errors/http.exception";
 
 export const server = new InversifyExpressServer(container);
 
@@ -24,4 +25,19 @@ server.setConfig((app) => {
       },
     })
   );
+});
+
+server.setErrorConfig((app) => {
+  app.use((req: Request, res: Response, next: NextFunction) => {
+    return res.status(404).end();
+  });
+
+  app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+    if (err instanceof HttpException) {
+      const { name, status, message } = err;
+      return res.status(status).json({ name, message });
+    }
+    loggerInstance.error(err.message, err.stack);
+    return res.status(500).json({ message: "server error :(" });
+  });
 });
