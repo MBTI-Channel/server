@@ -8,7 +8,7 @@ export class BadReqeustException extends HttpException {
 
 export class UnauthorizedException extends HttpException {
   constructor(message: string) {
-    super("BadReqeustException", message, 401);
+    super("UnauthorizedException", message, 401);
   }
 }
 
