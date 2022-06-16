@@ -8,7 +8,7 @@ export class BadReqeustException extends HttpException {
 
 export class UnauthorizedException extends HttpException {
   constructor(message: string) {
-    super("BadReqeustException", message, 401);
+    super("UnauthorizedException", message, 401);
   }
 }
 
@@ -33,5 +33,11 @@ export class ConflictException extends HttpException {
 export class InternalServerErrorException extends HttpException {
   constructor(message: string) {
     super("InternalServerErrorException", message, 500);
+  }
+}
+
+export class ValidationErrorException extends HttpException {
+  constructor(message: string = "validation error", info: string[]) {
+    super("ValidationErrorException", message, 400, info);
   }
 }

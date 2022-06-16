@@ -34,8 +34,8 @@ server.setErrorConfig((app) => {
 
   app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
     if (err instanceof HttpException) {
-      const { name, status, message } = err;
-      return res.status(status).json({ name, message });
+      const { name, status, message, info } = err;
+      return res.status(status).json({ name, message, info });
     }
     loggerInstance.error(err.message, err.stack);
     return res.status(500).json({ message: "server error :(" });
