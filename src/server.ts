@@ -14,7 +14,7 @@ const loggerInstance = container.get<Logger>(TYPES.Logger);
 const databaseInstance = container.get<DatabaseService>(TYPES.IDatabaseService);
 
 server.setConfig((app) => {
-  if (process.env.NODE_ENV !== "production") databaseInstance.init();
+  databaseInstance.init();
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
   app.use(helmet());
