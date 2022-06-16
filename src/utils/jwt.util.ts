@@ -1,8 +1,10 @@
+import { injectable } from "inversify";
 import * as jwt from "jsonwebtoken";
 import config from "../config/index";
 
 const { jwt: jwtConfig } = config;
 
+@injectable()
 export class JwtUtils {
   constructor() {}
 
