@@ -8,6 +8,12 @@ import { TYPES } from "../core/type.core";
 
 @controller("/auth")
 export class AuthController extends BaseHttpController {
-  @httpPost("/login", TYPES.GetProviderUserByOauthMiddleware)
-  async oauthLogin(req: Request, res: Response) {}
+  @httpPost(
+    "/login",
+    TYPES.GetProviderUserByOauthMiddleware,
+    TYPES.SocialSignUpMiddleware
+  )
+  async oauthLogin(req: Request, res: Response) {
+    res.send(req.user);
+  }
 }

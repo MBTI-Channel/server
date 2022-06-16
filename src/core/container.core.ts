@@ -9,6 +9,7 @@ import { IDatabaseService } from "./interfaces/IDatabase.service";
 import { DatabaseService } from "./services/database.service";
 /* util import */
 import { Logger } from "../utils/logger.util";
+import { SocialSignUp } from "../middlewares/social-sign-up.middleware";
 
 const container = new Container();
 
@@ -19,5 +20,7 @@ container.bind(TYPES.Logger).to(Logger);
 container
   .bind(TYPES.GetProviderUserByOauthMiddleware)
   .to(GetProviderUserByOauth);
+
+container.bind(TYPES.SocialSignUpMiddleware).to(SocialSignUp);
 
 export default container;

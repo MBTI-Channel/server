@@ -5,4 +5,5 @@ export const TYPES = {
   GetProviderUserByOauthMiddleware: Symbol.for(
     "GetProviderUserByOauthMiddleware"
   ),
+  SocialSignUpMiddleware: Symbol.for("SocialSignUpMiddleware"),
 };
