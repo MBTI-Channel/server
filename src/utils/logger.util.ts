@@ -79,27 +79,27 @@ export class Logger {
    * http: 3
    */
   http(message: string, meta?: any) {
-    this.logger.log(message, meta);
+    this.logger.http(message, meta);
   }
 
   /**
    * verbose: 4
    */
   verbose(message: string, meta?: any) {
-    this.logger.log(message, meta);
+    this.logger.verbose(message, meta);
   }
 
   /**
    * debug: 5
    */
   debug(message: string, meta?: any) {
-    this.logger.log(message, meta);
+    this.logger.debug(message, meta);
   }
 
   /**
    * silly: 6
    */
   silly(message: string, meta?: any) {
-    this.logger.log(message, meta);
+    this.logger.silly(message, meta);
   }
 }
