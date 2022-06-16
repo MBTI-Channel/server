@@ -49,7 +49,7 @@ export class User {
     length: "255",
     comment: "kakao | naver",
   })
-  providerType!: Provider;
+  provider!: Provider;
 
   @Column({
     length: "255",
