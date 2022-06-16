@@ -1,7 +1,7 @@
 import { Container } from "inversify";
 import { TYPES } from "./type.core";
 /* middleware import */
-import { GetProviderUserByOauth } from "../middlewares/get-user-by-oauth.middleware";
+import { GetProviderUserByOauth } from "../middlewares/get-provider-user-by-oauth.middleware";
 /* controller import */
 import "../controllers/index.controller";
 /* service import */
