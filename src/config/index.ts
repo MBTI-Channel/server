@@ -19,4 +19,8 @@ export default {
     password: isValidEnvVar("MYSQL_PASSWORD"),
     database: isValidEnvVar("MYSQL_DB"),
   },
+  kakao: {
+    restApiKey: isValidEnvVar("KAKAO_REST_API_KEY"),
+    redirectUri: isValidEnvVar("KAKAO_REDIRECT_URI"),
+  },
 };
