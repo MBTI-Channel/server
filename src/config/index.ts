@@ -23,4 +23,10 @@ export default {
     restApiKey: isValidEnvVar("KAKAO_REST_API_KEY"),
     redirectUri: isValidEnvVar("KAKAO_REDIRECT_URI"),
   },
+  naver: {
+    clientId: process.env.NAVER_CLIENT_ID!,
+    clientSecret: process.env.NAVER_CLIENT_SECRET!,
+    redirectUri: process.env.NAVER_REDIRECT_URI!,
+    randomState: process.env.NAVER_RANDOM_STATE!,
+  },
 };
