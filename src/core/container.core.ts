@@ -10,11 +10,19 @@ import { DatabaseService } from "./services/database.service";
 /* util import */
 import { Logger } from "../utils/logger.util";
 import { SocialSignUp } from "../middlewares/social-sign-up.middleware";
+import { JwtUtils } from "../utils/jwt.util";
+import { IAuthService } from "./interfaces/IAuth.service";
+import { AuthService } from "./services/auth.service";
 
 const container = new Container();
 
-container.bind<IDatabaseService>(TYPES.IDatabaseService).to(DatabaseService);
+/* utils */
 container.bind(TYPES.Logger).to(Logger);
+container.bind(TYPES.JwtUtils).to(JwtUtils);
+
+/* service */
+container.bind<IDatabaseService>(TYPES.IDatabaseService).to(DatabaseService);
+container.bind<IAuthService>(TYPES.IAuthService).to(AuthService);
 
 /* middleware */
 container

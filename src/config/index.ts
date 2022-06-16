@@ -29,4 +29,9 @@ export default {
     redirectUri: process.env.NAVER_REDIRECT_URI!,
     randomState: process.env.NAVER_RANDOM_STATE!,
   },
+  jwt: {
+    secret: process.env.JWT_SECRET!,
+    accessTokenExpiresIn: process.env.JWT_ACCESS_EXPIRES!,
+    refreshTokenExpiresIn: process.env.JWT_REFRESH_EXPIRES!,
+  },
 };
