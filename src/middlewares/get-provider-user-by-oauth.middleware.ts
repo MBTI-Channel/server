@@ -103,6 +103,7 @@ export class GetProviderUserByOauth extends BaseMiddleware {
           },
         });
         providerUserInfo = {
+          provider,
           providerId: data.id,
           providerData: JSON.stringify(data.kakao_account),
         };
@@ -117,6 +118,7 @@ export class GetProviderUserByOauth extends BaseMiddleware {
         });
         const { id, ...naver_account } = data.response;
         providerUserInfo = {
+          provider,
           providerId: id,
           providerData: JSON.stringify(naver_account),
         };
