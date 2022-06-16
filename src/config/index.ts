@@ -34,4 +34,7 @@ export default {
     accessTokenExpiresIn: process.env.JWT_ACCESS_EXPIRES!,
     refreshTokenExpiresIn: process.env.JWT_REFRESH_EXPIRES!,
   },
+  cookie: {
+    refreshTokenMaxAge: +process.env.COOKIE_REFRESH_MAX_AGE!,
+  },
 };

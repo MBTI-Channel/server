@@ -5,6 +5,7 @@ import {
   controller,
   httpPost,
 } from "inversify-express-utils";
+import config from "../config";
 import { AuthService } from "../core/services/auth.service";
 import { TYPES } from "../core/type.core";
 import { User } from "../entities/user.entity";
@@ -24,5 +25,21 @@ export class AuthController extends BaseHttpController {
       provider,
       providerId
     );
+
+    res.cookie("Refresh", refreshToken, {
+      httpOnly: true,
+      secure: false, // true
+      maxAge: config.cookie.refreshTokenMaxAge,
+    });
+
+    return res
+      .status(201)
+      .json({
+        nickname: user.nickname,
+        mbti: user.mbti,
+        isAdmin: user.isAdmin,
+        accessToken,
+        refreshToken,
+      });
   }
 }
