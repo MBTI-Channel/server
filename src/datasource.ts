@@ -10,7 +10,7 @@ const appDataSource = new DataSource({
   username: mysql.username,
   password: mysql.password,
   database: mysql.database,
-  entities: [__dirname + "/entities/*.entity{.ts,.js}"],
+  entities: [__dirname + "/modules/**/*.entity{.ts,.js}"],
   // migrations: [__dirname + "/migrations/**/*{.ts,.js}"],
   // migrationsTableName: "food_app_migrations",
   logging: process.env.NODE_ENV === "production" ? false : true,

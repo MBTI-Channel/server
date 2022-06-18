@@ -5,7 +5,7 @@ import config from "../config/index";
 const { jwt: jwtConfig } = config;
 
 @injectable()
-export class JwtUtils {
+export class JwtUtil {
   constructor() {}
 
   sign(payload: jwt.JwtPayload, options?: jwt.SignOptions) {

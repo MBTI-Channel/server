@@ -33,6 +33,7 @@ export default {
     secret: isValidEnvVar("JWT_SECRET"),
     accessTokenExpiresIn: isValidEnvVar("JWT_ACCESS_EXPIRES"),
     refreshTokenExpiresIn: isValidEnvVar("JWT_REFRESH_EXPIRES"),
+    issuer: isValidEnvVar("JWT_ISSUER"),
   },
   cookie: {
     refreshTokenMaxAge: parseInt(isValidEnvVar("COOKIE_REFRESH_MAX_AGE")),

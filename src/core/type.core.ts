@@ -1,13 +1,14 @@
 export const TYPES = {
   /* utils */
   Logger: Symbol.for("Logger"),
-  JwtUtils: Symbol.for("JwtUtils"),
-
-  /* service */
+  JwtUtil: Symbol.for("JwtUtil"),
+  /* database */
   IDatabaseService: Symbol.for("IDatabaseService"),
+  /* auth */
   IAuthService: Symbol.for("IAuthService"),
+  /* user */
   IUserService: Symbol.for("IUserService"),
-
+  IUserRepository: Symbol.for("IUserRepository"),
   /* middleware */
   GetProviderUserByOauthMiddleware: Symbol.for(
     "GetProviderUserByOauthMiddleware"
