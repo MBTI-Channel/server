@@ -2,7 +2,8 @@ import { inject, injectable } from "inversify";
 import { User } from "../user/entity/user.entity";
 import { NotFoundException } from "../../errors/all.exception";
 import { Logger } from "../../utils/logger.util";
-import { IAuthService, ITokenPayload } from "./interfaces/IAuth.service";
+import { IAuthService } from "./interfaces/IAuth.service";
+import { ITokenPayload } from "./interfaces/ITokenPayload";
 import { TYPES } from "../../core/type.core";
 import { SignOptions } from "jsonwebtoken";
 import config from "../../config";
@@ -16,7 +17,7 @@ const ISSUER = "MBTI Channel";
 export class AuthService implements IAuthService {
   constructor(
     @inject(TYPES.Logger) private readonly logger: Logger,
-    @inject(TYPES.JwtUtil) private readonly jwtUtils: JwtUtil,
+    @inject(TYPES.JwtUtil) private readonly jwtUtil: JwtUtil,
     @inject(TYPES.IUserService)
     private readonly userService: IUserService
   ) {}
@@ -47,7 +48,7 @@ export class AuthService implements IAuthService {
     const options: SignOptions = {
       expiresIn: config.jwt.accessTokenExpiresIn,
     };
-    const accessToken = this.jwtUtils.sign(payload, options);
+    const accessToken = this.jwtUtil.sign(payload, options);
     return accessToken;
   }
 
@@ -59,7 +60,7 @@ export class AuthService implements IAuthService {
     const options: SignOptions = {
       expiresIn: config.jwt.refreshTokenExpiresIn,
     };
-    const refreshToken = this.jwtUtils.sign(payload, options);
+    const refreshToken = this.jwtUtil.sign(payload, options);
     return refreshToken;
   }
 }
