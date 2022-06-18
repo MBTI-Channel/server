@@ -23,4 +23,18 @@ export default {
     restApiKey: isValidEnvVar("KAKAO_REST_API_KEY"),
     redirectUri: isValidEnvVar("KAKAO_REDIRECT_URI"),
   },
+  naver: {
+    clientId: isValidEnvVar("NAVER_CLIENT_ID"),
+    clientSecret: isValidEnvVar("NAVER_CLIENT_SECRET"),
+    redirectUri: isValidEnvVar("NAVER_REDIRECT_URI"),
+    randomState: isValidEnvVar("NAVER_RANDOM_STATE"),
+  },
+  jwt: {
+    secret: isValidEnvVar("JWT_SECRET"),
+    accessTokenExpiresIn: isValidEnvVar("JWT_ACCESS_EXPIRES"),
+    refreshTokenExpiresIn: isValidEnvVar("JWT_REFRESH_EXPIRES"),
+  },
+  cookie: {
+    refreshTokenMaxAge: parseInt(isValidEnvVar("COOKIE_REFRESH_MAX_AGE")),
+  },
 };

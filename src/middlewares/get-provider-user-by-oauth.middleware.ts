@@ -21,7 +21,7 @@ import config from "../config/index";
 @injectable()
 export class GetProviderUserByOauth extends BaseMiddleware {
   @inject(TYPES.Logger) private readonly logger: Logger;
-  async handler(req: Request, res: Response, next: NextFunction) {
+  public async handler(req: Request, res: Response, next: NextFunction) {
     try {
       const dto = plainToInstance(OauthLoginDto, req.body); // plainToInstance: 리터럴 객체 -> 클래스 객체
       // 유효성 검사
@@ -71,19 +71,19 @@ export class GetProviderUserByOauth extends BaseMiddleware {
 
   private async getProviderAccessToken(provider: Provider, authCode: string) {
     let providerAccessToken!: string;
+    let url!: string;
     try {
       if (provider === "kakao") {
-        const url = `https://kauth.kakao.com/oauth/token?grant_type=authorization_code&client_id=${config.kakao.restApiKey}&redirect_uri=${config.kakao.redirectUri}&code=${authCode}`;
-        const { data } = await axios.post(url, "", {
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded;charset=utf-8",
-          },
-        });
-        providerAccessToken = data.access_token;
+        url = `https://kauth.kakao.com/oauth/token?grant_type=authorization_code&client_id=${config.kakao.restApiKey}&redirect_uri=${config.kakao.redirectUri}&code=${authCode}`;
       } else if (provider === "naver") {
-        //TODO: naver
-        providerAccessToken = "";
+        url = `https://nid.naver.com/oauth2.0/token?grant_type=authorization_code&client_id=${config.naver.clientId}&client_secret=${config.naver.clientSecret}&redirect_uri=${config.naver.redirectUri}&code=${authCode}&state=${config.naver.randomState}`;
       }
+      const { data } = await axios.post(url, "", {
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded;charset=utf-8",
+        },
+      });
+      providerAccessToken = data.access_token;
       return providerAccessToken;
     } catch (err) {
       this.logger.http("invalid auth code");
@@ -103,12 +103,25 @@ export class GetProviderUserByOauth extends BaseMiddleware {
           },
         });
         providerUserInfo = {
+          provider,
           providerId: data.id,
           providerData: JSON.stringify(data.kakao_account),
         };
       }
       if (provider === "naver") {
-        //TODO: naver
+        const url = "https://openapi.naver.com/v1/nid/me";
+        const { data } = await axios.post(url, "", {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            "Content-Type": "application/x-www-form-urlencoded;charset=utf-8",
+          },
+        });
+        const { id, ...naver_account } = data.response;
+        providerUserInfo = {
+          provider,
+          providerId: id,
+          providerData: JSON.stringify(naver_account),
+        };
       }
       return providerUserInfo;
     } catch (err) {
@@ -118,19 +131,20 @@ export class GetProviderUserByOauth extends BaseMiddleware {
   }
 
   private async expiresProviderToken(provider: Provider, accessToken: string) {
+    let url!: string;
     try {
       if (provider === "kakao") {
-        const url = "https://kapi.kakao.com/v1/user/logout";
-        await axios.post(url, "", {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-            "Content-Type": "application/x-www-form-urlencoded;charset=utf-8",
-          },
-        });
+        url = "https://kapi.kakao.com/v1/user/logout";
       }
       if (provider === "naver") {
-        //TODO: naver
+        url = `https://nid.naver.com/oauth2.0/token?grant_type=delete&client_id=${config.naver.clientId}&client_secret=${config.naver.clientSecret}&access_token=${accessToken}&service_provider=NAVER`;
       }
+      await axios.post(url, "", {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "application/x-www-form-urlencoded;charset=utf-8",
+        },
+      });
       return;
     } catch (err) {
       this.logger.http("invaid porivder access token");
