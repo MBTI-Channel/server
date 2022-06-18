@@ -1,5 +1,5 @@
 import { inject, injectable } from "inversify";
-import { Provider, User } from "../../entities/user.entity";
+import { User } from "../../entities/user.entity";
 import { NotFoundException } from "../../errors/all.exception";
 import { Logger } from "../../utils/logger.util";
 import { IAuthService, ITokenPayload } from "../interfaces/IAuth.service";
@@ -8,6 +8,7 @@ import { DatabaseService } from "./database.service";
 import { SignOptions } from "jsonwebtoken";
 import config from "../../config";
 import { JwtUtils } from "../../utils/jwt.util";
+import { LoginDto } from "../../dtos/auth/oauth-login.dto";
 
 const ISSUER = "MBTI Channel";
 
@@ -20,13 +21,10 @@ export class AuthService implements IAuthService {
     private readonly databaseService: DatabaseService
   ) {}
 
-  public async login(provider: Provider, providerId: string) {
+  public async login(logindto: LoginDto): Promise<any> {
     const UserRepository = await this.databaseService.getRepository(User);
     const user = await UserRepository.findOne({
-      where: {
-        provider,
-        providerId,
-      },
+      where: logindto,
     });
     if (!user) {
       this.logger.error("not exists user");

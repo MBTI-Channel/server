@@ -7,13 +7,13 @@ import {
   httpPost,
 } from "inversify-express-utils";
 import config from "../config";
-import { AuthService } from "../core/services/auth.service";
+import { IAuthService } from "../core/interfaces/IAuth.service";
 import { TYPES } from "../core/type.core";
-import { User } from "../entities/user.entity";
+import { LoginDto } from "../dtos/auth/oauth-login.dto";
 
 @controller("/auth")
 export class AuthController extends BaseHttpController {
-  @inject(TYPES.IAuthService) private readonly authService: AuthService;
+  @inject(TYPES.IAuthService) private readonly authService: IAuthService;
 
   @httpPost(
     "/login",
@@ -21,10 +21,9 @@ export class AuthController extends BaseHttpController {
     TYPES.SocialSignUpMiddleware
   )
   async oauthLogin(req: Request, res: Response) {
-    const { provider, providerId } = req.user as User;
+    const loginDto = req.user as LoginDto;
     const { user, accessToken, refreshToken } = await this.authService.login(
-      provider,
-      providerId
+      loginDto
     );
 
     res.cookie("Refresh", refreshToken, {
