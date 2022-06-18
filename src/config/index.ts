@@ -24,17 +24,17 @@ export default {
     redirectUri: isValidEnvVar("KAKAO_REDIRECT_URI"),
   },
   naver: {
-    clientId: process.env.NAVER_CLIENT_ID!,
-    clientSecret: process.env.NAVER_CLIENT_SECRET!,
-    redirectUri: process.env.NAVER_REDIRECT_URI!,
-    randomState: process.env.NAVER_RANDOM_STATE!,
+    clientId: isValidEnvVar("NAVER_CLIENT_ID"),
+    clientSecret: isValidEnvVar("NAVER_CLIENT_SECRET"),
+    redirectUri: isValidEnvVar("NAVER_REDIRECT_URI"),
+    randomState: isValidEnvVar("NAVER_RANDOM_STATE"),
   },
   jwt: {
-    secret: process.env.JWT_SECRET!,
-    accessTokenExpiresIn: process.env.JWT_ACCESS_EXPIRES!,
-    refreshTokenExpiresIn: process.env.JWT_REFRESH_EXPIRES!,
+    secret: isValidEnvVar("JWT_SECRET"),
+    accessTokenExpiresIn: isValidEnvVar("JWT_ACCESS_EXPIRES"),
+    refreshTokenExpiresIn: isValidEnvVar("JWT_REFRESH_EXPIRES"),
   },
   cookie: {
-    refreshTokenMaxAge: +process.env.COOKIE_REFRESH_MAX_AGE!,
+    refreshTokenMaxAge: parseInt(isValidEnvVar("COOKIE_REFRESH_MAX_AGE")),
   },
 };
