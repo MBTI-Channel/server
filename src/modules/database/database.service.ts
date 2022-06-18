@@ -12,15 +12,15 @@ export class DatabaseService implements IDatabaseService {
 
   private async getConnection(): Promise<DataSource> {
     if (DatabaseService.myDataSource?.isInitialized) {
-      this.logger.info("Database Connection Already Established");
+      this.logger.info("database connection already established");
       return DatabaseService.myDataSource;
     }
 
     try {
       DatabaseService.myDataSource = await appDataSource.initialize();
-      this.logger.info("Database Connection Established");
+      this.logger.info("database connection established");
     } catch (error) {
-      this.logger.error(`Database Connection Failed. Error: ${error}`);
+      this.logger.error(`database connection failed. Error: ${error}`);
     }
 
     return DatabaseService.myDataSource;
@@ -29,9 +29,9 @@ export class DatabaseService implements IDatabaseService {
   public async init() {
     try {
       DatabaseService.myDataSource = await appDataSource.initialize();
-      this.logger.info("typeorm initialize success");
+      this.logger.info("database initialize success");
     } catch (err) {
-      this.logger.error("typeorm initialize error :", err);
+      this.logger.error("database initialize error :", err);
     }
     return;
   }
