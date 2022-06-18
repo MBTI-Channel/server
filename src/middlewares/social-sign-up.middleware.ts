@@ -1,51 +1,53 @@
 import { NextFunction, Request, Response } from "express";
 import { inject, injectable } from "inversify";
 import { BaseMiddleware } from "inversify-express-utils";
-import { DatabaseService } from "../modules/database/database.service";
 import { TYPES } from "../core/type.core";
 import { User } from "../modules/user/entity/user.entity";
 import { UnauthorizedException } from "../errors/all.exception";
 import { Logger } from "../utils/logger.util";
+import { IUserService } from "../modules/user/interfaces/IUser.service";
+import { CreateUserDto } from "../modules/user/dtos/create-user.dto";
 
 @injectable()
 export class SocialSignUp extends BaseMiddleware {
   @inject(TYPES.Logger) private readonly logger: Logger;
-  @inject(TYPES.IDatabaseService)
-  private readonly databaseService: DatabaseService;
-
+  @inject(TYPES.IUserService) private readonly userService: IUserService;
   public async handler(req: Request, res: Response, next: NextFunction) {
-    if (!req.user) throw new UnauthorizedException("authentication error");
+    try {
+      if (!req.user) throw new UnauthorizedException("authentication error");
 
-    const { provider, providerId, providerData } = req.user;
-
-    const UserRepository = await this.databaseService.getRepository(User);
-    const user = await UserRepository.findOne({
-      where: {
-        provider,
-        providerId,
-      },
-    });
-
-    // user가 db에 없으면 새로 생성 후 저장
-    if (!user) {
-      const newUser = await UserRepository.create({
-        provider,
-        providerId,
-        providerData,
-      });
-      await UserRepository.save(newUser);
-      return res.status(200).json({
-        id: newUser.id,
-        message: "need sign up",
-      });
+      const providerUserInfo = req.user as User;
+      // TODO: 리팩토링 필요
+      const foundUser = await this.isExistsUser(providerUserInfo);
+      if (!foundUser) {
+        const newUser = await this.userService.create(
+          providerUserInfo as CreateUserDto
+        );
+        return res.status(200).json({
+          id: newUser.id,
+          message: "need sign up",
+        });
+      }
+      if (!foundUser.nickname || !foundUser.mbti) {
+        return res.status(200).json({
+          id: foundUser.id,
+          message: "need sign up",
+        });
+      }
+      return next();
+    } catch (err) {
+      return next(err);
     }
+  }
 
-    if (!user.nickname || !user.mbti) {
-      return res.status(200).json({
-        id: user.id,
-        message: "need sign up",
-      });
+  private async isExistsUser(providerUserInfo: User): Promise<User | null> {
+    const { provider, providerId } = providerUserInfo;
+    try {
+      const user = await this.userService.findOne({ provider, providerId });
+      return user;
+    } catch (err) {
+      this.logger.http("not exsits user. need sign up");
+      return null;
     }
-    return next();
   }
 }

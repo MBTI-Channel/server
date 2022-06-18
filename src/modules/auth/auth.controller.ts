@@ -14,16 +14,15 @@ import { LoginDto } from "./dtos/login.dto";
 @controller("/auth")
 export class AuthController extends BaseHttpController {
   @inject(TYPES.IAuthService) private readonly authService: IAuthService;
-
   @httpPost(
     "/login",
     TYPES.GetProviderUserByOauthMiddleware,
     TYPES.SocialSignUpMiddleware
   )
   async oauthLogin(req: Request, res: Response) {
-    const loginDto = req.user as LoginDto;
+    const dto = req.user as LoginDto;
     const { user, accessToken, refreshToken } = await this.authService.login(
-      loginDto
+      dto
     );
 
     res.cookie("Refresh", refreshToken, {

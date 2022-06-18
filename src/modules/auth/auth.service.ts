@@ -20,12 +20,13 @@ export class AuthService implements IAuthService {
     private readonly userService: IUserService
   ) {}
 
-  public async login(loginDto: LoginDto): Promise<any> {
-    const user = await this.userService.findOne(loginDto);
+  public async login(dto: LoginDto): Promise<any> {
+    const user = await this.userService.findOne(dto);
     if (!user) {
       this.logger.error("not exists user");
       throw new NotFoundException("not exists user");
     }
+
     const [accessToken, refreshToken] = await Promise.all([
       this.generateAccessToken(user),
       this.generateRefreshToken(),

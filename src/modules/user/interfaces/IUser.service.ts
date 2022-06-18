@@ -1,6 +1,7 @@
-import { LoginDto } from "../../auth/dtos/login.dto";
+import { CreateUserDto } from "../dtos/create-user.dto";
 import { User } from "../entity/user.entity";
 
 export interface IUserService {
-  findOne(loginDto: LoginDto): Promise<User>;
+  create(dto: CreateUserDto): Promise<User>;
+  findOne(payload: Partial<User>): Promise<User>;
 }
