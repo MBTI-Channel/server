@@ -64,7 +64,6 @@ export class GetProviderUserByOauth extends BaseMiddleware {
       errors.forEach((errors) => {
         errorsMessageArray.push(...(Object as any).values(errors.constraints));
       });
-      console.log(errorsMessageArray);
       return errorsMessageArray;
     });
   }
