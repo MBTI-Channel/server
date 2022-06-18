@@ -35,7 +35,7 @@ export class AuthService implements IAuthService {
     return { user, accessToken, refreshToken };
   }
 
-  private async generateAccessToken(user: User) {
+  public async generateAccessToken(user: User) {
     const { id, nickname, mbti, isAdmin } = user;
     const payload: ITokenPayload = {
       id,
@@ -51,7 +51,7 @@ export class AuthService implements IAuthService {
     return accessToken;
   }
 
-  private async generateRefreshToken() {
+  public async generateRefreshToken() {
     // TODO: redis
     const payload: ITokenPayload = {
       iss: ISSUER,
