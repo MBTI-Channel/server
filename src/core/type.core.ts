@@ -6,6 +6,7 @@ export const TYPES = {
   /* service */
   IDatabaseService: Symbol.for("IDatabaseService"),
   IAuthService: Symbol.for("IAuthService"),
+  IUserService: Symbol.for("IUserService"),
 
   /* middleware */
   GetProviderUserByOauthMiddleware: Symbol.for(
