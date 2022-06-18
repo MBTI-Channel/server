@@ -1,4 +1,4 @@
-import { LoginDto } from "../../../dtos/user/login.dto";
+import { LoginDto } from "../../auth/dtos/login.dto";
 import { User } from "../entity/user.entity";
 
 export interface IUserService {
