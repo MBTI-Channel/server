@@ -6,12 +6,10 @@ import { IAuthService } from "./interfaces/IAuth.service";
 import { ITokenPayload } from "./interfaces/ITokenPayload";
 import { TYPES } from "../../core/type.core";
 import { SignOptions } from "jsonwebtoken";
-import config from "../../config";
 import { JwtUtil } from "../../utils/jwt.util";
 import { LoginDto } from "./dtos/login.dto";
 import { IUserService } from "../user/interfaces/IUser.service";
-
-const ISSUER = "MBTI Channel";
+import config from "../../config";
 
 @injectable()
 export class AuthService implements IAuthService {
@@ -43,7 +41,7 @@ export class AuthService implements IAuthService {
       nickname,
       mbti,
       isAdmin,
-      iss: ISSUER,
+      iss: config.jwt.issuer,
     };
     const options: SignOptions = {
       expiresIn: config.jwt.accessTokenExpiresIn,
@@ -55,7 +53,7 @@ export class AuthService implements IAuthService {
   public async generateRefreshToken() {
     // TODO: redis
     const payload: ITokenPayload = {
-      iss: ISSUER,
+      iss: config.jwt.issuer,
     };
     const options: SignOptions = {
       expiresIn: config.jwt.refreshTokenExpiresIn,
