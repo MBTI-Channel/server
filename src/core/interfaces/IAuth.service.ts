@@ -1,5 +1,5 @@
 import { JwtPayload } from "jsonwebtoken";
-import { LoginDto } from "../../dtos/auth/oauth-login.dto";
+import { LoginDto } from "../../dtos/user/login.dto";
 
 export interface IAuthService {
   login(loginDto: LoginDto): Promise<any>;

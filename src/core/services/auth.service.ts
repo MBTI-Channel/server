@@ -7,7 +7,7 @@ import { TYPES } from "../type.core";
 import { SignOptions } from "jsonwebtoken";
 import config from "../../config";
 import { JwtUtils } from "../../utils/jwt.util";
-import { LoginDto } from "../../dtos/auth/oauth-login.dto";
+import { LoginDto } from "../../dtos/user/login.dto";
 import { IUserService } from "../interfaces/IUser.service";
 
 const ISSUER = "MBTI Channel";

@@ -1,6 +1,6 @@
 import { inject, injectable } from "inversify";
 import { ObjectType, Repository } from "typeorm";
-import { LoginDto } from "../../dtos/auth/oauth-login.dto";
+import { LoginDto } from "../../dtos/user/login.dto";
 import { User } from "../../entities/user.entity";
 import { IDatabaseService } from "../interfaces/IDatabase.service";
 import { IUserService } from "../interfaces/IUser.service";

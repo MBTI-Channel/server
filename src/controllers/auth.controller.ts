@@ -9,7 +9,7 @@ import {
 import config from "../config";
 import { IAuthService } from "../core/interfaces/IAuth.service";
 import { TYPES } from "../core/type.core";
-import { LoginDto } from "../dtos/auth/oauth-login.dto";
+import { LoginDto } from "../dtos/user/login.dto";
 
 @controller("/auth")
 export class AuthController extends BaseHttpController {

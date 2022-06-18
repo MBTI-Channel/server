@@ -1,9 +1,8 @@
 import { IsIn, IsNotEmpty, IsString } from "class-validator";
 import { Provider } from "../../entities/user.entity";
+import { PROVIDER_KEY } from "../auth/oauth-login.dto";
 
-export const PROVIDER_KEY: string[] = ["kakao", "naver"];
-
-export class OauthLoginDto {
+export class LoginDto {
   @IsString()
   @IsNotEmpty()
   @IsIn(PROVIDER_KEY)
@@ -11,5 +10,5 @@ export class OauthLoginDto {
 
   @IsString()
   @IsNotEmpty()
-  authCode: string;
+  providerId: string;
 }
