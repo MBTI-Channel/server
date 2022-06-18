@@ -6,9 +6,9 @@ import { BaseMiddleware } from "inversify-express-utils";
 import axios from "axios";
 import { TYPES } from "../core/type.core";
 import { Logger } from "../utils/logger.util";
-import { Provider } from "../entities/user.entity";
-import { OauthLoginDto } from "../dtos/index.dto";
-import { IProviderUserInfo } from "./interfaces/IProviderUserInfo";
+import { Provider } from "../modules/user/entity/user.entity";
+import { OauthLoginDto } from "../modules/auth/dtos/oauth-login.dto";
+import { IProviderUserInfo } from "../modules/auth/interfaces/IProviderUserInfo";
 import {
   UnauthorizedException,
   ValidationErrorException,

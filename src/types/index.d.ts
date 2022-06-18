@@ -1,4 +1,4 @@
-import { User } from "../entities/user.entity";
+import { User } from "../modules/user/entity/user.entity";
 
 //express.Request - namespace - user
 declare global {

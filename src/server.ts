@@ -4,7 +4,7 @@ import morgan from "morgan";
 import { InversifyExpressServer } from "inversify-express-utils";
 import container from "./core/container.core";
 import { TYPES } from "./core/type.core";
-import { DatabaseService } from "./core/services/database.service";
+import { DatabaseService } from "./modules/database/database.service";
 import { Logger } from "./utils/logger.util";
 import { HttpException } from "./errors/http.exception";
 

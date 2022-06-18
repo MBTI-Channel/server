@@ -3,7 +3,7 @@ export const TYPES = {
   Logger: Symbol.for("Logger"),
   JwtUtils: Symbol.for("JwtUtils"),
 
-  /* service */
+  /* database */
   IDatabaseService: Symbol.for("IDatabaseService"),
   IAuthService: Symbol.for("IAuthService"),
   IUserService: Symbol.for("IUserService"),

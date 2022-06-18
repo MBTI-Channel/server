@@ -1,9 +1,9 @@
 import { NextFunction, Request, Response } from "express";
 import { inject, injectable } from "inversify";
 import { BaseMiddleware } from "inversify-express-utils";
-import { DatabaseService } from "../core/services/database.service";
+import { DatabaseService } from "../modules/database/database.service";
 import { TYPES } from "../core/type.core";
-import { User } from "../entities/user.entity";
+import { User } from "../modules/user/entity/user.entity";
 import { UnauthorizedException } from "../errors/all.exception";
 import { Logger } from "../utils/logger.util";
 
