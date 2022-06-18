@@ -17,7 +17,7 @@ import { IUserService } from "../modules/user/interfaces/IUser.service";
 import { UserService } from "../modules/user/user.service";
 /* util import */
 import { Logger } from "../utils/logger.util";
-import { JwtUtils } from "../utils/jwt.util";
+import { JwtUtil } from "../utils/jwt.util";
 
 const container = new Container();
 
@@ -38,6 +38,6 @@ container.bind<IUserService>(TYPES.IUserService).to(UserService);
 
 /* utils */
 container.bind(TYPES.Logger).to(Logger);
-container.bind(TYPES.JwtUtils).to(JwtUtils);
+container.bind(TYPES.JwtUtil).to(JwtUtil);
 
 export default container;

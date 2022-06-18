@@ -1,7 +1,7 @@
 export const TYPES = {
   /* utils */
   Logger: Symbol.for("Logger"),
-  JwtUtils: Symbol.for("JwtUtils"),
+  JwtUtil: Symbol.for("JwtUtil"),
 
   /* database */
   IDatabaseService: Symbol.for("IDatabaseService"),

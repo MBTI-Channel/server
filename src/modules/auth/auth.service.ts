@@ -6,7 +6,7 @@ import { IAuthService, ITokenPayload } from "./interfaces/IAuth.service";
 import { TYPES } from "../../core/type.core";
 import { SignOptions } from "jsonwebtoken";
 import config from "../../config";
-import { JwtUtils } from "../../utils/jwt.util";
+import { JwtUtil } from "../../utils/jwt.util";
 import { LoginDto } from "./dtos/login.dto";
 import { IUserService } from "../user/interfaces/IUser.service";
 
@@ -16,7 +16,7 @@ const ISSUER = "MBTI Channel";
 export class AuthService implements IAuthService {
   constructor(
     @inject(TYPES.Logger) private readonly logger: Logger,
-    @inject(TYPES.JwtUtils) private readonly jwtUtils: JwtUtils,
+    @inject(TYPES.JwtUtil) private readonly jwtUtils: JwtUtil,
     @inject(TYPES.IUserService)
     private readonly userService: IUserService
   ) {}
