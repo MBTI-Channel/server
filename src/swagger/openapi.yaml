@@ -11,9 +11,11 @@ servers:
 
 tags:
   - name: "auth"
-    description: auth
+    description: 인증
   - name: "users"
-    description: users
+    description: 유저
+  - name: "posts"
+    description: 게시글
 
 paths:
   # auth
@@ -64,3 +66,18 @@ paths:
         type: integer
         description: User ID
     $ref: "./paths/users/id.bookmarks.yaml"
+
+  # posts
+  /posts:
+    $ref: "./paths/posts/index.yaml"
+  /posts/trending:
+    $ref: "./paths/posts/trending.yaml"
+  /posts/search:
+    $ref: "./paths/posts/search.yaml"
+  /posts/{id}:
+    parameters:
+      - in: path
+        name: id
+        type: integer
+        description: Post ID
+    $ref: "./paths/posts/id.yaml"

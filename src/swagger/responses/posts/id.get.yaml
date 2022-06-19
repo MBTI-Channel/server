@@ -1,0 +1,61 @@
+"200":
+  description: 게시글 상세 보기 성공
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          id:
+            type: integer
+            example: 23
+          categoryId:
+            type: integer
+            example: 2
+          type:
+            type: string
+            example: survey
+          userId:
+            type: integer
+            example: 42
+          userMbti:
+            type: string
+            example: ENFP
+          userNickname:
+            type: string
+            example: 지나가는 나그네
+          isDisabledUser:
+            type: boolean
+            example: true
+          isSecret:
+            type: boolean
+            example: false
+          title:
+            type: string
+            example: 고민이 있어요
+          content:
+            type: string
+            example: 오늘 저녁 뭐먹지..?
+          viewCount:
+            type: integer
+            example: 333
+          commentCount:
+            type: integer
+            example: 5
+          likesCount:
+            type: integer
+            example: 6
+          isDisabled:
+            type: boolean
+            example: true
+          datetime:
+            type: string
+            example: 2022-07-21T17:32:28Z
+          updateDatetime:
+            type: string
+            example: 2022-07-21T17:32:28Z
+          isMy:
+            type: boolean
+            example: true
+
+"404":
+  description: 존재하지 않는 게시글
