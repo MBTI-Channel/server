@@ -1,0 +1,8 @@
+"201":
+  description: 대댓글 등록 완료
+
+"401":
+  description: authentication error
+
+"404":
+  description: 존재하지 않는 댓글

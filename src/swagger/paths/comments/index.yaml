@@ -1,0 +1,57 @@
+post:
+  tags:
+    - comments
+  description: 댓글 등록
+  parameters:
+    - name: Bearer 토큰
+      in: header
+      required: false
+      type: string
+      example: asduehfinnncudI1NiIsInR5csdwd665s88db
+    - name: Refresh 토큰
+      in: cookie
+      required: true
+      type: string
+      example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+  requestBody:
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            postId:
+              type: integer
+              example: 45
+            content:
+              type: string
+              example: 오므라이스요!!
+  responses:
+    $ref: "../../responses/comments/index.post.yaml"
+
+get:
+  tags:
+    - comments
+  description: 댓글 리스트 조회
+  parameters:
+    - name: postId
+      in: query
+      description: 게시글 id
+      required: true
+      type: integer
+      example: 45
+
+    - name: page
+      in: query
+      description: 댓글 page
+      required: true
+      type: integer
+      example: 2
+
+    - name: size
+      in: query
+      description: 한 번에 검색할 댓글 개수
+      required: true
+      type: integer
+      example: 50
+  responses:
+    $ref: "../../responses/comments/index.get.yaml"

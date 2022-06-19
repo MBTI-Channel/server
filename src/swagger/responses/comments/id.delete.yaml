@@ -1,0 +1,11 @@
+"200":
+  description: 댓글 삭제 성공
+
+"401":
+  description: authentication error
+
+"403":
+  description: authorization error
+
+"404":
+  description: 존재하지 않는 댓글

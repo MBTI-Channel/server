@@ -1,0 +1,61 @@
+"200":
+  description: 댓글 리스트 조회 성공
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          totalComments:
+            type: integer
+          commentsPerPage:
+            type: integer
+          currentPage:
+            type: integer
+          maxPage:
+            type: integer
+
+          comments:
+            type: object
+            properties:
+              id:
+                type: integer
+                example: 23
+              userId:
+                type: integer
+                example: 32
+              userNickname:
+                type: string
+                example: 지나가는 나그네
+              userMbti:
+                type: string
+                example: ENFP
+              isDisabledUser:
+                type: boolean
+                example: true
+              isSecret:
+                type: boolean
+                example: false
+              content:
+                type: string
+                example: 나는 뭐 먹지..?
+              replyCount:
+                type: integer
+                example: 6
+              likesCount:
+                type: integer
+                example: 6
+              isDisabled:
+                type: boolean
+                example: true
+              datetime:
+                type: string
+                example: 2022-07-21T17:32:28Z
+              updateDatetime:
+                type: string
+                example: 2022-07-21T17:32:28Z
+              isMy:
+                type: boolean
+                example: true
+              isPostWriter:
+                type: boolean
+                example: true
