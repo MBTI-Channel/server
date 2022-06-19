@@ -22,7 +22,7 @@
   description: authentication error
 
 "403":
-  description: permission denied
+  description: authorization error
 
 "404":
   description: 404에러
