@@ -1,0 +1,39 @@
+"200":
+  description: 로그인 성공, 회원가입 해야함
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          message:
+            type: string
+            example: need sign up
+          id:
+            type: integer
+            example: 1
+
+"201":
+  description: 로그인 성공
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          nickname:
+            type: string
+            example: 지나가는 나그네
+          mbti:
+            type: string
+            example: ENFP
+          isAdmin:
+            type: boolean
+            example: 1
+          accessToken:
+            type: string
+            example: asduehfinnncudI1NiIsInR5csdwd665s88db
+          refreshToken:
+            type: string
+            example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+"401":
+  description: authentication error

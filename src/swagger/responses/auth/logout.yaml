@@ -1,0 +1,13 @@
+"200":
+  description: 로그아웃 성공
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          message:
+            type: string
+            example: logout done
+
+"400":
+  description: 400 에러

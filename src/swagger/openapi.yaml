@@ -8,3 +8,18 @@ info:
 
 servers:
   - url: http://localhost:8001/
+
+tags:
+  - name: "auth"
+    description: auth
+
+paths:
+  # auth
+  /auth/login:
+    $ref: "./paths/auth/login.yaml"
+  /auth/me:
+    $ref: "./paths/auth/me.yaml"
+  /auth:
+    $ref: "./paths/auth/index.yaml"
+  /auth/logout:
+    $ref: "./paths/auth/logout.yaml"
