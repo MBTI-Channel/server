@@ -1,5 +1,3 @@
-import { plainToInstance } from "class-transformer";
-import { validateOrReject, ValidationError } from "class-validator";
 import { NextFunction, Request, Response } from "express";
 import { inject, injectable } from "inversify";
 import { BaseMiddleware } from "inversify-express-utils";
@@ -7,12 +5,8 @@ import axios from "axios";
 import { TYPES } from "../core/type.core";
 import { Logger } from "../utils/logger.util";
 import { Provider } from "../modules/user/entity/user.entity";
-import { OauthLoginDto } from "../modules/auth/dtos/oauth-login.dto";
 import { IProviderUserInfo } from "../modules/auth/interfaces/IProviderUserInfo";
-import {
-  UnauthorizedException,
-  ValidationErrorException,
-} from "../errors/all.exception";
+import { UnauthorizedException } from "../errors/all.exception";
 import config from "../config/index";
 
 /**
@@ -23,13 +17,7 @@ export class GetProviderUserByOauth extends BaseMiddleware {
   @inject(TYPES.Logger) private readonly logger: Logger;
   public async handler(req: Request, res: Response, next: NextFunction) {
     try {
-      const dto = plainToInstance(OauthLoginDto, req.body); // plainToInstance: 리터럴 객체 -> 클래스 객체
-      // 유효성 검사
-      const validationErrors = await this.isValid(dto);
-      if (validationErrors)
-        throw new ValidationErrorException("bad request", validationErrors);
-
-      const { provider, authCode } = dto;
+      const { provider, authCode } = req.body;
 
       // oauth 인증 서비스로부터 토큰 얻어오기
       const providerAccessToken = await this.getProviderAccessToken(
@@ -56,16 +44,6 @@ export class GetProviderUserByOauth extends BaseMiddleware {
     } catch (err) {
       return next(err);
     }
-  }
-
-  private async isValid(dto: OauthLoginDto) {
-    return validateOrReject(dto).catch((errors: ValidationError[]) => {
-      let errorsMessageArray: string[] = [];
-      errors.forEach((errors) => {
-        errorsMessageArray.push(...(Object as any).values(errors.constraints));
-      });
-      return errorsMessageArray;
-    });
   }
 
   private async getProviderAccessToken(provider: Provider, authCode: string) {
