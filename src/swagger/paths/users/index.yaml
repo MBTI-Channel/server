@@ -12,7 +12,7 @@ post:
               type: string
               example: 지나가는 나그네
             mbti:
-              type: ENFP
+              type: string
               example: ENFP
   responses:
     $ref: "../../responses/users/index.post.yaml"
