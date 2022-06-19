@@ -8,10 +8,17 @@ import { DatabaseService } from "./modules/database/database.service";
 import { Logger } from "./utils/logger.util";
 import { HttpException } from "./errors/http.exception";
 
+/* Swagger */
+import swaggerUi from "swagger-ui-express";
+import YAML from "yamljs";
+import { join } from "path";
+
 export const server = new InversifyExpressServer(container);
 
 const loggerInstance = container.get<Logger>(TYPES.Logger);
 const databaseInstance = container.get<DatabaseService>(TYPES.IDatabaseService);
+
+const swaggerYaml = YAML.load(join(__dirname, "./swagger.yaml"));
 
 server.setConfig((app) => {
   databaseInstance.init();
@@ -25,6 +32,7 @@ server.setConfig((app) => {
       },
     })
   );
+  app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerYaml));
 });
 
 server.setErrorConfig((app) => {
