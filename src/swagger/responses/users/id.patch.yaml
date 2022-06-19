@@ -1,0 +1,28 @@
+"200":
+  description: 유저 정보 수정 성공
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          nickname:
+            type: string
+            example: 지나가는 나그네
+          mbti:
+            type: string
+            example: ENFP
+          isAdmin:
+            type: boolean
+            example: 1
+          isMe:
+            type: boolean
+            example: 1
+
+"401":
+  description: authentication error
+
+"403":
+  description: permission denied
+
+"404":
+  description: 404에러

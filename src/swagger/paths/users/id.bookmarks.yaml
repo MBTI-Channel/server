@@ -1,0 +1,17 @@
+get:
+  tags:
+    - users
+  description: 내가 북마크한 글 조회
+  parameters:
+    - name: Bearer 토큰
+      in: header
+      required: true
+      type: string
+      example: asduehfinnncudI1NiIsInR5csdwd665s88db
+    - name: Refresh 토큰
+      in: cookie
+      required: true
+      type: string
+      example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+  responses:
+    $ref: "../../responses/users/id.bookmarks.get.yaml"

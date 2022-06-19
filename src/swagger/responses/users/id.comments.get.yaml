@@ -1,0 +1,22 @@
+"200":
+  description: 댓글 조회 성공
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          commentId:
+            type: array
+            example: [1, 2, 3]
+          isMe:
+            type: boolean
+            example: 1
+
+"401":
+  description: authentication error
+
+"403":
+  description: permission denied
+
+"404":
+  description: 404에러

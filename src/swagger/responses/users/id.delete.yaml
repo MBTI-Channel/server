@@ -1,0 +1,11 @@
+"200": # 수정 필요
+  description: 회원 탈퇴 완료
+
+"401":
+  description: authentication error
+
+"403":
+  description: permission denied
+
+"404":
+  description: 404에러

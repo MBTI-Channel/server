@@ -12,6 +12,8 @@ servers:
 tags:
   - name: "auth"
     description: auth
+  - name: "users"
+    description: users
 
 paths:
   # auth
@@ -23,3 +25,42 @@ paths:
     $ref: "./paths/auth/index.yaml"
   /auth/logout:
     $ref: "./paths/auth/logout.yaml"
+
+  # users
+  /users:
+    $ref: "./paths/users/index.yaml"
+  /users/{id}:
+    parameters:
+      - in: path
+        name: id
+        type: integer
+        description: User ID
+    $ref: "./paths/users/id.yaml"
+  /users/{id}/posts:
+    parameters:
+      - in: path
+        name: id
+        type: integer
+        description: User ID
+    $ref: "./paths/users/id.posts.yaml"
+  /users/{id}/comments:
+    parameters:
+      - in: path
+        name: id
+        type: integer
+        description: User ID
+    $ref: "./paths/users/id.comments.yaml"
+  /users/{id}/survey:
+    parameters:
+      - in: path
+        name: id
+        type: integer
+        description: User ID
+    $ref: "./paths/users/id.survey.yaml"
+  /users/{id}/bookmarks:
+    parameters:
+      - in: path
+        name: id
+        type: integer
+        description: User ID
+    $ref: "./paths/users/id.bookmarks.yaml"
