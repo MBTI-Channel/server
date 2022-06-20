@@ -8,7 +8,7 @@ import {
 } from "inversify-express-utils";
 import { TYPES } from "../../core/type.core";
 import { IAuthService } from "./interfaces/IAuth.service";
-import { DtoValidatorMiddleware } from "../../middlewares/dto-validator.middleware";
+import { bodyValidator } from "../../middlewares/validator.middleware";
 import { LoginDto } from "./dtos/login.dto";
 import { OauthLoginDto } from "./dtos/oauth-login.dto";
 import config from "../../config";
@@ -18,7 +18,7 @@ export class AuthController extends BaseHttpController {
   @inject(TYPES.IAuthService) private readonly authService: IAuthService;
   @httpPost(
     "/login",
-    DtoValidatorMiddleware(OauthLoginDto),
+    bodyValidator(OauthLoginDto),
     TYPES.GetProviderUserByOauthMiddleware,
     TYPES.SocialSignUpMiddleware
   )
