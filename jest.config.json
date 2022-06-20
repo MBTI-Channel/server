@@ -1,0 +1,7 @@
+{
+  "preset": "ts-jest",
+  "testEnvironment": "node",
+  "roots": ["."],
+  "setupFilesAfterEnv": ["<rootDir>/test/jest.setup.ts"],
+  "testMatch": ["**/*.spec.[jt]s?(x)", "**/*.test.[jt]s?(x)"]
+}
