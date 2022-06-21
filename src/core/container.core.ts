@@ -7,7 +7,7 @@ import { DatabaseService } from "../modules/database/database.service";
 /* middleware import */
 import { GetProviderUserByOauth } from "../middlewares/get-provider-user-by-oauth.middleware";
 import { SocialSignUp } from "../middlewares/social-sign-up.middleware";
-import { ValidateAccessToken } from "../middlewares/authentication.middleware";
+import { ValidateAccessToken } from "../middlewares/validate-access-token.middleware";
 
 /* controller import */
 import "../modules/index.controller";
@@ -33,7 +33,7 @@ container
   .bind(TYPES.GetProviderUserByOauthMiddleware)
   .to(GetProviderUserByOauth);
 container.bind(TYPES.SocialSignUpMiddleware).to(SocialSignUp);
-container.bind(TYPES.AuthenticationMiddleware).to(ValidateAccessToken);
+container.bind(TYPES.ValidateAccessTokenMiddleware).to(ValidateAccessToken);
 
 /* auth */
 container.bind<IAuthService>(TYPES.IAuthService).to(AuthService);

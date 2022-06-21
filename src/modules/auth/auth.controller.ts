@@ -43,7 +43,7 @@ export class AuthController extends BaseHttpController {
     });
   }
 
-  @httpGet("/me", TYPES.AuthenticationMiddleware)
+  @httpGet("/me", TYPES.ValidateAccessTokenMiddleware)
   async validateUser(req: Request, res: Response) {
     return res.status(200).json({
       message: "access token valid",
