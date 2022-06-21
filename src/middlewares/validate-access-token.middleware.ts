@@ -3,6 +3,7 @@ import { inject, injectable } from "inversify";
 import { BaseMiddleware } from "inversify-express-utils";
 import { TYPES } from "../core/type.core";
 import { JwtUtil } from "../utils/jwt.util";
+import { User } from "../modules/user/entity/user.entity";
 
 @injectable()
 export class ValidateAccessToken extends BaseMiddleware {
@@ -20,17 +21,22 @@ export class ValidateAccessToken extends BaseMiddleware {
       });
     }
 
-    req.accessToken = accessToken;
-
     // access token 만료 여부 판단
-    let isValidate = this.jwtUtil.verify(accessToken);
+    try {
+      let decoded = this.jwtUtil.verify(accessToken);
+      req.user = {
+        id: decoded.id,
+        nickname: decoded.nickname,
+        mbti: decoded.mbti,
+        isAdmin: decoded.isAdmin,
+      };
 
-    if (!isValidate) {
-      // TODO : refresh token 재발급으로 이동
+      next();
+    } catch (err) {
+      // access token 유효하지 않음
       return res.status(400).json({
         message: "access token is not validate",
       });
     }
-    next();
   }
 }

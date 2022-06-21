@@ -12,7 +12,7 @@ export class DecodedDto implements JwtPayload {
   mbti: string;
 
   @IsNumber()
-  isAdmin: number;
+  isAdmin: boolean;
 
   @IsString()
   @IsNotEmpty()
