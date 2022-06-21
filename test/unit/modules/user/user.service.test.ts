@@ -24,9 +24,9 @@ describe("UserService ", () => {
     it("Case1: DB에 존재하는 닉네임이라면 true를 리턴한다.", async () => {
       const userService = container.get<IUserService>(TYPES.IUserService);
 
-      const spyFindOne = jest
-        .spyOn(userService, "findOne")
-        .mockResolvedValue(mockUser);
+      userService.findOne = jest.fn().mockImplementation(() => {
+        return mockUser;
+      });
 
       const result = await userService.isExistsNickname(mockDto);
       await expect(result).toEqual(true);
@@ -35,11 +35,9 @@ describe("UserService ", () => {
     it("Case2: DB에 존재하지 않는 닉네임이라면 false를 리턴한다.", async () => {
       const userService = container.get<IUserService>(TYPES.IUserService);
 
-      const spyFindOne = jest
-        .spyOn(userService, "findOne")
-        .mockImplementation(() => {
-          throw new Error();
-        });
+      userService.findOne = jest.fn().mockImplementation(() => {
+        throw new Error();
+      });
 
       const result = await userService.isExistsNickname(mockDto);
       await expect(result).toEqual(false);
