@@ -1,6 +1,7 @@
 import express, { NextFunction, Request, Response } from "express";
 import helmet from "helmet";
 import morgan from "morgan";
+import cookieParser from "cookie-parser";
 import { InversifyExpressServer } from "inversify-express-utils";
 import container from "./core/container.core";
 import { TYPES } from "./core/type.core";
@@ -18,6 +19,7 @@ server.setConfig((app) => {
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
   app.use(helmet());
+  app.use(cookieParser());
   app.use(
     morgan("combined", {
       stream: {
