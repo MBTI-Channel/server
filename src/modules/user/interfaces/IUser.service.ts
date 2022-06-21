@@ -4,6 +4,6 @@ import { User } from "../entity/user.entity";
 
 export interface IUserService {
   create(dto: CreateUserDto): Promise<User>;
-  findOne(payload: Partial<User>): Promise<User>;
+  findOne(payload: Partial<User>): Promise<User | null>;
   isExistsNickname(dto: NicknameDuplicateCheckDto): Promise<boolean>;
 }
