@@ -52,9 +52,11 @@ export class AuthController extends BaseHttpController {
 
   @httpGet("/")
   async reissueAccessToken(req: Request, res: Response) {
+    const accessToken = req.headers!.authorization!.replace("Bearer ", "");
+
     const { refreshTokenValid, newAccessToken } =
       await this.authService.reissueAccessToken(
-        req.accessToken!,
+        accessToken,
         req.cookies.Refresh
       );
 

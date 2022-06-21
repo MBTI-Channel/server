@@ -3,11 +3,8 @@ import * as jwt from "jsonwebtoken";
 import config from "../config/index";
 import { DecodedDto } from "../modules/auth/dtos/decode-token.dto";
 import { plainToInstance } from "class-transformer";
-import { parse } from "path";
 
 const { jwt: jwtConfig } = config;
-
-const secret: string = jwtConfig.secret;
 
 @injectable()
 export class JwtUtil {
@@ -18,14 +15,15 @@ export class JwtUtil {
     return jwt.sign(payload, jwtConfig.secret);
   }
 
-  verify(token: string): boolean {
-    let isValidate = true;
-    jwt.verify(token, jwtConfig.secret, (error: any, decoded: any) => {
-      if (error) {
-        isValidate = false;
-      }
-    });
-    return isValidate;
+  verify(token: string): DecodedDto {
+    try {
+      const decoded = jwt.verify(token, jwtConfig.secret);
+      const dto = plainToInstance(DecodedDto, decoded);
+      return dto;
+    } catch (err) {
+      const dto = plainToInstance(DecodedDto, {});
+      return dto;
+    }
   }
 
   decode(token: string): DecodedDto {

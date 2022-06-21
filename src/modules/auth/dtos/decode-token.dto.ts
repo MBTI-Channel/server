@@ -1,20 +1,17 @@
 import { IsNotEmpty, IsNumber, IsString } from "class-validator";
+import { JwtPayload } from "jsonwebtoken";
 
-export class DecodedDto {
+export class DecodedDto implements JwtPayload {
   @IsNumber()
-  @IsNotEmpty()
   id: number;
 
   @IsString()
-  @IsNotEmpty()
   nickname: string;
 
   @IsString()
-  @IsNotEmpty()
   mbti: string;
 
   @IsNumber()
-  @IsNotEmpty()
   isAdmin: number;
 
   @IsString()
