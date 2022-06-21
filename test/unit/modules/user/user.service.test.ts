@@ -17,7 +17,7 @@ describe("UserService ", () => {
 
   describe("isExistsNickname", () => {
     const mockDto: NicknameDuplicateCheckDto = {
-      nickname: "야옹맨1",
+      nickname: "야옹맨",
     };
     const mockUser = new User();
 
@@ -34,6 +34,12 @@ describe("UserService ", () => {
 
     it("Case2: DB에 존재하지 않는 닉네임이라면 false를 리턴한다.", async () => {
       const userService = container.get<IUserService>(TYPES.IUserService);
+
+      const spyFindOne = jest
+        .spyOn(userService, "findOne")
+        .mockImplementation(() => {
+          throw new Error();
+        });
 
       const result = await userService.isExistsNickname(mockDto);
       await expect(result).toEqual(false);
