@@ -10,6 +10,7 @@ import { JwtUtil } from "../../utils/jwt.util";
 import { LoginDto } from "./dtos/login.dto";
 import { IUserService } from "../user/interfaces/IUser.service";
 import config from "../../config";
+import { DecodedDto } from "./dtos/decode-token.dto";
 
 @injectable()
 export class AuthService implements IAuthService {
@@ -61,5 +62,27 @@ export class AuthService implements IAuthService {
     };
     const refreshToken = this.jwtUtil.sign(payload, options);
     return refreshToken;
+  }
+
+  public async reissueAccessToken(
+    oldAccessToken: string,
+    refreshToken: string // TODO: Dto로 수정
+  ) {
+    let refreshTokenValid = true;
+    const isValidate = await this.jwtUtil.verify(refreshToken);
+
+    if (!isValidate) {
+      refreshTokenValid = false;
+      return { refreshTokenValid };
+    }
+
+    const decodedToken = this.jwtUtil.decode(oldAccessToken);
+    let userId = decodedToken.id;
+
+    const user = await this.userService.findOne({ id: userId });
+    if (!user) throw new Error("user not found");
+
+    const newAccessToken = await this.generateAccessToken(user);
+    return { refreshTokenValid, newAccessToken };
   }
 }
