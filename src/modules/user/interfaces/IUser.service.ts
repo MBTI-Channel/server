@@ -8,4 +8,5 @@ export interface IUserService {
   create(dto: CreateUserDto): Promise<User>;
   findOne(payload: Partial<User>): Promise<User | null>;
   isExistsNickname(dto: NicknameDuplicateCheckDto): Promise<boolean>;
+  reissueAccessToken(accessToken: string, refreshToken: string): Promise<any>;
 }

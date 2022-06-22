@@ -33,6 +33,7 @@ export class UserController extends BaseHttpController {
     return res.status(200).json({ isExistsNickname: result });
   }
 
+  // 유저 로그인
   @httpPost(
     "/login",
     bodyValidator(OauthLoginDto),
@@ -56,6 +57,27 @@ export class UserController extends BaseHttpController {
       isAdmin: user.isAdmin,
       accessToken,
       refreshToken,
+    });
+  }
+
+  // access token 재발급
+  @httpGet("/accessToken")
+  async reissueAccessToken(req: Request, res: Response) {
+    const accessToken = req.headers!.authorization!.replace("Bearer ", "");
+
+    const { refreshTokenValid, newAccessToken } =
+      await this.userService.reissueAccessToken(
+        accessToken,
+        req.cookies.Refresh
+      );
+
+    if (!refreshTokenValid || newAccessToken === "undefined") {
+      res.clearCookie("Refresh");
+      // TODO: login page로 이동
+    }
+
+    return res.status(200).json({
+      newAccessToken,
     });
   }
 }

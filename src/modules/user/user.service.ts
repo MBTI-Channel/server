@@ -9,6 +9,7 @@ import { NicknameDuplicateCheckDto } from "./dtos/nickname-duplicate-check.dto";
 import { LoginDto } from "./dtos/login.dto";
 import { IAuthService } from "../auth/interfaces/IAuth.service";
 import { Logger } from "../../utils/logger.util";
+import { JwtUtil } from "../../utils/jwt.util";
 
 @injectable()
 export class UserService implements IUserService {
@@ -17,7 +18,8 @@ export class UserService implements IUserService {
     @inject(TYPES.IUserRepository)
     private readonly userRepository: IUserRepository,
     @inject(TYPES.IAuthService)
-    private readonly authService: IAuthService
+    private readonly authService: IAuthService,
+    @inject(TYPES.JwtUtil) private readonly jwtUtil: JwtUtil
   ) {}
 
   public async create(dto: CreateUserDto): Promise<User> {
@@ -53,5 +55,27 @@ export class UserService implements IUserService {
     ]);
 
     return { user, accessToken, refreshToken };
+  }
+
+  public async reissueAccessToken(
+    oldAccessToken: string,
+    refreshToken: string // TODO: Dto로 수정
+  ) {
+    let refreshTokenValid = true;
+    try {
+      const decoded = await this.jwtUtil.verify(refreshToken);
+      const decodedToken = this.jwtUtil.decode(oldAccessToken);
+      let userId = decodedToken.id;
+
+      const user = await this.findOne({ id: userId });
+      if (!user) throw new Error("user not found");
+
+      const newAccessToken = await this.authService.generateAccessToken(user);
+      return { refreshTokenValid, newAccessToken };
+    } catch (err) {
+      // refresh token도 만료됨
+      refreshTokenValid = false;
+      return { refreshTokenValid };
+    }
   }
 }
