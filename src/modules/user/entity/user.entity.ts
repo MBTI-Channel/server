@@ -17,6 +17,7 @@ import { Report } from "../../report/entity/report.entity";
 import { Survey } from "../../survey/entity/survey.entity";
 
 export type Provider = "kakao" | "naver";
+export const PROVIDER_KEY: string[] = ["kakao", "naver"];
 
 @Entity("User")
 export class User {
