@@ -14,4 +14,5 @@ export const TYPES = {
     "GetProviderUserByOauthMiddleware"
   ),
   SocialSignUpMiddleware: Symbol.for("SocialSignUpMiddleware"),
+  ValidateAccessTokenMiddleware: Symbol.for("ValidateAccessTokenMiddleware"),
 };

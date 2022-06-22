@@ -42,10 +42,10 @@ export class AuthService implements IAuthService {
       nickname,
       mbti,
       isAdmin,
-      iss: config.jwt.issuer,
     };
     const options: SignOptions = {
       expiresIn: config.jwt.accessTokenExpiresIn,
+      issuer: config.jwt.issuer,
     };
     const accessToken = this.jwtUtil.sign(payload, options);
     return accessToken;
@@ -53,13 +53,34 @@ export class AuthService implements IAuthService {
 
   public async generateRefreshToken() {
     // TODO: redis
-    const payload: ITokenPayload = {
-      iss: config.jwt.issuer,
-    };
+    const payload: ITokenPayload = {};
     const options: SignOptions = {
       expiresIn: config.jwt.refreshTokenExpiresIn,
+      issuer: config.jwt.issuer,
     };
     const refreshToken = this.jwtUtil.sign(payload, options);
     return refreshToken;
+  }
+
+  public async reissueAccessToken(
+    oldAccessToken: string,
+    refreshToken: string // TODO: Dto로 수정
+  ) {
+    let refreshTokenValid = true;
+    try {
+      const decoded = await this.jwtUtil.verify(refreshToken);
+      const decodedToken = this.jwtUtil.decode(oldAccessToken);
+      let userId = decodedToken.id;
+
+      const user = await this.userService.findOne({ id: userId });
+      if (!user) throw new Error("user not found");
+
+      const newAccessToken = await this.generateAccessToken(user);
+      return { refreshTokenValid, newAccessToken };
+    } catch (err) {
+      // refresh token도 만료됨
+      refreshTokenValid = false;
+      return { refreshTokenValid };
+    }
   }
 }
