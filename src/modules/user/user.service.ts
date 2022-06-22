@@ -57,25 +57,14 @@ export class UserService implements IUserService {
     return { user, accessToken, refreshToken };
   }
 
-  public async reissueAccessToken(
-    oldAccessToken: string,
-    refreshToken: string // TODO: Dto로 수정
-  ) {
-    let refreshTokenValid = true;
-    try {
-      const decoded = await this.jwtUtil.verify(refreshToken);
-      const decodedToken = this.jwtUtil.decode(oldAccessToken);
-      let userId = decodedToken.id;
+  public async reissueAccessToken(oldAccessToken: string) {
+    const decodedToken = this.jwtUtil.decode(oldAccessToken);
+    let userId = decodedToken.id;
 
-      const user = await this.findOne({ id: userId });
-      if (!user) throw new Error("user not found");
+    const user = await this.findOne({ id: userId });
+    if (!user) throw new Error("user not found");
 
-      const newAccessToken = await this.authService.generateAccessToken(user);
-      return { refreshTokenValid, newAccessToken };
-    } catch (err) {
-      // refresh token도 만료됨
-      refreshTokenValid = false;
-      return { refreshTokenValid };
-    }
+    const newAccessToken = await this.authService.generateAccessToken(user);
+    return { newAccessToken };
   }
 }

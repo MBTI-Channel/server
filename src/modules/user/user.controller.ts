@@ -61,21 +61,13 @@ export class UserController extends BaseHttpController {
   }
 
   // access token 재발급
-  @httpGet("/accessToken")
+  @httpGet("/accessToken", TYPES.ValidateRefreshTokenMiddleware)
   async reissueAccessToken(req: Request, res: Response) {
     const accessToken = req.headers!.authorization!.replace("Bearer ", "");
 
-    const { refreshTokenValid, newAccessToken } =
-      await this.userService.reissueAccessToken(
-        accessToken,
-        req.cookies.Refresh
-      );
-
-    if (!refreshTokenValid || newAccessToken === "undefined") {
-      res.clearCookie("Refresh");
-      // TODO: login page로 이동
-    }
-
+    const { newAccessToken } = await this.userService.reissueAccessToken(
+      accessToken
+    );
     return res.status(200).json({
       newAccessToken,
     });
