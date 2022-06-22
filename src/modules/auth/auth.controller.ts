@@ -4,44 +4,14 @@ import {
   BaseHttpController,
   controller,
   httpGet,
-  httpPost,
 } from "inversify-express-utils";
 import { TYPES } from "../../core/type.core";
 import { IAuthService } from "./interfaces/IAuth.service";
-import { bodyValidator } from "../../middlewares/validator.middleware";
-import { LoginDto } from "./dtos/login.dto";
-import { OauthLoginDto } from "./dtos/oauth-login.dto";
 import config from "../../config";
 
 @controller("/auth")
 export class AuthController extends BaseHttpController {
   @inject(TYPES.IAuthService) private readonly authService: IAuthService;
-  @httpPost(
-    "/login",
-    bodyValidator(OauthLoginDto),
-    TYPES.GetProviderUserByOauthMiddleware,
-    TYPES.SocialSignUpMiddleware
-  )
-  async oauthLogin(req: Request, res: Response) {
-    const dto = req.user as LoginDto;
-    const { user, accessToken, refreshToken } = await this.authService.login(
-      dto
-    );
-
-    res.cookie("Refresh", refreshToken, {
-      httpOnly: true,
-      secure: false, // true
-      maxAge: config.cookie.refreshTokenMaxAge,
-    });
-
-    return res.status(201).json({
-      nickname: user.nickname,
-      mbti: user.mbti,
-      isAdmin: user.isAdmin,
-      accessToken,
-      refreshToken,
-    });
-  }
 
   @httpGet("/me", TYPES.ValidateAccessTokenMiddleware)
   async validateUser(req: Request, res: Response) {

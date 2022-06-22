@@ -1,6 +1,6 @@
 import { IsIn, IsNotEmpty, IsString } from "class-validator";
-import { Provider } from "../../user/entity/user.entity";
-import { PROVIDER_KEY } from "./oauth-login.dto";
+import { Provider } from "../entity/user.entity";
+import { PROVIDER_KEY } from "../../auth/dtos/oauth-login.dto";
 
 export class LoginDto {
   @IsString()
