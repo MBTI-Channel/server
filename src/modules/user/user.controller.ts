@@ -84,7 +84,7 @@ export class UserController extends BaseHttpController {
   // 임시 kakao 라우터
   @httpGet("/kakao")
   async kakaoLogin(req: Request, res: Response) {
-    const url = `https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=${config.naver.clientId}&redirect_uri=${config.naver.redirectUri}&state=${config.naver.randomState}`;
+    const url = `https://kauth.kakao.com/oauth/authorize?client_id=${config.kakao.restApiKey}&redirect_uri=${config.kakao.redirectUri}&response_type=code`;
     return res.redirect(url);
   }
 
