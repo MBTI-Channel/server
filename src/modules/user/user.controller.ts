@@ -6,6 +6,7 @@ import {
   httpGet,
   httpPost,
   queryParam,
+  requestBody,
 } from "inversify-express-utils";
 import { TYPES } from "../../core/type.core";
 import {
@@ -13,14 +14,29 @@ import {
   queryValidator,
 } from "../../middlewares/validator.middleware";
 import { IUserService } from "./interfaces/IUser.service";
-import { NicknameDuplicateCheckDto } from "./dtos/nickname-duplicate-check.dto";
 import { OauthLoginDto } from "../auth/dtos/oauth-login.dto";
-import { LoginDto } from "./dtos/login.dto";
+import { LoginDto, SignUpDto, NicknameDuplicateCheckDto } from "./dto";
 import config from "../../config";
 
 @controller("/users")
 export class UserController extends BaseHttpController {
   @inject(TYPES.IUserService) private readonly userService: IUserService;
+
+  // 회원가입 (nickname, mbti 설정)
+  @httpPost("/", bodyValidator(SignUpDto))
+  async signUp(@requestBody() body: SignUpDto, req: Request, res: Response) {
+    const { user, accessToken, refreshToken } = await this.userService.signUp(
+      body
+    );
+
+    return res.status(201).json({
+      nickname: user.nickname,
+      mbti: user.mbti,
+      isAdmin: user.isAdmin,
+      accessToken,
+      refreshToken,
+    });
+  }
 
   // 닉네임 중복확인
   @httpGet("/", queryValidator(NicknameDuplicateCheckDto))

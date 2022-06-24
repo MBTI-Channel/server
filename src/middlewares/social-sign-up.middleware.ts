@@ -6,7 +6,7 @@ import { User } from "../modules/user/entity/user.entity";
 import { UnauthorizedException } from "../errors/all.exception";
 import { Logger } from "../utils/logger.util";
 import { IUserService } from "../modules/user/interfaces/IUser.service";
-import { CreateUserDto } from "../modules/user/dtos/create-user.dto";
+import { CreateUserDto } from "../modules/user/dto/create-user.dto";
 
 @injectable()
 export class SocialSignUp extends BaseMiddleware {

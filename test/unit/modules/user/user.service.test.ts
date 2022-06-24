@@ -1,8 +1,14 @@
 import container from "../../../../src/core/container.core";
 import { TYPES } from "../../../../src/core/type.core";
-import { NotFoundException } from "../../../../src/errors/all.exception";
-import { LoginDto } from "../../../../src/modules/user/dtos/login.dto";
-import { NicknameDuplicateCheckDto } from "../../../../src/modules/user/dtos/nickname-duplicate-check.dto";
+import {
+  NotFoundException,
+  UnauthorizedException,
+} from "../../../../src/errors/all.exception";
+import {
+  LoginDto,
+  NicknameDuplicateCheckDto,
+  SignUpDto,
+} from "../../../../src/modules/user/dto";
 import { User } from "../../../../src/modules/user/entity/user.entity";
 import { IUserService } from "../../../../src/modules/user/interfaces/IUser.service";
 
@@ -99,6 +105,101 @@ describe("UserService ", () => {
       await expect(async () => {
         await userService.login(mockDto);
       }).rejects.toThrowError(new NotFoundException("not exists user"));
+    });
+  });
+
+  /* 회원가입 */
+  describe("signup", () => {
+    const mockDto: SignUpDto = {
+      id: 1,
+      nickname: "exmaple",
+      mbti: "ISTP",
+    };
+    const mockAccessToken = "mockAccessToken";
+    const mockRefreshToken = "mockRefreshToken";
+
+    it("Success: user의 nickname, mbti 설정 후 {user, accessToken, refreshToken} 리턴", async () => {
+      // given
+      const mockUser: Partial<User> = {
+        id: 1,
+        nickname: "",
+        mbti: "",
+        status: +process.env.USER_STATUS_NEW!,
+      };
+      const mockUpdatedUser: Partial<User> = {
+        id: 1,
+        nickname: "example",
+        mbti: "ISTP",
+        status: +process.env.USER_STATUS_NORMAL!,
+      };
+      const mockAuthService = {
+        generateAccessToken: () => mockAccessToken,
+        generateRefreshToken: () => mockRefreshToken,
+      };
+      container.unbind(TYPES.IAuthService);
+      container.bind(TYPES.IAuthService).toConstantValue(mockAuthService);
+      const userService = container.get<IUserService>(TYPES.IUserService);
+
+      userService.findOne = jest.fn().mockImplementation(() => mockUser);
+      userService.isExistsNickname = jest.fn().mockImplementation(() => false);
+      userService.update = jest.fn().mockReturnValue(mockUpdatedUser);
+
+      // when
+      const result = await userService.signUp(mockDto);
+
+      //then
+      expect(result).toEqual({
+        user: mockUpdatedUser,
+        accessToken: mockAccessToken,
+        refreshToken: mockRefreshToken,
+      });
+    });
+
+    it("Error: DB에 존재하지 않는 user id라면 UnauthorizedException 발생", async () => {
+      // given
+      const userService = container.get<IUserService>(TYPES.IUserService);
+
+      userService.findOne = jest.fn().mockImplementation(() => false);
+
+      // when, then
+      await expect(async () => {
+        await userService.signUp(mockDto);
+      }).rejects.toThrowError(
+        new UnauthorizedException("not exists user or invalid request")
+      );
+    });
+
+    it("Error: status가 new가 아니라면 UnauthorizedException 발생", async () => {
+      // given
+      const mockUser: Partial<User> = {
+        status: +process.env.USER_STATUS_NORMAL!,
+      };
+      const userService = container.get<IUserService>(TYPES.IUserService);
+
+      userService.findOne = jest.fn().mockImplementation(() => mockUser);
+
+      // when, then
+      await expect(async () => {
+        await userService.signUp(mockDto);
+      }).rejects.toThrowError(
+        new UnauthorizedException("not exists user or invalid request")
+      );
+    });
+
+    it("Error: 이미 존재하는 닉네임이라면 ConflictException 발생", async () => {
+      // given
+      const mockUser: Partial<User> = {
+        status: +process.env.USER_STATUS_NEW!,
+      };
+      const userService = container.get<IUserService>(TYPES.IUserService);
+
+      userService.findOne = jest.fn().mockImplementation(() => mockUser);
+      userService.isExistsNickname = jest.fn().mockImplementation(() => true);
+
+      // when, then
+      await expect(async () => {
+        await userService.signUp(mockDto);
+      }).rejects.toThrowError(new NotFoundException("already exists nickname"));
     });
   });
 });

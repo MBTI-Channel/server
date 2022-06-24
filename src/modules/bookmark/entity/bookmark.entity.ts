@@ -5,7 +5,7 @@ import {
   ManyToOne,
 } from "typeorm";
 
-import { Post } from "../../post/entity/post..entity";
+import { Post } from "../../post/entity/post.entity";
 import { User } from "../../user/entity/user.entity";
 
 @Entity("Bookmark")
