@@ -1,6 +1,5 @@
-name: "test-pr-all-push"
+name: "test-pr"
 on:
-  push:
   pull_request:
     branches: ["main"]
   workflow_dispatch:
