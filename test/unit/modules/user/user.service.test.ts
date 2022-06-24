@@ -1,8 +1,10 @@
 import container from "../../../../src/core/container.core";
 import { TYPES } from "../../../../src/core/type.core";
 import { NotFoundException } from "../../../../src/errors/all.exception";
-import { LoginDto } from "../../../../src/modules/user/dtos/login.dto";
-import { NicknameDuplicateCheckDto } from "../../../../src/modules/user/dtos/nickname-duplicate-check.dto";
+import {
+  LoginDto,
+  NicknameDuplicateCheckDto,
+} from "../../../../src/modules/user/dto";
 import { User } from "../../../../src/modules/user/entity/user.entity";
 import { IUserService } from "../../../../src/modules/user/interfaces/IUser.service";
 
