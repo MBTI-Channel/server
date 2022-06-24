@@ -12,7 +12,7 @@ import { Comment } from "../../comment/entity/comment.entity";
 import { Like } from "../../like/entity/like.entity";
 import { LoginLog } from "../../login-log/entity/login-log.entity";
 import { Notification } from "../../notifications/entity/notification.entity";
-import { Post } from "../../post/entity/post..entity";
+import { Post } from "../../post/entity/post.entity";
 import { Report } from "../../report/entity/report.entity";
 import { Survey } from "../../survey/entity/survey.entity";
 

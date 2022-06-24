@@ -6,7 +6,7 @@ import {
   JoinColumn,
 } from "typeorm";
 
-import { Post } from "../../post/entity/post..entity";
+import { Post } from "../../post/entity/post.entity";
 
 @Entity("Trend")
 export class Trend {
