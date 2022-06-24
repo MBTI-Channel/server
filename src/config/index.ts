@@ -38,4 +38,12 @@ export default {
   cookie: {
     refreshTokenMaxAge: parseInt(isValidEnvVar("COOKIE_REFRESH_MAX_AGE")),
   },
+  user: {
+    status: {
+      withdrawal: parseInt(isValidEnvVar("USER_STATUS_WITHDRAWAL")),
+      new: parseInt(isValidEnvVar("USER_STATUS_NEW")),
+      normal: parseInt(isValidEnvVar("USER_STATUS_NORMAL")),
+      restriction: parseInt(isValidEnvVar("USER_STATUS_RESTRICTION")),
+    },
+  },
 };
