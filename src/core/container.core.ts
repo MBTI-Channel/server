@@ -22,11 +22,16 @@ import { UserRepository } from "../modules/user/user.repository";
 /* util import */
 import { Logger } from "../utils/logger.util";
 import { JwtUtil } from "../utils/jwt.util";
+import { IRedisService } from "../modules/redis/interfaces/IRedis.service";
+import { RedisService } from "../modules/redis/redis.service";
 
 const container = new Container();
 
 /* database */
 container.bind<IDatabaseService>(TYPES.IDatabaseService).to(DatabaseService);
+
+/* redis */
+container.bind<IRedisService>(TYPES.IRedisService).to(RedisService);
 
 /* middleware */
 container

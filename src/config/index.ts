@@ -46,4 +46,10 @@ export default {
       restriction: parseInt(isValidEnvVar("USER_STATUS_RESTRICTION")),
     },
   },
+  redis: {
+    redisUserName: isValidEnvVar("REDIS_USERNAME"),
+    redisPassword: isValidEnvVar("REDIS_PASSWORD"),
+    redisHost: isValidEnvVar("REDIS_HOST"),
+    redisPort: isValidEnvVar("REDIS_PORT"),
+  },
 };

@@ -9,6 +9,7 @@ import { TYPES } from "./core/type.core";
 import { DatabaseService } from "./modules/database/database.service";
 import { Logger } from "./utils/logger.util";
 import { HttpException } from "./errors/http.exception";
+import { RedisService } from "./modules/redis/redis.service";
 
 export const server = new InversifyExpressServer(container);
 
@@ -27,9 +28,11 @@ const corsOptions = {
 
 const loggerInstance = container.get<Logger>(TYPES.Logger);
 const databaseInstance = container.get<DatabaseService>(TYPES.IDatabaseService);
+const redisInstance = container.get<RedisService>(TYPES.IRedisService);
 
 server.setConfig((app) => {
   databaseInstance.init();
+  redisInstance.init();
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
   app.use(helmet());

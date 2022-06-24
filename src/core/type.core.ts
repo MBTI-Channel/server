@@ -4,6 +4,8 @@ export const TYPES = {
   JwtUtil: Symbol.for("JwtUtil"),
   /* database */
   IDatabaseService: Symbol.for("IDatabaseService"),
+  /* redis */
+  IRedisService: Symbol.for("IRedisService"),
   /* auth */
   IAuthService: Symbol.for("IAuthService"),
   /* user */
