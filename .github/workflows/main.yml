@@ -5,7 +5,7 @@ name: node.js CI
 on:
   # Triggers the workflow on push or pull request events but only for the "main" branch
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -18,7 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [ '14', '16' ] # 테스트할 노드 환경
+        node-version: ["14", "16"] # 테스트할 노드 환경
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
@@ -30,9 +30,27 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
-      # 라이브러리 설치
-      - run: npm install
+      # node module 캐싱
+      - name: Cache node modules
+        id: cache-npm
+        uses: action/cache@v3
+        env:
+          cache-name: cache-node-modules
+        with:
+          # npm 캐시 파일 경로
+          path: ~/.npm
+          # 캐시를 저장할때 생성되는 키
+          key: ${{ runner.os }}-node-modules-${{ hashFiles('**/package-lock.json') }}
+          # key로 못찾았다면 찾는 대체키
+          restore-keys: |
+            ${{ runner.os }}-node-modules-
+
+      # 라이브러리 설치. 일치하는 키가 없다면 설치
+      - name: Install Dependencies
+        if: ${{ steps.cache-npm.outputs.cache-hit == 'false' }}
+        run: npm install
+
       # 테스트 실행
       - run: npm test
         #env:
-           #KEY: ${{ secrets.KEY}}
+        #KEY: ${{ secrets.KEY}}
