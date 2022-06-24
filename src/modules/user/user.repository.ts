@@ -2,9 +2,9 @@ import { inject, injectable } from "inversify";
 import { QueryDeepPartialEntity } from "typeorm/query-builder/QueryPartialEntity";
 import { TYPES } from "../../core/type.core";
 import { IDatabaseService } from "../database/interfaces/IDatabase.service";
-import { CreateUserDto } from "./dto/create-user.dto";
-import { User } from "./entity/user.entity";
 import { IUserRepository } from "./interfaces/IUser.repository";
+import { CreateUserDto } from "./dto";
+import { User } from "./entity/user.entity";
 
 @injectable()
 export class UserRepository implements IUserRepository {

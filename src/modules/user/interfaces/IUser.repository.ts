@@ -1,5 +1,5 @@
 import { QueryDeepPartialEntity } from "typeorm/query-builder/QueryPartialEntity";
-import { CreateUserDto } from "../dtos/create-user.dto";
+import { CreateUserDto } from "../dto";
 import { User } from "../entity/user.entity";
 
 export interface IUserRepository {

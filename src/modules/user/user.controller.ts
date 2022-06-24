@@ -14,10 +14,8 @@ import {
   queryValidator,
 } from "../../middlewares/validator.middleware";
 import { IUserService } from "./interfaces/IUser.service";
-import { NicknameDuplicateCheckDto } from "./dto/nickname-duplicate-check.dto";
 import { OauthLoginDto } from "../auth/dtos/oauth-login.dto";
-import { LoginDto } from "./dto/login.dto";
-import { SignUpDto } from "./dto/sign-up.dto";
+import { LoginDto, SignUpDto, NicknameDuplicateCheckDto } from "./dto";
 import config from "../../config";
 
 @controller("/users")

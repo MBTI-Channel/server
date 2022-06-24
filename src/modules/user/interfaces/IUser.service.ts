@@ -1,9 +1,11 @@
 import { QueryDeepPartialEntity } from "typeorm/query-builder/QueryPartialEntity";
-import { CreateUserDto } from "../dtos/create-user.dto";
-import { NicknameDuplicateCheckDto } from "../dtos/nickname-duplicate-check.dto";
+import {
+  LoginDto,
+  SignUpDto,
+  NicknameDuplicateCheckDto,
+  CreateUserDto,
+} from "../dto";
 import { User } from "../entity/user.entity";
-import { LoginDto } from "../dtos/login.dto";
-import { SignUpDto } from "../dtos/sign-up.dto";
 
 export interface IUserService {
   login(dto: LoginDto): Promise<any>;
