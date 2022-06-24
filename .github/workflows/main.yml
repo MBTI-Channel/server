@@ -33,7 +33,7 @@ jobs:
       # node module 캐싱
       - name: Cache node modules
         id: cache-npm
-        uses: action/cache@v3
+        uses: actions/cache@v3
         env:
           cache-name: cache-node-modules
         with:
