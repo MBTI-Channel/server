@@ -6,6 +6,7 @@ import {
   httpGet,
   httpPost,
   queryParam,
+  requestBody,
 } from "inversify-express-utils";
 import { TYPES } from "../../core/type.core";
 import {
@@ -16,6 +17,7 @@ import { IUserService } from "./interfaces/IUser.service";
 import { NicknameDuplicateCheckDto } from "./dtos/nickname-duplicate-check.dto";
 import { OauthLoginDto } from "../auth/dtos/oauth-login.dto";
 import { LoginDto } from "./dtos/login.dto";
+import { SignUpDto } from "./dtos/sign-up.dto";
 import config from "../../config";
 
 @controller("/users")
@@ -50,6 +52,22 @@ export class UserController extends BaseHttpController {
       secure: false, // true
       maxAge: config.cookie.refreshTokenMaxAge,
     });
+
+    return res.status(201).json({
+      nickname: user.nickname,
+      mbti: user.mbti,
+      isAdmin: user.isAdmin,
+      accessToken,
+      refreshToken,
+    });
+  }
+
+  // 회원가입 (nickname, mbti 설정)
+  @httpPost("/", bodyValidator(SignUpDto))
+  async signUp(@requestBody() body: SignUpDto, req: Request, res: Response) {
+    const { user, accessToken, refreshToken } = await this.userService.signUp(
+      body
+    );
 
     return res.status(201).json({
       nickname: user.nickname,
