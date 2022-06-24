@@ -5,21 +5,39 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  project-test:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: ["14", "16"] # 테스트할 노드 환경
+        node-version: ["14", "16"]
     steps:
-      - uses: actions/checkout@v3
+      - name: Checout Commit
+        uses: actions/checkout@v3
+
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
 
-      # 라이브러리 설치
-      - run: npm install
+      - name: Cache npm dependency
+        uses: actions/cache@v3
+        id: npm-cache
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-npm-
+      # 캐시가 없다면 npm ci
+      - name: Install Dependency
+        if: steps.npm-cache.outputs.cache-hit == 'true'
+        run: echo 'npm cache hit'
+        if: steps.npm-cache.outputs.cache-hit != 'true'
+        run: |
+          echo 'npm cache missed'
+          npm ci
+
       # 테스트 실행
-      - run: npm test
+      - name: Run Test
+        run: npm test
         #env:
         #KEY: ${{ secrets.KEY}}
