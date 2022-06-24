@@ -1,5 +1,6 @@
-name: node.js CI
+name: "test-pr-all-push"
 on:
+  push:
   pull_request:
     branches: ["main"]
   workflow_dispatch:
