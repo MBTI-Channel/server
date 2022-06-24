@@ -1,7 +1,5 @@
 import { IsIn, IsNotEmpty, IsString } from "class-validator";
-import { Provider } from "../entity/user.entity";
-
-export const PROVIDER_KEY: string[] = ["kakao", "naver"]; // TODO: 리팩토링
+import { Provider, PROVIDER_KEY } from "../entity/user.entity";
 
 export class CreateUserDto {
   @IsString()
