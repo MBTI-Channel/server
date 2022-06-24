@@ -29,9 +29,7 @@ jobs:
             ${{ runner.os }}-npm-
       # 캐시가 없다면 npm ci
       - name: Install Dependency
-        if: steps.npm-cache.outputs.cache-hit == 'true'
-        run: echo 'npm cache hit'
-        if: steps.npm-cache.outputs.cache-hit != 'true'
+        if: steps.npm-cache.outputs.cache-hit == 'false'
         run: |
           echo 'npm cache missed'
           npm ci
