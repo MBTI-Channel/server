@@ -3,18 +3,18 @@ import { User } from "./entity/user.entity";
 import { IUserService } from "./interfaces/IUser.service";
 import { TYPES } from "../../core/type.core";
 import { IUserRepository } from "./interfaces/IUser.repository";
-import { CreateUserDto } from "./dtos/create-user.dto";
+import { CreateUserDto } from "./dto/create-user.dto";
 import {
   ConflictException,
   NotFoundException,
   UnauthorizedException,
 } from "../../errors/all.exception";
-import { NicknameDuplicateCheckDto } from "./dtos/nickname-duplicate-check.dto";
-import { LoginDto } from "./dtos/login.dto";
+import { NicknameDuplicateCheckDto } from "./dto/nickname-duplicate-check.dto";
+import { LoginDto } from "./dto/login.dto";
 import { IAuthService } from "../auth/interfaces/IAuth.service";
 import { Logger } from "../../utils/logger.util";
 import { JwtUtil } from "../../utils/jwt.util";
-import { SignUpDto } from "./dtos/sign-up.dto";
+import { SignUpDto } from "./dto/sign-up.dto";
 import { QueryDeepPartialEntity } from "typeorm/query-builder/QueryPartialEntity";
 import config from "../../config";
 
