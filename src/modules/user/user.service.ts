@@ -41,16 +41,6 @@ export class UserService implements IUserService {
     return user;
   }
 
-  public async isExistsNickname(dto: NicknameDuplicateCheckDto) {
-    const { nickname } = dto;
-    try {
-      await this.findOne({ nickname });
-      return true;
-    } catch (err) {
-      return false;
-    }
-  }
-
   public async update(id: number, payload: QueryDeepPartialEntity<User>) {
     const user = await this.findOne({ id });
     if (!user) throw new NotFoundException("not exists user");
@@ -98,6 +88,16 @@ export class UserService implements IUserService {
     ]);
 
     return { user, accessToken, refreshToken };
+  }
+
+  public async isExistsNickname(dto: NicknameDuplicateCheckDto) {
+    const { nickname } = dto;
+    try {
+      await this.findOne({ nickname });
+      return true;
+    } catch (err) {
+      return false;
+    }
   }
 
   public async reissueAccessToken(oldAccessToken: string) {

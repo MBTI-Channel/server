@@ -22,6 +22,22 @@ import config from "../../config";
 export class UserController extends BaseHttpController {
   @inject(TYPES.IUserService) private readonly userService: IUserService;
 
+  // 회원가입 (nickname, mbti 설정)
+  @httpPost("/", bodyValidator(SignUpDto))
+  async signUp(@requestBody() body: SignUpDto, req: Request, res: Response) {
+    const { user, accessToken, refreshToken } = await this.userService.signUp(
+      body
+    );
+
+    return res.status(201).json({
+      nickname: user.nickname,
+      mbti: user.mbti,
+      isAdmin: user.isAdmin,
+      accessToken,
+      refreshToken,
+    });
+  }
+
   // 닉네임 중복확인
   @httpGet("/", queryValidator(NicknameDuplicateCheckDto))
   async nicknameDuplicateCheck(
@@ -50,22 +66,6 @@ export class UserController extends BaseHttpController {
       secure: false, // true
       maxAge: config.cookie.refreshTokenMaxAge,
     });
-
-    return res.status(201).json({
-      nickname: user.nickname,
-      mbti: user.mbti,
-      isAdmin: user.isAdmin,
-      accessToken,
-      refreshToken,
-    });
-  }
-
-  // 회원가입 (nickname, mbti 설정)
-  @httpPost("/", bodyValidator(SignUpDto))
-  async signUp(@requestBody() body: SignUpDto, req: Request, res: Response) {
-    const { user, accessToken, refreshToken } = await this.userService.signUp(
-      body
-    );
 
     return res.status(201).json({
       nickname: user.nickname,
