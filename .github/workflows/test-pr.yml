@@ -1,0 +1,42 @@
+name: "test-pr"
+on:
+  pull_request:
+    branches: ["main"]
+  workflow_dispatch:
+
+jobs:
+  project-test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: ["14", "16"]
+    steps:
+      - name: Checkout Commit
+        uses: actions/checkout@v3
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Cache npm dependency
+        uses: actions/cache@v3
+        id: npm-cache
+        with:
+          # npm cache files are stored in `~/.npm` on Linux/macOS
+          path: ~/.npm
+          key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-npm-
+      # 캐시가 없다면 npm ci
+      - if: steps.npm-cache.outputs.cache-hit != true
+        name: Install Dependency
+        run: |
+          echo 'npm cache missed'
+          npm ci
+
+      # 테스트 실행
+      - name: Run Test
+        run: npm test
+        #env:
+        #KEY: ${{ secrets.KEY}}
