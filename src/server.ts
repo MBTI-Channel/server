@@ -2,6 +2,7 @@ import express, { NextFunction, Request, Response } from "express";
 import helmet from "helmet";
 import morgan from "morgan";
 import cookieParser from "cookie-parser";
+import cors from "cors";
 import { InversifyExpressServer } from "inversify-express-utils";
 import container from "./core/container.core";
 import { TYPES } from "./core/type.core";
@@ -10,6 +11,19 @@ import { Logger } from "./utils/logger.util";
 import { HttpException } from "./errors/http.exception";
 
 export const server = new InversifyExpressServer(container);
+
+type StaticOrigin = boolean | string | RegExp | (boolean | string | RegExp)[];
+const whitelist = ["http://localhost:3000"];
+const corsOptions = {
+  origin: (
+    origin: string | undefined,
+    cb: (err: Error | null, singleOrigin?: StaticOrigin) => void
+  ) => {
+    const isWhitelisted = origin && whitelist.indexOf(origin) !== -1;
+    cb(null, isWhitelisted);
+  },
+  credentials: true, // allow request with cookie
+};
 
 const loggerInstance = container.get<Logger>(TYPES.Logger);
 const databaseInstance = container.get<DatabaseService>(TYPES.IDatabaseService);
@@ -20,6 +34,7 @@ server.setConfig((app) => {
   app.use(express.urlencoded({ extended: true }));
   app.use(helmet());
   app.use(cookieParser());
+  app.use(cors(corsOptions));
   app.use(
     morgan("combined", {
       stream: {
