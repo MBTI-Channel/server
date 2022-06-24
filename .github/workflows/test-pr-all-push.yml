@@ -29,8 +29,8 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-npm-
       # 캐시가 없다면 npm ci
-      - name: Install Dependency
-        if: steps.npm-cache.outputs.cache-hit == 'false'
+      - if: steps.npm-cache.outputs.cache-hit != true
+        name: Install Dependency
         run: |
           echo 'npm cache missed'
           npm ci
