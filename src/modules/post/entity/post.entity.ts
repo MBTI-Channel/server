@@ -26,8 +26,11 @@ export class Post {
   @ManyToOne((type) => User, (user) => user.id)
   user!: User;
 
-  @Column({ comment: "게시글 종류 [1: post, 2: survey, 3: notice]" })
-  type: boolean;
+  @Column({
+    default: 1,
+    comment: "게시글 종류 [1: post, 2: survey, 3: notice]",
+  })
+  type: number;
 
   @Column({ length: 4, comment: "작성자 MBTI" })
   userMbti: string;
@@ -35,7 +38,7 @@ export class Post {
   @Column({ length: 10, comment: "작성자 닉네임" })
   userNickname: string;
 
-  @Column({ comment: "작성자 익명 여부" })
+  @Column({ default: false, comment: "작성자 익명 여부" })
   isSecret: boolean;
 
   @Column({ length: 30, comment: "게시글 제목" })
