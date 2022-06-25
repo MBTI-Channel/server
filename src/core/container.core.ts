@@ -4,6 +4,9 @@ import { TYPES } from "./type.core";
 /* database import */
 import { IDatabaseService } from "../modules/database/interfaces/IDatabase.service";
 import { DatabaseService } from "../modules/database/database.service";
+/* redis import */
+import { IRedisService } from "../modules/redis/interfaces/IRedis.service";
+import { RedisService } from "../modules/redis/redis.service";
 /* middleware import */
 import { GetProviderUserByOauth } from "../middlewares/get-provider-user-by-oauth.middleware";
 import { SocialSignUp } from "../middlewares/social-sign-up.middleware";
@@ -22,8 +25,6 @@ import { UserRepository } from "../modules/user/user.repository";
 /* util import */
 import { Logger } from "../utils/logger.util";
 import { JwtUtil } from "../utils/jwt.util";
-import { IRedisService } from "../modules/redis/interfaces/IRedis.service";
-import { RedisService } from "../modules/redis/redis.service";
 
 const container = new Container();
 
