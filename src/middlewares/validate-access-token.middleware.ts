@@ -17,7 +17,7 @@ export class ValidateAccessToken extends BaseMiddleware {
     // access token 유무 확인
     if (!accessToken) {
       return res.status(401).json({
-        message: "access token not exists",
+        message: "access token is required",
       });
     }
 
