@@ -16,13 +16,13 @@ export class ValidateRefreshToken extends BaseMiddleware {
 
     if (!refreshToken) {
       res.status(401).json({
-        message: "refresh token not exists",
+        message: "refresh token is required",
       });
     }
 
     if (!accessToken) {
       return res.status(401).json({
-        message: "access token not exists",
+        message: "access token is required",
       });
     }
 
