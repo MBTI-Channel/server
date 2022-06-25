@@ -22,6 +22,11 @@ import { IUserService } from "../modules/user/interfaces/IUser.service";
 import { UserService } from "../modules/user/user.service";
 import { IUserRepository } from "../modules/user/interfaces/IUser.repository";
 import { UserRepository } from "../modules/user/user.repository";
+/* post import */
+import { IPostService } from "../modules/post/interfaces/IPost.service";
+import { PostService } from "../modules/post/post.service";
+import { IPostRepository } from "../modules/post/interfaces/IPost.repository";
+import { PostRepository } from "../modules/post/post.repository";
 /* util import */
 import { Logger } from "../utils/logger.util";
 import { JwtUtil } from "../utils/jwt.util";
@@ -48,6 +53,10 @@ container.bind<IAuthService>(TYPES.IAuthService).to(AuthService);
 /* user */
 container.bind<IUserService>(TYPES.IUserService).to(UserService);
 container.bind<IUserRepository>(TYPES.IUserRepository).to(UserRepository);
+
+/* post */
+container.bind<IPostService>(TYPES.IPostService).to(PostService);
+container.bind<IPostRepository>(TYPES.IPostRepository).to(PostRepository);
 
 /* utils */
 container.bind(TYPES.Logger).to(Logger);
