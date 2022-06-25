@@ -56,7 +56,7 @@ export class Post {
   @Column({ default: 0, comment: "신고수" })
   reportCount: number;
 
-  @Column({ comment: "게시글 비활성 여부" })
+  @Column({ default: false, comment: "게시글 비활성 여부" })
   isDisabled: boolean;
 
   @CreateDateColumn({
