@@ -3,7 +3,8 @@ import { inject, injectable } from "inversify";
 import { BaseMiddleware } from "inversify-express-utils";
 import { TYPES } from "../core/type.core";
 import { JwtUtil } from "../utils/jwt.util";
-import { User } from "../modules/user/entity/user.entity";
+import { UserInfoDto } from "../modules/user/dto";
+import { plainToInstance } from "class-transformer";
 
 @injectable()
 export class ValidateAccessToken extends BaseMiddleware {
@@ -22,21 +23,14 @@ export class ValidateAccessToken extends BaseMiddleware {
     }
 
     // access token 만료 여부 판단
-    try {
-      let decoded = this.jwtUtil.verify(accessToken);
-      req.user = {
-        id: decoded.id,
-        nickname: decoded.nickname,
-        mbti: decoded.mbti,
-        isAdmin: decoded.isAdmin,
-      };
-
-      next();
-    } catch (err) {
-      // access token 유효하지 않음
+    let decoded = this.jwtUtil.verify(accessToken);
+    if (!decoded.id) {
       return res.status(400).json({
         message: "access token is not validate",
       });
     }
+
+    req.user = plainToInstance(UserInfoDto, decoded);
+    next();
   }
 }
