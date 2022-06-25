@@ -4,6 +4,9 @@ import { TYPES } from "./type.core";
 /* database import */
 import { IDatabaseService } from "../modules/database/interfaces/IDatabase.service";
 import { DatabaseService } from "../modules/database/database.service";
+/* redis import */
+import { IRedisService } from "../modules/redis/interfaces/IRedis.service";
+import { RedisService } from "../modules/redis/redis.service";
 /* middleware import */
 import { GetProviderUserByOauth } from "../middlewares/get-provider-user-by-oauth.middleware";
 import { SocialSignUp } from "../middlewares/social-sign-up.middleware";
@@ -27,6 +30,9 @@ const container = new Container();
 
 /* database */
 container.bind<IDatabaseService>(TYPES.IDatabaseService).to(DatabaseService);
+
+/* redis */
+container.bind<IRedisService>(TYPES.IRedisService).to(RedisService);
 
 /* middleware */
 container
