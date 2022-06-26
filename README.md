@@ -1,1 +1,3 @@
 # MBTI Channel Server
+
+test
