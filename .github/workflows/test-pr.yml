@@ -21,18 +21,24 @@ jobs:
           cache: "npm"
           cache-dependency-path: "**/package-lock.json"
 
+      - name: Get npm cache directory
+        id: npm-cache-dir
+        run: |
+          echo "::set-output name=dir::$(npm config get cache)"
+
       - name: Cache npm dependency
         uses: actions/cache@v3
         id: npm-cache
         with:
           # npm cache files are stored in `~/.npm` on Linux/macOS
-          path: ~/.npm
+          path: ${{ steps.npm-cache-dir.outputs.dir }}
           key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-npm-
+
       # 캐시가 없다면 npm ci
-      - if: steps.npm-cache.outputs.cache-hit != true
-        name: Install Dependency
+      - name: Install Dependency
+        if: steps.npm-cache.outputs.cache-hit != true
         run: |
           echo 'npm cache missed'
           npm ci
