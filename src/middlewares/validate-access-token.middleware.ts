@@ -24,13 +24,7 @@ export class ValidateAccessToken extends BaseMiddleware {
     // access token 만료 여부 판단
     try {
       let decoded = this.jwtUtil.verify(accessToken);
-      req.user = {
-        id: decoded.id,
-        nickname: decoded.nickname,
-        mbti: decoded.mbti,
-        isAdmin: decoded.isAdmin,
-      };
-
+      this.httpContext.user.details = decoded;
       next();
     } catch (err) {
       // access token 유효하지 않음

@@ -10,8 +10,15 @@ import { DatabaseService } from "./modules/database/database.service";
 import { Logger } from "./utils/logger.util";
 import { HttpException } from "./errors/http.exception";
 import { RedisService } from "./modules/redis/redis.service";
+import { CustomAuthProvider } from "./shared/custom.auth.provider";
 
-export const server = new InversifyExpressServer(container);
+export const server = new InversifyExpressServer(
+  container,
+  null,
+  null,
+  null,
+  CustomAuthProvider
+);
 
 type StaticOrigin = boolean | string | RegExp | (boolean | string | RegExp)[];
 const whitelist = ["http://localhost:3000"];
