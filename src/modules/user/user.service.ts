@@ -52,7 +52,6 @@ export class UserService implements IUserService {
   public async login(dto: LoginDto): Promise<any> {
     const user = await this.findOne(dto);
     if (!user) {
-      this.logger.error("not exists user");
       throw new NotFoundException("not exists user");
     }
 

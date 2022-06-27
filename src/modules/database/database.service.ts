@@ -19,8 +19,8 @@ export class DatabaseService implements IDatabaseService {
     try {
       DatabaseService.myDataSource = await appDataSource.initialize();
       this.logger.info("database connection established");
-    } catch (error) {
-      this.logger.error(`database connection failed. Error: ${error}`);
+    } catch (err) {
+      this.logger.error(err, `database connection failed. Error: ${err}`);
     }
 
     return DatabaseService.myDataSource;
@@ -31,7 +31,7 @@ export class DatabaseService implements IDatabaseService {
       DatabaseService.myDataSource = await appDataSource.initialize();
       this.logger.info("database initialize success");
     } catch (err) {
-      this.logger.error("database initialize error :", err);
+      this.logger.error(err, `database initialize error. Error: ${err}`);
     }
     return;
   }

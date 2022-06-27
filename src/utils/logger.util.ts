@@ -3,103 +3,102 @@ import WinstonDaily from "winston-daily-rotate-file";
 import winston from "winston";
 import path from "path";
 
+const nodeEnv = process.env.NODE_ENV;
+const logDir = path.join(__dirname + "../../../logs");
+
 @injectable()
 export class Logger {
-  private logDir = path.join(__dirname + "../../../logs");
-
-  private dailyOptions(level: string) {
+  private _dailyOptions(level: string) {
     return {
       level,
       datePattern: "YYYY-MM-DD",
-      dirname: `${this.logDir}/${level}`,
+      dirname: `${logDir}/${level}`,
       filename: `%DATE%.${level}.log`,
       maxFiles: 30,
       zippedArchive: true,
     };
   }
 
-  private formatter = winston.format.combine(
+  private _formatter = winston.format.combine(
     winston.format.timestamp({ format: "YYYY-MM-DD HH:mm:ss" }),
-    winston.format.colorize({ all: true }),
+    winston.format.colorize({ all: nodeEnv === "production" ? false : true }),
     winston.format.splat(),
     winston.format.printf((info) => {
+      if (info instanceof Error) {
+        return `${info.timestamp} ${info.level}: ${info.message} ${info.stack}`;
+      }
       return `${info.timestamp} ${info.level}: ${info.message}`;
     })
   );
 
-  private logger: winston.Logger;
+  private _logger: winston.Logger;
 
   constructor() {
-    const transport = new winston.transports.Console({
-      level: "silly",
-      format: this.formatter,
-    });
-
-    const simpleTransport = new winston.transports.Console({
-      level: "error",
-      format: winston.format.simple(),
-    });
-
-    this.logger = winston.createLogger({
+    this._logger = winston.createLogger({
       transports: [
-        process.env.NODE_ENV === "production" ? simpleTransport : transport,
-        new WinstonDaily(this.dailyOptions("info")),
-        new WinstonDaily(this.dailyOptions("warn")),
-        new WinstonDaily(this.dailyOptions("error")),
+        new winston.transports.Console({
+          level: nodeEnv === "production" ? "error" : "silly",
+          format: this._formatter,
+        }),
+        new WinstonDaily(this._dailyOptions("info")),
+        new WinstonDaily(this._dailyOptions("warn")),
+        new WinstonDaily(this._dailyOptions("error")),
       ],
     });
   }
 
   morganStream(message: string) {
-    this.logger.info(message.substring(0, message.lastIndexOf("\n")));
+    this._logger.info(message.substring(0, message.lastIndexOf("\n")));
   }
 
   /**
    * error: 0
    */
-  error(message: string, meta?: any) {
-    this.logger.error(message, meta);
+  error(err: any, message?: string, meta?: any) {
+    if (message)
+      this._logger.error(`${err.name}: ${message} \n ${err.stack}`, meta);
+    this._logger.error(`${err.name}: ${err.message} \n ${err.stack}`, meta);
   }
 
   /**
    * warn: 1
    */
   warn(message: string, meta?: any) {
-    this.logger.warn(message, meta);
+    this._logger.warn(message, meta);
   }
 
   /**
    * info: 2
    */
   info(message: string, meta?: any) {
-    this.logger.info(message, meta);
+    this._logger.info(message, meta);
   }
 
   /**
    * http: 3
    */
   http(message: string, meta?: any) {
-    this.logger.http(message, meta);
+    this._logger.http(message, meta);
   }
 
   /**
    * verbose: 4
    */
   verbose(message: string, meta?: any) {
-    this.logger.verbose(message, meta);
+    this._logger.verbose(message, meta);
   }
 
   /**
    * debug: 5
    */
   debug(message: string, meta?: any) {
-    this.logger.debug(message, meta);
+    this._logger.debug(message, meta);
   }
 
   /**
    * silly: 6
    */
   silly(message: string, meta?: any) {
-    this.logger.silly(message, meta);
+    this._logger.silly(message, meta);
   }
 }
