@@ -11,7 +11,7 @@ import { RedisService } from "../modules/redis/redis.service";
 import { GetProviderUserByOauth } from "../middlewares/get-provider-user-by-oauth.middleware";
 import { SocialSignUp } from "../middlewares/social-sign-up.middleware";
 import { ValidateAccessToken } from "../middlewares/validate-access-token.middleware";
-import { ValidateRefreshToken } from "../middlewares/validate-refresh-token.middleware";
+import { ValidateReissueToken } from "../middlewares/validate-reissue-token.middleware";
 /* controller import */
 import "../modules/index.controller";
 /* auth import */
@@ -40,7 +40,7 @@ container
   .to(GetProviderUserByOauth);
 container.bind(TYPES.SocialSignUpMiddleware).to(SocialSignUp);
 container.bind(TYPES.ValidateAccessTokenMiddleware).to(ValidateAccessToken);
-container.bind(TYPES.ValidateRefreshTokenMiddleware).to(ValidateRefreshToken);
+container.bind(TYPES.ValidateReissueTokenMiddleware).to(ValidateReissueToken);
 
 /* auth */
 container.bind<IAuthService>(TYPES.IAuthService).to(AuthService);

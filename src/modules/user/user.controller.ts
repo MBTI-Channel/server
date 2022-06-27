@@ -77,7 +77,7 @@ export class UserController extends BaseHttpController {
   }
 
   // access token 재발급
-  @httpGet("/accessToken", TYPES.ValidateRefreshTokenMiddleware)
+  @httpGet("/accessToken", TYPES.ValidateReissueTokenMiddleware)
   async reissueAccessToken(req: Request, res: Response) {
     const accessToken = req.headers!.authorization!.replace("Bearer ", "");
 
