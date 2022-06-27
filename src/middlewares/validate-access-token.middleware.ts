@@ -3,7 +3,6 @@ import { inject, injectable } from "inversify";
 import { BaseMiddleware } from "inversify-express-utils";
 import { TYPES } from "../core/type.core";
 import { JwtUtil } from "../utils/jwt.util";
-import { User } from "../modules/user/entity/user.entity";
 
 @injectable()
 export class ValidateAccessToken extends BaseMiddleware {
@@ -12,31 +11,39 @@ export class ValidateAccessToken extends BaseMiddleware {
   }
 
   async handler(req: Request, res: Response, next: NextFunction) {
-    const accessToken = req.headers?.authorization?.replace("Bearer ", "");
+    const authHeader = req.headers.authorization;
 
-    // access token 유무 확인
-    if (!accessToken) {
+    // authorization 헤더에 존재 x
+    if (!authHeader) {
       return res.status(401).json({
-        message: "access token is required",
+        message: "Header authorization is required",
       });
     }
 
-    // access token 만료 여부 판단
-    try {
-      let decoded = this.jwtUtil.verify(accessToken);
-      req.user = {
-        id: decoded.id,
-        nickname: decoded.nickname,
-        mbti: decoded.mbti,
-        isAdmin: decoded.isAdmin,
-      };
+    // 인증 TYPE이 Bearer Token인지 확인
+    if (!authHeader.includes("Bearer")) {
+      return res.status(401).json({
+        message: "Wrong authorization type",
+      });
+    }
 
-      next();
-    } catch (err) {
-      // access token 유효하지 않음
+    const accessToken = authHeader.replace("Bearer ", "");
+
+    // access token 만료 여부 판단
+    let decoded = this.jwtUtil.verify(accessToken);
+    if (!decoded.id) {
       return res.status(400).json({
         message: "access token is not validate",
       });
     }
+
+    req.user = {
+      id: decoded.id,
+      nickname: decoded.nickname,
+      mbti: decoded.mbti,
+      isAdmin: decoded.isAdmin,
+    };
+
+    next();
   }
 }

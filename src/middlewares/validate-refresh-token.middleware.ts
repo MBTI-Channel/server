@@ -12,7 +12,7 @@ export class ValidateRefreshToken extends BaseMiddleware {
 
   async handler(req: Request, res: Response, next: NextFunction) {
     const refreshToken = req.cookies.Refresh;
-    const accessToken = req.headers?.authorization?.replace("Bearer ", "");
+    const authHeader = req.headers.authorization;
 
     if (!refreshToken) {
       res.status(401).json({
@@ -20,11 +20,21 @@ export class ValidateRefreshToken extends BaseMiddleware {
       });
     }
 
-    if (!accessToken) {
+    // authorization 헤더에 존재 x
+    if (!authHeader) {
       return res.status(401).json({
-        message: "access token is required",
+        message: "Header authorization is required",
       });
     }
+
+    // 인증 TYPE이 Bearer Token인지 확인
+    if (!authHeader.includes("Bearer")) {
+      return res.status(401).json({
+        message: "Wrong authorization type",
+      });
+    }
+
+    const accessToken = authHeader.replace("Bearer ", "");
 
     const accessTokenDecoded = this.jwtUtil.verify(accessToken);
     if (accessTokenDecoded.id) {
