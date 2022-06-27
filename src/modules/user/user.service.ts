@@ -101,10 +101,16 @@ export class UserService implements IUserService {
 
   public async reissueAccessToken(oldAccessToken: string) {
     const decodedToken = this.jwtUtil.decode(oldAccessToken);
+
+    if (!decodedToken) {
+      throw new UnauthorizedException("token is not validate");
+    }
     let userId = decodedToken.id;
 
     const user = await this.findOne({ id: userId });
-    if (!user) throw new Error("user not found");
+    if (!user) {
+      throw new NotFoundException("not exists user");
+    }
 
     const newAccessToken = await this.authService.generateAccessToken(user);
     return { newAccessToken };

@@ -16,24 +16,26 @@ export class JwtUtil {
   }
 
   verify(token: string): DecodedDto {
+    let dto: DecodedDto;
     try {
-      const decoded = jwt.verify(token, jwtConfig.secret);
-      const dto = plainToInstance(DecodedDto, decoded);
-      return dto;
+      let decoded = jwt.verify(token, jwtConfig.secret);
+      dto = plainToInstance(DecodedDto, decoded);
     } catch (err) {
-      const dto = plainToInstance(DecodedDto, {});
-      return dto;
+      dto = plainToInstance(DecodedDto, {});
     }
+    return dto;
   }
 
   decode(token: string): DecodedDto {
-    const decodedToken = jwt.decode(token, {
-      complete: false,
-    });
-    if (!decodedToken) {
-      throw new Error("parse error");
+    let dto: DecodedDto;
+    try {
+      let decodedToken = jwt.decode(token, {
+        complete: false,
+      });
+      dto = plainToInstance(DecodedDto, decodedToken);
+    } catch {
+      dto = plainToInstance(DecodedDto, {});
     }
-    const dto = plainToInstance(DecodedDto, decodedToken);
     return dto;
   }
 }

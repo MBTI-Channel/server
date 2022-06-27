@@ -17,5 +17,5 @@ export const TYPES = {
   ),
   SocialSignUpMiddleware: Symbol.for("SocialSignUpMiddleware"),
   ValidateAccessTokenMiddleware: Symbol.for("ValidateAccessTokenMiddleware"),
-  ValidateRefreshTokenMiddleware: Symbol.for("ValidateRefreshTokenMiddleware"),
+  ValidateReissueTokenMiddleware: Symbol.for("ValidateReissueTokenMiddleware"),
 };

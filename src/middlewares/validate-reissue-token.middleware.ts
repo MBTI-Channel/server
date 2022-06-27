@@ -5,7 +5,7 @@ import { TYPES } from "../core/type.core";
 import { JwtUtil } from "../utils/jwt.util";
 
 @injectable()
-export class ValidateRefreshToken extends BaseMiddleware {
+export class ValidateReissueToken extends BaseMiddleware {
   constructor(@inject(TYPES.JwtUtil) private readonly jwtUtil: JwtUtil) {
     super();
   }
