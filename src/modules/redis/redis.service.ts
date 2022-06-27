@@ -19,7 +19,7 @@ export class RedisService implements IRedisService {
       url: `redis://${redis.redisUserName}:${redis.redisPassword}@${redis.redisHost}:${redis.redisPort}`,
     });
     RedisService.client.on("error", (err) => {
-      this.logger.error(`redis connection failed. Error: ${err}`);
+      this.logger.error(err, `redis connection failed. Error: ${err}`);
       RedisService.client.QUIT();
     });
     await RedisService.client.connect();

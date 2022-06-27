@@ -23,6 +23,9 @@ export class Logger {
     winston.format.colorize({ all: true }),
     winston.format.splat(),
     winston.format.printf((info) => {
+      if (info instanceof Error) {
+        return `${info.timestamp} ${info.level}: ${info.message} ${info.stack}`;
+      }
       return `${info.timestamp} ${info.level}: ${info.message}`;
     })
   );
@@ -57,8 +60,10 @@ export class Logger {
   /**
    * error: 0
    */
-  error(message: string, meta?: any) {
-    this.logger.error(message, meta);
+  error(err: any, message?: string, meta?: any) {
+    if (message)
+      this.logger.error(`${err.name}: ${message} \n ${err.stack}`, meta);
+    this.logger.error(`${err.name}: ${err.message} \n ${err.stack}`, meta);
   }
 
   /**

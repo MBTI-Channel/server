@@ -57,7 +57,7 @@ server.setErrorConfig((app) => {
       const { name, status, message, info } = err;
       return res.status(status).json({ name, message, info });
     }
-    loggerInstance.error(err.message, err.stack);
+    loggerInstance.error(err); // logging server error
     return res.status(500).json({ message: "server error :(" });
   });
 });
