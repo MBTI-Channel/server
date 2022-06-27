@@ -11,39 +11,31 @@ export class ValidateAccessToken extends BaseMiddleware {
   }
 
   async handler(req: Request, res: Response, next: NextFunction) {
-    const authHeader = req.headers.authorization;
+    const AUTH_TYPE = "Bearer ";
+    const header = req.headers.authorization;
 
-    // authorization 헤더에 존재 x
-    if (!authHeader) {
-      return res.status(401).json({
-        message: "Header authorization is required",
-      });
+    if (header && header.startsWith(AUTH_TYPE)) {
+      const accessToken = header.split(" ")[1];
+      // access token 유효 여부 판단
+      let decoded = this.jwtUtil.verify(accessToken);
+      if (!decoded.id) {
+        return res.status(401).json({
+          message: "access token is not validate",
+        });
+      }
+
+      req.user = {
+        id: decoded.id,
+        nickname: decoded.nickname,
+        mbti: decoded.mbti,
+        isAdmin: decoded.isAdmin,
+      };
+
+      next();
     }
 
-    // 인증 TYPE이 Bearer Token인지 확인
-    if (!authHeader.includes("Bearer")) {
-      return res.status(401).json({
-        message: "Wrong authorization type",
-      });
-    }
-
-    const accessToken = authHeader.replace("Bearer ", "");
-
-    // access token 만료 여부 판단
-    let decoded = this.jwtUtil.verify(accessToken);
-    if (!decoded.id) {
-      return res.status(400).json({
-        message: "access token is not validate",
-      });
-    }
-
-    req.user = {
-      id: decoded.id,
-      nickname: decoded.nickname,
-      mbti: decoded.mbti,
-      isAdmin: decoded.isAdmin,
-    };
-
-    next();
+    return res.status(401).json({
+      message: "header is not validate",
+    });
   }
 }
