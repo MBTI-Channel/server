@@ -89,7 +89,7 @@ export class UserService implements IUserService {
     if (foundNickname) throw new ConflictException("already exists nickname");
 
     // 업데이트 및 토큰 발급
-    const user = await this.update(id, {
+    const user = await this.userRepository.update(id, {
       nickname,
       mbti,
       status: config.user.status.normal,
