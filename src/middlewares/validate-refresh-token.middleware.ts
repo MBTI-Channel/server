@@ -26,6 +26,8 @@ export class ValidateRefreshToken extends BaseMiddleware {
     }
 
     let accessTokenDecoded = this.jwtUtil.verify(accessToken);
+    // id가 존재한다면 유효한 토큰
+    // refresh 재발급시에 access token이 만료되어야 하므로 에러
     if (accessTokenDecoded.id) {
       return res.status(400).json({
         message: "access token should expire",
