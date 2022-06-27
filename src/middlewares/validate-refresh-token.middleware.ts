@@ -39,12 +39,11 @@ export class ValidateRefreshToken extends BaseMiddleware {
     const accessTokenDecoded = this.jwtUtil.verify(accessToken);
     if (accessTokenDecoded.id) {
       return res.status(401).json({
-        message: "access token is not valid",
+        message: "access token should expire",
       });
     }
 
     const refreshTokenDecoded = this.jwtUtil.verify(refreshToken);
-    console.log(refreshTokenDecoded);
     if (!refreshTokenDecoded.iss) {
       res.clearCookie("Refresh");
       return res.status(401).json({
