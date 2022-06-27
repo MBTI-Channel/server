@@ -5,11 +5,15 @@ import {
   NicknameDuplicateCheckDto,
   CreateUserDto,
 } from "../dto";
-import { User } from "../entity/user.entity";
+import { Provider, User } from "../entity/user.entity";
 
 export interface IUserService {
   create(dto: CreateUserDto): Promise<User>;
-  findOne(payload: Partial<User>): Promise<User | null>;
+  findOneById(id: number): Promise<User | null>;
+  findOneByProviderInfo(
+    provider: Provider,
+    providerId: string
+  ): Promise<User | null>;
   update(
     id: number,
     payload: QueryDeepPartialEntity<User>

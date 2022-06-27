@@ -4,7 +4,7 @@ import { TYPES } from "../../core/type.core";
 import { IDatabaseService } from "../database/interfaces/IDatabase.service";
 import { IUserRepository } from "./interfaces/IUser.repository";
 import { CreateUserDto } from "./dto";
-import { User } from "./entity/user.entity";
+import { Provider, User } from "./entity/user.entity";
 
 @injectable()
 export class UserRepository implements IUserRepository {
@@ -19,9 +19,22 @@ export class UserRepository implements IUserRepository {
     return user;
   }
 
-  async findOne(payload: Partial<User>): Promise<User> {
+  async findOneById(id: number): Promise<User | null> {
     const repository = await this.database.getRepository(User);
-    return await repository.findOne({ where: payload });
+    return await repository.findOne({ where: { id } });
+  }
+
+  async findOneByNickname(nickname: string): Promise<User | null> {
+    const repository = await this.database.getRepository(User);
+    return await repository.findOne({ where: { nickname } });
+  }
+
+  async findOneByProviderInfo(
+    provider: Provider,
+    providerId: string
+  ): Promise<User | null> {
+    const repository = await this.database.getRepository(User);
+    return await repository.findOne({ where: { provider, providerId } });
   }
 
   async update(

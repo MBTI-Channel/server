@@ -1,6 +1,6 @@
 import { inject, injectable } from "inversify";
 import { QueryDeepPartialEntity } from "typeorm/query-builder/QueryPartialEntity";
-import { User } from "./entity/user.entity";
+import { Provider, User } from "./entity/user.entity";
 import { IUserService } from "./interfaces/IUser.service";
 import { TYPES } from "../../core/type.core";
 import { IUserRepository } from "./interfaces/IUser.repository";
@@ -35,14 +35,22 @@ export class UserService implements IUserService {
     return await this.userRepository.create(dto);
   }
 
-  public async findOne(payload: Partial<User>): Promise<User> {
-    const user = await this.userRepository.findOne(payload);
-    if (!user) throw new NotFoundException("not exists user");
-    return user;
+  public async findOneById(id: number): Promise<User | null> {
+    return await this.userRepository.findOneById(id);
+  }
+
+  public async findOneByProviderInfo(
+    provider: Provider,
+    providerId: string
+  ): Promise<User | null> {
+    return await this.userRepository.findOneByProviderInfo(
+      provider,
+      providerId
+    );
   }
 
   public async update(id: number, payload: QueryDeepPartialEntity<User>) {
-    const user = await this.findOne({ id });
+    const user = await this.userRepository.findOneById(id);
     if (!user) throw new NotFoundException("not exists user");
     const updatedUser = await this.userRepository.update(id, payload);
 
@@ -50,7 +58,12 @@ export class UserService implements IUserService {
   }
 
   public async login(dto: LoginDto): Promise<any> {
-    const user = await this.findOne(dto);
+    const { provider, providerId } = dto;
+
+    const user = await this.userRepository.findOneByProviderInfo(
+      provider,
+      providerId
+    );
     if (!user) {
       throw new NotFoundException("not exists user");
     }
@@ -67,7 +80,7 @@ export class UserService implements IUserService {
     const { id, nickname, mbti } = dto;
     // 존재하는 유저 id인지, 회원가입 가능한 상태인지 확인
     // 악성 가입 요청을 방지하기 위해 동일한 인증에러, 메세지 반환
-    const foundUser = await this.findOne({ id });
+    const foundUser = await this.userRepository.findOneById(id);
     if (!foundUser || foundUser.status !== config.user.status.new)
       throw new UnauthorizedException("not exists user or invalid request");
 
@@ -91,12 +104,9 @@ export class UserService implements IUserService {
 
   public async isExistsNickname(dto: NicknameDuplicateCheckDto) {
     const { nickname } = dto;
-    try {
-      await this.findOne({ nickname });
-      return true;
-    } catch (err) {
-      return false;
-    }
+    const foundNickname = await this.userRepository.findOneByNickname(nickname);
+    if (foundNickname) return true;
+    return false;
   }
 
   public async reissueAccessToken(oldAccessToken: string) {
@@ -107,7 +117,7 @@ export class UserService implements IUserService {
     }
     let userId = decodedToken.id;
 
-    const user = await this.findOne({ id: userId });
+    const user = await this.userRepository.findOneById(userId);
     if (!user) {
       throw new NotFoundException("not exists user");
     }
