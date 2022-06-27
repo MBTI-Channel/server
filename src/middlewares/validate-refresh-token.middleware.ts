@@ -11,37 +11,44 @@ export class ValidateRefreshToken extends BaseMiddleware {
   }
 
   async handler(req: Request, res: Response, next: NextFunction) {
-    const refreshToken = req.cookies.Refresh;
-    const accessToken = req.headers?.authorization?.replace("Bearer ", "");
+    const AUTH_TYPE = "Bearer ";
+    const header = req.headers.authorization;
 
-    if (!refreshToken) {
-      res.status(401).json({
-        message: "refresh token is required",
-      });
-    }
+    let accessToken: string;
+    let refreshToken: string;
 
-    if (!accessToken) {
+    if (header && header.startsWith(AUTH_TYPE)) {
+      accessToken = header.split(" ")[1];
+    } else {
       return res.status(401).json({
-        message: "access token is required",
+        message: "authentication error",
       });
     }
 
-    const accessTokenDecoded = this.jwtUtil.verify(accessToken);
+    let accessTokenDecoded = this.jwtUtil.verify(accessToken);
+    // id가 존재한다면 유효한 토큰
+    // refresh 재발급시에 access token이 만료되어야 하므로 에러
     if (accessTokenDecoded.id) {
-      return res.status(401).json({
-        message: "access token is not valid",
+      return res.status(400).json({
+        message: "access token should expire",
       });
     }
 
-    const refreshTokenDecoded = this.jwtUtil.verify(refreshToken);
-    console.log(refreshTokenDecoded);
+    refreshToken = req.cookies.Refresh;
+    if (!refreshToken) {
+      return res.status(401).json({
+        message: "authentication error",
+      });
+    }
+
+    let refreshTokenDecoded = this.jwtUtil.verify(refreshToken);
     if (!refreshTokenDecoded.iss) {
       res.clearCookie("Refresh");
       return res.status(401).json({
-        message: "refresh token is not valid",
+        message: "authentication error",
       });
     }
 
-    next();
+    return next();
   }
 }

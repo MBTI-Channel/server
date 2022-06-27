@@ -3,7 +3,6 @@ import { inject, injectable } from "inversify";
 import { BaseMiddleware } from "inversify-express-utils";
 import { TYPES } from "../core/type.core";
 import { JwtUtil } from "../utils/jwt.util";
-import { User } from "../modules/user/entity/user.entity";
 
 @injectable()
 export class ValidateAccessToken extends BaseMiddleware {
@@ -12,31 +11,35 @@ export class ValidateAccessToken extends BaseMiddleware {
   }
 
   async handler(req: Request, res: Response, next: NextFunction) {
-    const accessToken = req.headers?.authorization?.replace("Bearer ", "");
+    const AUTH_TYPE = "Bearer ";
+    const header = req.headers.authorization;
 
-    // access token 유무 확인
-    if (!accessToken) {
+    let accessToken: string;
+
+    // 요청 헤더와 타입이 맞다면 accessToken 할당
+    if (header && header.startsWith(AUTH_TYPE)) {
+      accessToken = header.split(" ")[1];
+    } else {
       return res.status(401).json({
-        message: "access token is required",
+        message: "authentication error",
       });
     }
 
-    // access token 만료 여부 판단
-    try {
-      let decoded = this.jwtUtil.verify(accessToken);
-      req.user = {
-        id: decoded.id,
-        nickname: decoded.nickname,
-        mbti: decoded.mbti,
-        isAdmin: decoded.isAdmin,
-      };
-
-      next();
-    } catch (err) {
-      // access token 유효하지 않음
-      return res.status(400).json({
-        message: "access token is not validate",
+    // access token 유효 여부 판단
+    let decoded = this.jwtUtil.verify(accessToken);
+    if (!decoded.id) {
+      return res.status(401).json({
+        message: "authentication error",
       });
     }
+
+    req.user = {
+      id: decoded.id,
+      nickname: decoded.nickname,
+      mbti: decoded.mbti,
+      isAdmin: decoded.isAdmin,
+    };
+
+    return next();
   }
 }
