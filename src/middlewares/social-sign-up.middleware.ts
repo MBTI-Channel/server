@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { inject, injectable } from "inversify";
 import { BaseMiddleware } from "inversify-express-utils";
+import { plainToClass } from "class-transformer";
 import { TYPES } from "../core/type.core";
 import { User } from "../modules/user/entity/user.entity";
 import { UnauthorizedException } from "../errors/all.exception";
@@ -12,42 +13,44 @@ import { CreateUserDto } from "../modules/user/dto/create-user.dto";
 export class SocialSignUp extends BaseMiddleware {
   @inject(TYPES.Logger) private readonly logger: Logger;
   @inject(TYPES.IUserService) private readonly userService: IUserService;
+
   public async handler(req: Request, res: Response, next: NextFunction) {
     try {
+      // req.user 없다면 인증 에러
       if (!req.user) throw new UnauthorizedException("authentication error");
+      const { provider, providerId, providerData } = req.user as User;
 
-      const providerUserInfo = req.user as User;
-      // TODO: 리팩토링 필요
-      const foundUser = await this.isExistsUser(providerUserInfo);
+      const foundUser = await this.userService.findOneByProviderInfo(
+        provider,
+        providerId!
+      );
+
+      // provider info에 해당하는 user가 없다면 생성후 need sign up 리턴
       if (!foundUser) {
-        const newUser = await this.userService.create(
-          providerUserInfo as CreateUserDto
-        );
-        return res.status(200).json({
+        const dto = plainToClass(CreateUserDto, {
+          provider,
+          providerId,
+          providerData,
+        });
+        const newUser = await this.userService.create(dto);
+
+        return res.status(201).json({
           id: newUser.id,
           message: "need sign up",
         });
       }
+
+      // user의 nickname || mbti가 없다면 need sign up 리턴
       if (!foundUser.nickname || !foundUser.mbti) {
         return res.status(200).json({
           id: foundUser.id,
           message: "need sign up",
         });
       }
+
       return next();
     } catch (err) {
       return next(err);
-    }
-  }
-
-  private async isExistsUser(providerUserInfo: User): Promise<User | null> {
-    const { provider, providerId } = providerUserInfo;
-    try {
-      const user = await this.userService.findOne({ provider, providerId });
-      return user;
-    } catch (err) {
-      this.logger.http("not exsits user. need sign up");
-      return null;
     }
   }
 }

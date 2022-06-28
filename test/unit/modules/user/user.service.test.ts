@@ -23,43 +23,6 @@ describe("UserService ", () => {
     container.restore();
   });
 
-  /* 닉네임 중복 확인 */
-  describe("isExistsNickname", () => {
-    const mockDto: NicknameDuplicateCheckDto = {
-      nickname: "야옹맨",
-    };
-    const mockUser = new User();
-
-    it("Case1: DB에 존재하는 닉네임이라면 true를 리턴한다.", async () => {
-      // given
-      const userService = container.get<IUserService>(TYPES.IUserService);
-
-      userService.findOne = jest.fn().mockImplementation(() => {
-        return mockUser;
-      });
-
-      // when
-      const result = await userService.isExistsNickname(mockDto);
-
-      // then
-      expect(result).toEqual(true);
-    });
-
-    it("Case2: DB에 존재하지 않는 닉네임이라면 false를 리턴한다.", async () => {
-      // given
-      const userService = container.get<IUserService>(TYPES.IUserService);
-      userService.findOne = jest.fn().mockImplementation(() => {
-        throw new Error();
-      });
-
-      // when
-      const result = await userService.isExistsNickname(mockDto);
-
-      // then
-      expect(result).toEqual(false);
-    });
-  });
-
   /* 로그인 */
   describe("login", () => {
     const mockUser = new User();
@@ -79,10 +42,13 @@ describe("UserService ", () => {
       };
       container.unbind(TYPES.IAuthService);
       container.bind(TYPES.IAuthService).toConstantValue(mockAuthService);
+      const mockUserRepository = {
+        findOneByProviderInfo: () => mockUser,
+      };
+      container.unbind(TYPES.IUserRepository);
+      container.bind(TYPES.IUserRepository).toConstantValue(mockUserRepository);
 
       const userService = container.get<IUserService>(TYPES.IUserService);
-
-      userService.findOne = jest.fn().mockImplementation(() => mockUser);
 
       // when
       const result = await userService.login(mockDto);
@@ -97,9 +63,13 @@ describe("UserService ", () => {
 
     it("Error: DB에 존재하지 않는 user라면 NotFoundException 발생", async () => {
       // given
-      const userService = container.get<IUserService>(TYPES.IUserService);
+      const mockUserRepository = {
+        findOneByProviderInfo: () => false,
+      };
+      container.unbind(TYPES.IUserRepository);
+      container.bind(TYPES.IUserRepository).toConstantValue(mockUserRepository);
 
-      userService.findOne = jest.fn().mockImplementation(() => null);
+      const userService = container.get<IUserService>(TYPES.IUserService);
 
       // when, then
       await expect(async () => {
@@ -132,15 +102,23 @@ describe("UserService ", () => {
         mbti: "ISTP",
         status: +process.env.USER_STATUS_NORMAL!,
       };
+
       const mockAuthService = {
         generateAccessToken: () => mockAccessToken,
         generateRefreshToken: () => mockRefreshToken,
       };
       container.unbind(TYPES.IAuthService);
       container.bind(TYPES.IAuthService).toConstantValue(mockAuthService);
+
+      const mockUserRepository = {
+        findOneById: () => mockUser,
+        update: () => mockUpdatedUser,
+      };
+      container.unbind(TYPES.IUserRepository);
+      container.bind(TYPES.IUserRepository).toConstantValue(mockUserRepository);
+
       const userService = container.get<IUserService>(TYPES.IUserService);
 
-      userService.findOne = jest.fn().mockImplementation(() => mockUser);
       userService.isExistsNickname = jest.fn().mockImplementation(() => false);
       userService.update = jest.fn().mockReturnValue(mockUpdatedUser);
 
@@ -157,9 +135,13 @@ describe("UserService ", () => {
 
     it("Error: DB에 존재하지 않는 user id라면 UnauthorizedException 발생", async () => {
       // given
-      const userService = container.get<IUserService>(TYPES.IUserService);
+      const mockUserRepository = {
+        findOneById: () => false,
+      };
+      container.unbind(TYPES.IUserRepository);
+      container.bind(TYPES.IUserRepository).toConstantValue(mockUserRepository);
 
-      userService.findOne = jest.fn().mockImplementation(() => false);
+      const userService = container.get<IUserService>(TYPES.IUserService);
 
       // when, then
       await expect(async () => {
@@ -174,9 +156,13 @@ describe("UserService ", () => {
       const mockUser: Partial<User> = {
         status: +process.env.USER_STATUS_NORMAL!,
       };
-      const userService = container.get<IUserService>(TYPES.IUserService);
+      const mockUserRepository = {
+        findOneById: () => mockUser,
+      };
+      container.unbind(TYPES.IUserRepository);
+      container.bind(TYPES.IUserRepository).toConstantValue(mockUserRepository);
 
-      userService.findOne = jest.fn().mockImplementation(() => mockUser);
+      const userService = container.get<IUserService>(TYPES.IUserService);
 
       // when, then
       await expect(async () => {
@@ -191,15 +177,61 @@ describe("UserService ", () => {
       const mockUser: Partial<User> = {
         status: +process.env.USER_STATUS_NEW!,
       };
+      const mockUserRepository = {
+        findOneById: () => mockUser,
+      };
+      container.unbind(TYPES.IUserRepository);
+      container.bind(TYPES.IUserRepository).toConstantValue(mockUserRepository);
+
       const userService = container.get<IUserService>(TYPES.IUserService);
 
-      userService.findOne = jest.fn().mockImplementation(() => mockUser);
       userService.isExistsNickname = jest.fn().mockImplementation(() => true);
 
       // when, then
       await expect(async () => {
         await userService.signUp(mockDto);
       }).rejects.toThrowError(new NotFoundException("already exists nickname"));
+    });
+  });
+
+  /* 닉네임 중복 확인 */
+  describe("isExistsNickname", () => {
+    const mockDto: NicknameDuplicateCheckDto = {
+      nickname: "야옹맨",
+    };
+    const mockUser = new User();
+
+    it("Case 1: DB에 존재하는 닉네임이라면 true를 리턴한다.", async () => {
+      // given
+      const mockUserRepository = {
+        findOneByNickname: () => true,
+      };
+      container.unbind(TYPES.IUserRepository);
+      container.bind(TYPES.IUserRepository).toConstantValue(mockUserRepository);
+      const userService = container.get<IUserService>(TYPES.IUserService);
+
+      // when
+      const result = await userService.isExistsNickname(mockDto);
+
+      // then
+      expect(result).toEqual(true);
+    });
+
+    it("Case 2: DB에 존재하지 않는 닉네임이라면 false를 리턴한다.", async () => {
+      // given
+      const mockUserRepository = {
+        findOneByNickname: () => false,
+      };
+      container.unbind(TYPES.IUserRepository);
+      container.bind(TYPES.IUserRepository).toConstantValue(mockUserRepository);
+
+      const userService = container.get<IUserService>(TYPES.IUserService);
+
+      // when
+      const result = await userService.isExistsNickname(mockDto);
+
+      // then
+      expect(result).toEqual(false);
     });
   });
 });
