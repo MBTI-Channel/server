@@ -52,7 +52,7 @@ export class Logger {
 
   constructor() {
     this._logger = winston.createLogger({
-      level: nodeEnv === "production" ? "warn" : "trace",
+      level: nodeEnv === "production" ? "info" : "trace",
       levels: this._customLevels.levels,
       transports: [
         new winston.transports.Console({
