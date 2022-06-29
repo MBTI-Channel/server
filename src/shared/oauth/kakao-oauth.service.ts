@@ -22,9 +22,14 @@ export class KakaoOauthService implements IOauthService {
         },
       });
       const providerAccessToken = data.access_token;
+      this._logger.trace(
+        `[KakaoOauthService] access token successfully received`
+      );
       return providerAccessToken;
     } catch (err) {
-      this._logger.http("invalid auth code");
+      this._logger.warn(
+        `[KakaoOauthService] invalid 'authCode' or check 'restApiKey' & 'redirectUri' of kakao`
+      );
       return null;
     }
   }
@@ -43,9 +48,10 @@ export class KakaoOauthService implements IOauthService {
         providerId: data.id,
         providerData: JSON.stringify(data.kakao_account),
       };
+      this._logger.trace(`[KakaoOauthService] user info successfully received`);
       return providerUserInfo;
     } catch (err) {
-      this._logger.http("invalid provider access token");
+      this._logger.warn(`[KakaoOauthService] invalid provider access token`);
       return null;
     }
   }
@@ -60,9 +66,10 @@ export class KakaoOauthService implements IOauthService {
           "Content-Type": "application/x-www-form-urlencoded;charset=utf-8",
         },
       });
+      this._logger.trace(`[KakaoOauthService] request logout successful`);
       return;
     } catch (err) {
-      this._logger.http("invaid porivder access token");
+      this._logger.warn(`[KakaoOauthService] invaid access token`);
       return;
     }
   }

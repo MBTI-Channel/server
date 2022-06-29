@@ -1,6 +1,5 @@
-import { inject } from "inversify";
+import { inject, injectable } from "inversify";
 import { RedisClientType } from "@redis/client";
-import { injectable } from "inversify";
 import { IRedisService } from "./interfaces/IRedis.service";
 import { createClient } from "redis";
 import { TYPES } from "../../core/type.core";
@@ -15,14 +14,21 @@ export class RedisService implements IRedisService {
   constructor(@inject(TYPES.Logger) private readonly _logger: Logger) {}
 
   public async init() {
+    this._logger.info(`[RedisService] redis init...`);
+
     RedisService._client = createClient({
       url: `redis://${redis.redisUserName}:${redis.redisPassword}@${redis.redisHost}:${redis.redisPort}`,
     });
     RedisService._client.on("error", (err) => {
-      this._logger.error(err, `redis connection failed. Error: ${err}`);
+      this._logger.error(
+        err,
+        `[RedisService] redis connection failed. Error: ${err}`
+      );
       RedisService._client.QUIT();
     });
     await RedisService._client.connect();
+
+    this._logger.info(`[RedisService] redis done`);
   }
 
   // test용 임의로 둔 set
