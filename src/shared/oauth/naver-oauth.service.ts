@@ -10,7 +10,7 @@ const { naver } = config;
 const PROVIDER = "naver";
 
 @injectable()
-export class NaverOauth implements IOauth {
+export class NaverOauthService implements IOauth {
   constructor(@inject(TYPES.Logger) private readonly logger: Logger) {}
 
   public async getProviderAccessToken(authCode: string) {

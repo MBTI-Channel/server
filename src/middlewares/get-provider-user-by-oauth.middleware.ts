@@ -3,9 +3,9 @@ import { inject, injectable } from "inversify";
 import { BaseMiddleware } from "inversify-express-utils";
 import { TYPES } from "../core/type.core";
 import { UnauthorizedException } from "../errors/all.exception";
-import { NaverOauth } from "../shared/oauth-class/naver-oauth";
-import { KakaoOauth } from "../shared/oauth-class/kakao-oauth";
-import { IOauth } from "../shared/oauth-class/interfaces/IOauth";
+import { NaverOauthService } from "../shared/oauth/naver-oauth.service";
+import { KakaoOauthService } from "../shared/oauth/kakao-oauth.service";
+import { IOauth } from "../shared/oauth/interfaces/IOauth";
 
 /**
  * Oauth 2.0 인증 후 reqeust에 user 정보를 할당해준다.
@@ -13,8 +13,8 @@ import { IOauth } from "../shared/oauth-class/interfaces/IOauth";
 @injectable()
 export class GetProviderUserByOauth extends BaseMiddleware {
   constructor(
-    @inject(TYPES.NaverOauth) private readonly naver: NaverOauth,
-    @inject(TYPES.KakaoOauth) private readonly kakao: KakaoOauth
+    @inject(TYPES.NaverOauthService) private readonly naver: NaverOauthService,
+    @inject(TYPES.KakaoOauthService) private readonly kakao: KakaoOauthService
   ) {
     super();
   }

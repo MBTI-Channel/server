@@ -10,7 +10,7 @@ const { kakao } = config;
 const PROVIDER = "kakao";
 
 @injectable()
-export class KakaoOauth implements IOauth {
+export class KakaoOauthService implements IOauth {
   constructor(@inject(TYPES.Logger) private readonly logger: Logger) {}
 
   public async getProviderAccessToken(authCode: string) {

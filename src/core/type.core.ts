@@ -19,6 +19,6 @@ export const TYPES = {
   ValidateAccessTokenMiddleware: Symbol.for("ValidateAccessTokenMiddleware"),
   ValidateReissueTokenMiddleware: Symbol.for("ValidateReissueTokenMiddleware"),
   /* shared */
-  NaverOauth: Symbol.for("NaverOauth"),
-  KakaoOauth: Symbol.for("KakaoOauth"),
+  NaverOauthService: Symbol.for("NaverOauthService"),
+  KakaoOauthService: Symbol.for("KakaoOauthService"),
 };
