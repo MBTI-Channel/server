@@ -1,4 +1,4 @@
-import { IProviderUserInfo } from "../../../modules/auth/interfaces/IProviderUserInfo";
+import { IProviderUserInfo } from "./IProviderUserInfo";
 
 export interface IOauth {
   getProviderAccessToken(authCode: string): Promise<string | null>;

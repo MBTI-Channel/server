@@ -2,7 +2,7 @@ import axios from "axios";
 import { inject, injectable } from "inversify";
 import { TYPES } from "../../core/type.core";
 import { Logger } from "../../utils/logger.util";
-import { IProviderUserInfo } from "../../modules/auth/interfaces/IProviderUserInfo";
+import { IProviderUserInfo } from "./interfaces/IProviderUserInfo";
 import config from "../../config/index";
 import { IOauth } from "./interfaces/IOauth";
 
