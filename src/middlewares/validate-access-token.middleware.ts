@@ -6,7 +6,7 @@ import { JwtUtil } from "../utils/jwt.util";
 
 @injectable()
 export class ValidateAccessToken extends BaseMiddleware {
-  constructor(@inject(TYPES.JwtUtil) private readonly jwtUtil: JwtUtil) {
+  constructor(@inject(TYPES.JwtUtil) private readonly _jwtUtil: JwtUtil) {
     super();
   }
 
@@ -26,7 +26,7 @@ export class ValidateAccessToken extends BaseMiddleware {
     }
 
     // access token 유효 여부 판단
-    let decoded = this.jwtUtil.verify(accessToken);
+    let decoded = this._jwtUtil.verify(accessToken);
     if (!decoded.id) {
       return res.status(401).json({
         message: "authentication error",

@@ -11,8 +11,8 @@ import { CreateUserDto } from "../modules/user/dto/create-user.dto";
 
 @injectable()
 export class SocialSignUp extends BaseMiddleware {
-  @inject(TYPES.Logger) private readonly logger: Logger;
-  @inject(TYPES.IUserService) private readonly userService: IUserService;
+  @inject(TYPES.Logger) private readonly _logger: Logger;
+  @inject(TYPES.IUserService) private readonly _userService: IUserService;
 
   public async handler(req: Request, res: Response, next: NextFunction) {
     try {
@@ -20,7 +20,7 @@ export class SocialSignUp extends BaseMiddleware {
       if (!req.user) throw new UnauthorizedException("authentication error");
       const { provider, providerId, providerData } = req.user as User;
 
-      const foundUser = await this.userService.findOneByProviderInfo(
+      const foundUser = await this._userService.findOneByProviderInfo(
         provider,
         providerId!
       );
@@ -32,7 +32,7 @@ export class SocialSignUp extends BaseMiddleware {
           providerId,
           providerData,
         });
-        const newUser = await this.userService.create(dto);
+        const newUser = await this._userService.create(dto);
 
         return res.status(201).json({
           id: newUser.id,

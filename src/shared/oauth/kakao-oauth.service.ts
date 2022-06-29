@@ -11,7 +11,7 @@ const PROVIDER = "kakao";
 
 @injectable()
 export class KakaoOauthService implements IOauthService {
-  constructor(@inject(TYPES.Logger) private readonly logger: Logger) {}
+  constructor(@inject(TYPES.Logger) private readonly _logger: Logger) {}
 
   public async getProviderAccessToken(authCode: string) {
     try {
@@ -24,7 +24,7 @@ export class KakaoOauthService implements IOauthService {
       const providerAccessToken = data.access_token;
       return providerAccessToken;
     } catch (err) {
-      this.logger.http("invalid auth code");
+      this._logger.http("invalid auth code");
       return null;
     }
   }
@@ -45,7 +45,7 @@ export class KakaoOauthService implements IOauthService {
       };
       return providerUserInfo;
     } catch (err) {
-      this.logger.http("invalid provider access token");
+      this._logger.http("invalid provider access token");
       return null;
     }
   }
@@ -62,7 +62,7 @@ export class KakaoOauthService implements IOauthService {
       });
       return;
     } catch (err) {
-      this.logger.http("invaid porivder access token");
+      this._logger.http("invaid porivder access token");
       return;
     }
   }

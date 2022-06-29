@@ -14,9 +14,9 @@ import { IOauthService } from "../shared/oauth/interfaces/IOauth.service";
 export class GetProviderUserByOauth extends BaseMiddleware {
   constructor(
     @inject(TYPES.NaverOauthService)
-    private readonly naverService: NaverOauthService,
+    private readonly _naverService: NaverOauthService,
     @inject(TYPES.KakaoOauthService)
-    private readonly kakaoService: KakaoOauthService
+    private readonly _kakaoService: KakaoOauthService
   ) {
     super();
   }
@@ -26,10 +26,10 @@ export class GetProviderUserByOauth extends BaseMiddleware {
 
     let oauthProvider!: IOauthService;
     if (provider === "kakao") {
-      oauthProvider = this.kakaoService;
+      oauthProvider = this._kakaoService;
     }
     if (provider === "naver") {
-      oauthProvider = this.naverService;
+      oauthProvider = this._naverService;
     }
 
     try {

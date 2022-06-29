@@ -6,7 +6,7 @@ import { JwtUtil } from "../utils/jwt.util";
 
 @injectable()
 export class ValidateReissueToken extends BaseMiddleware {
-  constructor(@inject(TYPES.JwtUtil) private readonly jwtUtil: JwtUtil) {
+  constructor(@inject(TYPES.JwtUtil) private readonly _jwtUtil: JwtUtil) {
     super();
   }
 
@@ -25,7 +25,7 @@ export class ValidateReissueToken extends BaseMiddleware {
       });
     }
 
-    let accessTokenDecoded = this.jwtUtil.verify(accessToken);
+    let accessTokenDecoded = this._jwtUtil.verify(accessToken);
     // id가 존재한다면 유효한 토큰
     // refresh 재발급시에 access token이 만료되어야 하므로 에러
     if (accessTokenDecoded.id) {
@@ -41,7 +41,7 @@ export class ValidateReissueToken extends BaseMiddleware {
       });
     }
 
-    let refreshTokenDecoded = this.jwtUtil.verify(refreshToken);
+    let refreshTokenDecoded = this._jwtUtil.verify(refreshToken);
     if (!refreshTokenDecoded.iss) {
       res.clearCookie("Refresh");
       return res.status(401).json({
