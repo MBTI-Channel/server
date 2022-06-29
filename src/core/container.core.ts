@@ -25,6 +25,8 @@ import { UserRepository } from "../modules/user/user.repository";
 /* util import */
 import { Logger } from "../utils/logger.util";
 import { JwtUtil } from "../utils/jwt.util";
+import { NaverOauthService } from "../shared/oauth/naver-oauth.service";
+import { KakaoOauthService } from "../shared/oauth/kakao-oauth.service";
 
 const container = new Container();
 
@@ -52,5 +54,9 @@ container.bind<IUserRepository>(TYPES.IUserRepository).to(UserRepository);
 /* utils */
 container.bind(TYPES.Logger).to(Logger);
 container.bind(TYPES.JwtUtil).to(JwtUtil);
+
+/* shared */
+container.bind(TYPES.NaverOauthService).to(NaverOauthService);
+container.bind(TYPES.KakaoOauthService).to(KakaoOauthService);
 
 export default container;
