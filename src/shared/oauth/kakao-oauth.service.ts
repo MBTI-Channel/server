@@ -4,13 +4,13 @@ import { TYPES } from "../../core/type.core";
 import { Logger } from "../../utils/logger.util";
 import { IProviderUserInfo } from "./interfaces/IProviderUserInfo";
 import config from "../../config/index";
-import { IOauth } from "./interfaces/IOauth";
+import { IOauthService } from "./interfaces/IOauth.service";
 
 const { kakao } = config;
 const PROVIDER = "kakao";
 
 @injectable()
-export class KakaoOauthService implements IOauth {
+export class KakaoOauthService implements IOauthService {
   constructor(@inject(TYPES.Logger) private readonly logger: Logger) {}
 
   public async getProviderAccessToken(authCode: string) {

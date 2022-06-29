@@ -5,7 +5,7 @@ import { TYPES } from "../core/type.core";
 import { UnauthorizedException } from "../errors/all.exception";
 import { NaverOauthService } from "../shared/oauth/naver-oauth.service";
 import { KakaoOauthService } from "../shared/oauth/kakao-oauth.service";
-import { IOauth } from "../shared/oauth/interfaces/IOauth";
+import { IOauthService } from "../shared/oauth/interfaces/IOauth.service";
 
 /**
  * Oauth 2.0 인증 후 reqeust에 user 정보를 할당해준다.
@@ -13,8 +13,10 @@ import { IOauth } from "../shared/oauth/interfaces/IOauth";
 @injectable()
 export class GetProviderUserByOauth extends BaseMiddleware {
   constructor(
-    @inject(TYPES.NaverOauthService) private readonly naver: NaverOauthService,
-    @inject(TYPES.KakaoOauthService) private readonly kakao: KakaoOauthService
+    @inject(TYPES.NaverOauthService)
+    private readonly naverService: NaverOauthService,
+    @inject(TYPES.KakaoOauthService)
+    private readonly kakaoService: KakaoOauthService
   ) {
     super();
   }
@@ -22,12 +24,12 @@ export class GetProviderUserByOauth extends BaseMiddleware {
   public async handler(req: Request, res: Response, next: NextFunction) {
     const { provider, authCode } = req.body;
 
-    let oauthProvider!: IOauth;
+    let oauthProvider!: IOauthService;
     if (provider === "kakao") {
-      oauthProvider = this.kakao;
+      oauthProvider = this.kakaoService;
     }
     if (provider === "naver") {
-      oauthProvider = this.naver;
+      oauthProvider = this.naverService;
     }
 
     try {

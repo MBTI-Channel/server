@@ -4,13 +4,13 @@ import { TYPES } from "../../core/type.core";
 import { Logger } from "../../utils/logger.util";
 import { IProviderUserInfo } from "./interfaces/IProviderUserInfo";
 import config from "../../config/index";
-import { IOauth } from "./interfaces/IOauth";
+import { IOauthService } from "./interfaces/IOauth.service";
 
 const { naver } = config;
 const PROVIDER = "naver";
 
 @injectable()
-export class NaverOauthService implements IOauth {
+export class NaverOauthService implements IOauthService {
   constructor(@inject(TYPES.Logger) private readonly logger: Logger) {}
 
   public async getProviderAccessToken(authCode: string) {
