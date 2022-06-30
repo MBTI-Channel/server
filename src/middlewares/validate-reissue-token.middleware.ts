@@ -22,6 +22,7 @@ export class ValidateReissueToken extends BaseMiddleware {
     let accessToken: string;
     let refreshToken: string;
 
+    // access token이 authorization 헤더와 Bearer 타입인지 확인
     if (header && header.startsWith(AUTH_TYPE)) {
       accessToken = header.split(" ")[1];
     } else {
@@ -33,15 +34,23 @@ export class ValidateReissueToken extends BaseMiddleware {
       });
     }
 
-    let accessTokenDecoded = this._jwtUtil.verify(accessToken);
-    // refresh 재발급시에 access token이 만료되어야 하므로 에러
-    if (accessTokenDecoded.status === "success") {
+    let { status: accessTokenStatus } = this._jwtUtil.verify(accessToken);
+    // 재발급시에 access token이 만료되어야 하므로 에러
+    if (accessTokenStatus === "success") {
       this._logger.trace(`[ValidateReissueToken] access token should expire`);
       return res.status(400).json({
         message: "access token should expire",
       });
     }
+    // access token 검증 에러
+    if (accessTokenStatus === "invalid") {
+      this._logger.trace(`[ValidateReissueToken] authentication error`);
+      return res.status(401).json({
+        message: "authentication error",
+      });
+    }
 
+    // refresh token이 쿠키에 있는지 확인
     refreshToken = req.cookies.Refresh;
     if (!refreshToken) {
       this._logger.trace(`[ValidateReissueToken] refresh token not in cookie`);
@@ -50,15 +59,16 @@ export class ValidateReissueToken extends BaseMiddleware {
       });
     }
 
-    let refreshTokenDecoded = this._jwtUtil.verify(refreshToken);
-    if (refreshTokenDecoded.status === "invalid") {
+    // refresh token 검증
+    let { status: refreshTokenStatus } = this._jwtUtil.verify(refreshToken);
+    if (refreshTokenStatus === "invalid") {
       this._logger.trace(`[ValidateReissueToken] invald refresh token`);
       res.clearCookie("Refresh");
       return res.status(401).json({
         message: "authentication error",
       });
     }
-    if (refreshTokenDecoded.status === "expired") {
+    if (refreshTokenStatus === "expired") {
       this._logger.trace(`[ValidateReissueToken] expired refresh token`);
       res.clearCookie("Refresh");
       return res.status(401).json({
