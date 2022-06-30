@@ -19,7 +19,6 @@ import {
   CreateUserDto,
 } from "./dto";
 import config from "../../config";
-import { Provider } from "../../shared/type.shared";
 
 @injectable()
 export class UserService implements IUserService {
@@ -40,14 +39,8 @@ export class UserService implements IUserService {
     return await this._userRepository.findOneById(id);
   }
 
-  public async findOneByProviderInfo(
-    provider: Provider,
-    providerId: string
-  ): Promise<User | null> {
-    return await this._userRepository.findOneByProviderInfo(
-      provider,
-      providerId
-    );
+  public async findOneByProviderInfo(dto: LoginDto): Promise<User | null> {
+    return await this._userRepository.findOneByProviderInfo(dto);
   }
 
   public async update(id: number, payload: QueryDeepPartialEntity<User>) {
@@ -59,12 +52,7 @@ export class UserService implements IUserService {
   }
 
   public async login(dto: LoginDto): Promise<any> {
-    const { provider, providerId } = dto;
-
-    const user = await this._userRepository.findOneByProviderInfo(
-      provider,
-      providerId
-    );
+    const user = await this._userRepository.findOneByProviderInfo(dto);
     if (!user) {
       throw new NotFoundException("not exists user");
     }
