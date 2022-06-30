@@ -11,8 +11,8 @@ import config from "../../config";
 @injectable()
 export class AuthService implements IAuthService {
   constructor(
-    @inject(TYPES.Logger) private readonly logger: Logger,
-    @inject(TYPES.JwtUtil) private readonly jwtUtil: JwtUtil
+    @inject(TYPES.Logger) private readonly _logger: Logger,
+    @inject(TYPES.JwtUtil) private readonly _jwtUtil: JwtUtil
   ) {}
 
   public async generateAccessToken(user: User) {
@@ -27,7 +27,7 @@ export class AuthService implements IAuthService {
       expiresIn: config.jwt.accessTokenExpiresIn,
       issuer: config.jwt.issuer,
     };
-    const accessToken = this.jwtUtil.sign(payload, options);
+    const accessToken = this._jwtUtil.sign(payload, options);
     return accessToken;
   }
 
@@ -38,7 +38,7 @@ export class AuthService implements IAuthService {
       expiresIn: config.jwt.refreshTokenExpiresIn,
       issuer: config.jwt.issuer,
     };
-    const refreshToken = this.jwtUtil.sign(payload, options);
+    const refreshToken = this._jwtUtil.sign(payload, options);
     return refreshToken;
   }
 }

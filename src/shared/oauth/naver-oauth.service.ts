@@ -11,7 +11,7 @@ const PROVIDER = "naver";
 
 @injectable()
 export class NaverOauthService implements IOauthService {
-  constructor(@inject(TYPES.Logger) private readonly logger: Logger) {}
+  constructor(@inject(TYPES.Logger) private readonly _logger: Logger) {}
 
   public async getProviderAccessToken(authCode: string) {
     try {
@@ -23,9 +23,14 @@ export class NaverOauthService implements IOauthService {
         },
       });
       const providerAccessToken = data.access_token;
+      this._logger.trace(
+        `[NaverOauthService] access token successfully received`
+      );
       return providerAccessToken;
     } catch (err) {
-      this.logger.http("invalid auth code");
+      this._logger.warn(
+        `[NaverOauthService] invalid 'authCode' or check 'clientId' & 'clientSecret' of naver`
+      );
       return null;
     }
   }
@@ -45,9 +50,10 @@ export class NaverOauthService implements IOauthService {
         providerId: id,
         providerData: JSON.stringify(naver_account),
       };
+      this._logger.trace(`[NaverOauthService] user info successfully received`);
       return providerUserInfo;
     } catch (err) {
-      this.logger.http("invalid provider access token");
+      this._logger.warn(`[NaverOauthService] invalid access token`);
       return null;
     }
   }
@@ -62,9 +68,12 @@ export class NaverOauthService implements IOauthService {
           "Content-Type": "application/x-www-form-urlencoded;charset=utf-8",
         },
       });
+      this._logger.trace(`[NaverOauthService] request logout successful`);
       return;
     } catch (err) {
-      this.logger.http("invaid porivder access token");
+      this._logger.warn(
+        `[NaverOauthService] invalid access token or check 'clientId' & 'clientSecret' of naver`
+      );
       return;
     }
   }

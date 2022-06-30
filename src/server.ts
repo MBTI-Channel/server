@@ -49,6 +49,7 @@ server.setConfig((app) => {
 
 server.setErrorConfig((app) => {
   app.use((req: Request, res: Response, next: NextFunction) => {
+    loggerInstance.warn(`throwing a 'not found' exception by '${req.ip}' `);
     return res.status(404).end();
   });
 

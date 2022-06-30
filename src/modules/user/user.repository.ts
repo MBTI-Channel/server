@@ -9,23 +9,23 @@ import { Provider, User } from "./entity/user.entity";
 @injectable()
 export class UserRepository implements IUserRepository {
   constructor(
-    @inject(TYPES.IDatabaseService) private readonly database: IDatabaseService
+    @inject(TYPES.IDatabaseService) private readonly _database: IDatabaseService
   ) {}
 
   async create(dto: CreateUserDto): Promise<User> {
-    const repository = await this.database.getRepository(User);
+    const repository = await this._database.getRepository(User);
     const user = await repository.create(dto);
     await repository.insert(user);
     return user;
   }
 
   async findOneById(id: number): Promise<User | null> {
-    const repository = await this.database.getRepository(User);
+    const repository = await this._database.getRepository(User);
     return await repository.findOne({ where: { id } });
   }
 
   async findOneByNickname(nickname: string): Promise<User | null> {
-    const repository = await this.database.getRepository(User);
+    const repository = await this._database.getRepository(User);
     return await repository.findOne({ where: { nickname } });
   }
 
@@ -33,7 +33,7 @@ export class UserRepository implements IUserRepository {
     provider: Provider,
     providerId: string
   ): Promise<User | null> {
-    const repository = await this.database.getRepository(User);
+    const repository = await this._database.getRepository(User);
     return await repository.findOne({ where: { provider, providerId } });
   }
 
@@ -41,7 +41,7 @@ export class UserRepository implements IUserRepository {
     id: number,
     payload: QueryDeepPartialEntity<User>
   ): Promise<User> {
-    const repository = await this.database.getRepository(User);
+    const repository = await this._database.getRepository(User);
     const updatedUser = await repository
       .update(id, payload)
       .then(async () => await repository.findOne({ where: { id } }));

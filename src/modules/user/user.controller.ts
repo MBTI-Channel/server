@@ -20,12 +20,12 @@ import config from "../../config";
 
 @controller("/users")
 export class UserController extends BaseHttpController {
-  @inject(TYPES.IUserService) private readonly userService: IUserService;
+  @inject(TYPES.IUserService) private readonly _userService: IUserService;
 
   // 회원가입 (nickname, mbti 설정)
   @httpPost("/", bodyValidator(SignUpDto))
   async signUp(@requestBody() body: SignUpDto, req: Request, res: Response) {
-    const { user, accessToken, refreshToken } = await this.userService.signUp(
+    const { user, accessToken, refreshToken } = await this._userService.signUp(
       body
     );
 
@@ -45,7 +45,7 @@ export class UserController extends BaseHttpController {
     req: Request,
     res: Response
   ) {
-    const result = await this.userService.isExistsNickname(dto);
+    const result = await this._userService.isExistsNickname(dto);
     return res.status(200).json({ isExistsNickname: result });
   }
 
@@ -58,7 +58,7 @@ export class UserController extends BaseHttpController {
   )
   async oauthLogin(req: Request, res: Response) {
     const dto = req.user as LoginDto;
-    const { user, accessToken, refreshToken } = await this.userService.login(
+    const { user, accessToken, refreshToken } = await this._userService.login(
       dto
     );
     res.cookie("Refresh", refreshToken, {
@@ -81,7 +81,7 @@ export class UserController extends BaseHttpController {
   async reissueAccessToken(req: Request, res: Response) {
     const accessToken = req.headers!.authorization!.replace("Bearer ", "");
 
-    const { newAccessToken } = await this.userService.reissueAccessToken(
+    const { newAccessToken } = await this._userService.reissueAccessToken(
       accessToken
     );
     return res.status(200).json({
