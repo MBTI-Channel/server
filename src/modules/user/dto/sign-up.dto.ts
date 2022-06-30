@@ -6,7 +6,7 @@ import {
   Length,
   Matches,
 } from "class-validator";
-import { MBTI_KEY } from "../entity/user.entity";
+import { MBTI_KEY } from "../../../shared/constant.shared";
 
 export class SignUpDto {
   @IsNumber()

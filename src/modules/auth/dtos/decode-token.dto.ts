@@ -25,4 +25,8 @@ export class DecodedDto implements JwtPayload {
   @IsNumber()
   @IsNotEmpty()
   exp: number;
+
+  @IsString()
+  @IsNotEmpty()
+  status: "success" | "invalid" | "expired";
 }

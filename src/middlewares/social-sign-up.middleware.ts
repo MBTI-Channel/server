@@ -25,10 +25,10 @@ export class SocialSignUp extends BaseMiddleware {
       this._logger.trace(
         `[SocialSignUp] checking if provider && providerId exists in database`
       );
-      const foundUser = await this._userService.findOneByProviderInfo(
+      const foundUser = await this._userService.findOneByProviderInfo({
         provider,
-        providerId!
-      );
+        providerId,
+      });
 
       // provider info에 해당하는 user가 없다면 생성후 need sign up 리턴
       if (!foundUser) {

@@ -3,8 +3,8 @@ import { QueryDeepPartialEntity } from "typeorm/query-builder/QueryPartialEntity
 import { TYPES } from "../../core/type.core";
 import { IDatabaseService } from "../database/interfaces/IDatabase.service";
 import { IUserRepository } from "./interfaces/IUser.repository";
-import { CreateUserDto } from "./dto";
-import { Provider, User } from "./entity/user.entity";
+import { CreateUserDto, LoginDto } from "./dto";
+import { User } from "./entity/user.entity";
 
 @injectable()
 export class UserRepository implements IUserRepository {
@@ -29,10 +29,8 @@ export class UserRepository implements IUserRepository {
     return await repository.findOne({ where: { nickname } });
   }
 
-  async findOneByProviderInfo(
-    provider: Provider,
-    providerId: string
-  ): Promise<User | null> {
+  async findOneByProviderInfo(dto: LoginDto): Promise<User | null> {
+    const { provider, providerId } = dto;
     const repository = await this._database.getRepository(User);
     return await repository.findOne({ where: { provider, providerId } });
   }

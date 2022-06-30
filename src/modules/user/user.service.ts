@@ -1,6 +1,6 @@
 import { inject, injectable } from "inversify";
 import { QueryDeepPartialEntity } from "typeorm/query-builder/QueryPartialEntity";
-import { Provider, User } from "./entity/user.entity";
+import { User } from "./entity/user.entity";
 import { IUserService } from "./interfaces/IUser.service";
 import { TYPES } from "../../core/type.core";
 import { IUserRepository } from "./interfaces/IUser.repository";
@@ -39,14 +39,8 @@ export class UserService implements IUserService {
     return await this._userRepository.findOneById(id);
   }
 
-  public async findOneByProviderInfo(
-    provider: Provider,
-    providerId: string
-  ): Promise<User | null> {
-    return await this._userRepository.findOneByProviderInfo(
-      provider,
-      providerId
-    );
+  public async findOneByProviderInfo(dto: LoginDto): Promise<User | null> {
+    return await this._userRepository.findOneByProviderInfo(dto);
   }
 
   public async update(id: number, payload: QueryDeepPartialEntity<User>) {
@@ -58,12 +52,7 @@ export class UserService implements IUserService {
   }
 
   public async login(dto: LoginDto): Promise<any> {
-    const { provider, providerId } = dto;
-
-    const user = await this._userRepository.findOneByProviderInfo(
-      provider,
-      providerId
-    );
+    const user = await this._userRepository.findOneByProviderInfo(dto);
     if (!user) {
       throw new NotFoundException("not exists user");
     }
@@ -113,18 +102,19 @@ export class UserService implements IUserService {
 
   public async reissueAccessToken(oldAccessToken: string) {
     const decodedToken = this._jwtUtil.decode(oldAccessToken);
+    // TODO: 수정필요
+    // if (decodedToken.status !== "success") {
+    //   throw new UnauthorizedException("token is not validate");
+    // }
 
-    if (!decodedToken) {
-      throw new UnauthorizedException("token is not validate");
-    }
-    let userId = decodedToken.id;
+    // let userId = decodedToken.id;
 
-    const user = await this._userRepository.findOneById(userId);
-    if (!user) {
-      throw new NotFoundException("not exists user");
-    }
+    // const user = await this._userRepository.findOneById(userId);
+    // if (!user) {
+    //   throw new NotFoundException("not exists user");
+    // }
 
-    const newAccessToken = await this._authService.generateAccessToken(user);
-    return { newAccessToken };
+    // const newAccessToken = await this._authService.generateAccessToken(user);
+    // return { newAccessToken };
   }
 }
