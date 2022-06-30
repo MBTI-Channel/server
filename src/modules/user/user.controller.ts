@@ -14,6 +14,7 @@ import {
   queryValidator,
 } from "../../middlewares/validator.middleware";
 import { IUserService } from "./interfaces/IUser.service";
+import { User } from "./entity/user.entity";
 import { OauthLoginDto } from "../auth/dtos/oauth-login.dto";
 import { LoginDto, SignUpDto, NicknameDuplicateCheckDto } from "./dto";
 import config from "../../config";
@@ -92,10 +93,12 @@ export class UserController extends BaseHttpController {
   //사용자 유효한지 지속적으로 확인
   @httpGet("/me", TYPES.ValidateAccessTokenMiddleware)
   async validateUser(req: Request, res: Response) {
-    // TODO: access token payload의 id가 db에 존재하는지, db의 mbti, nickname과 일치하는지
+    const { nickname, mbti, isAdmin } = req.user as User;
 
     return res.status(200).json({
-      message: "access token valid",
+      nickname,
+      mbti,
+      isAdmin,
     });
   }
 
