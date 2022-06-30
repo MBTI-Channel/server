@@ -1,6 +1,6 @@
 import { inject, injectable } from "inversify";
 import { QueryDeepPartialEntity } from "typeorm/query-builder/QueryPartialEntity";
-import { Provider, User } from "./entity/user.entity";
+import { User } from "./entity/user.entity";
 import { IUserService } from "./interfaces/IUser.service";
 import { TYPES } from "../../core/type.core";
 import { IUserRepository } from "./interfaces/IUser.repository";
@@ -19,6 +19,7 @@ import {
   CreateUserDto,
 } from "./dto";
 import config from "../../config";
+import { Provider } from "../../shared/type.shared";
 
 @injectable()
 export class UserService implements IUserService {

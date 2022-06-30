@@ -4,7 +4,8 @@ import { TYPES } from "../../core/type.core";
 import { IDatabaseService } from "../database/interfaces/IDatabase.service";
 import { IUserRepository } from "./interfaces/IUser.repository";
 import { CreateUserDto } from "./dto";
-import { Provider, User } from "./entity/user.entity";
+import { User } from "./entity/user.entity";
+import { Provider } from "../../shared/type.shared";
 
 @injectable()
 export class UserRepository implements IUserRepository {

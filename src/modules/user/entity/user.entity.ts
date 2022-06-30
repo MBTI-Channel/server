@@ -6,6 +6,7 @@ import {
   UpdateDateColumn,
   CreateDateColumn,
 } from "typeorm";
+import { Provider } from "../../../shared/type.shared";
 
 import { Bookmark } from "../../bookmark/entity/bookmark.entity";
 import { Comment } from "../../comment/entity/comment.entity";
@@ -15,28 +16,6 @@ import { Notification } from "../../notifications/entity/notification.entity";
 import { Post } from "../../post/entity/post.entity";
 import { Report } from "../../report/entity/report.entity";
 import { Survey } from "../../survey/entity/survey.entity";
-
-// TODO: 리팩토링. 다른 곳에서도 사용가능한 폴더에서 관리하는게 좋을 것 같음
-export type Provider = "kakao" | "naver";
-export const PROVIDER_KEY: string[] = ["kakao", "naver"];
-export const MBTI_KEY: string[] = [
-  "ISTJ",
-  "ISTP",
-  "ISFJ",
-  "ISFP",
-  "INTJ",
-  "INTP",
-  "INFJ",
-  "INFP",
-  "ESTJ",
-  "ESTP",
-  "ESFJ",
-  "ESFP",
-  "ENTJ",
-  "ENTP",
-  "ENFJ",
-  "ENFP",
-];
 
 @Entity("User")
 export class User {
