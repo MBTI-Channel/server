@@ -23,8 +23,11 @@ export class JwtUtil {
       dto.status = "success";
     } catch (err) {
       dto = plainToInstance(DecodedDto, {});
-      if (err instanceof jwt.JsonWebTokenError) dto.status = "invalid";
-      else if (err instanceof jwt.TokenExpiredError) dto.status = "expired";
+      if (err instanceof jwt.TokenExpiredError) {
+        dto.status = "expired";
+      } else {
+        dto.status = "invalid";
+      }
     }
     return dto;
   }
