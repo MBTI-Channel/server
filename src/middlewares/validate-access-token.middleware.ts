@@ -35,7 +35,7 @@ export class ValidateAccessToken extends BaseMiddleware {
 
     // access token 유효 여부 판단
     let decoded = this._jwtUtil.verify(accessToken);
-    if (!decoded.id) {
+    if (decoded.status !== "success") {
       this._logger.trace(`[ValidateAccessToken] jwt verify error`);
       return res.status(401).json({
         message: "authentication error",

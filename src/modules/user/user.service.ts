@@ -103,7 +103,7 @@ export class UserService implements IUserService {
   public async reissueAccessToken(oldAccessToken: string) {
     const decodedToken = this._jwtUtil.decode(oldAccessToken);
 
-    if (!decodedToken) {
+    if (decodedToken.status !== "success") {
       throw new UnauthorizedException("token is not validate");
     }
     let userId = decodedToken.id;

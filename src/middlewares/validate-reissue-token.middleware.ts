@@ -34,9 +34,8 @@ export class ValidateReissueToken extends BaseMiddleware {
     }
 
     let accessTokenDecoded = this._jwtUtil.verify(accessToken);
-    // id가 존재한다면 유효한 토큰
     // refresh 재발급시에 access token이 만료되어야 하므로 에러
-    if (accessTokenDecoded.id) {
+    if (accessTokenDecoded.status === "success") {
       this._logger.trace(`[ValidateReissueToken] access token should expire`);
       return res.status(400).json({
         message: "access token should expire",
@@ -52,8 +51,15 @@ export class ValidateReissueToken extends BaseMiddleware {
     }
 
     let refreshTokenDecoded = this._jwtUtil.verify(refreshToken);
-    if (!refreshTokenDecoded.iss) {
+    if (refreshTokenDecoded.status === "invalid") {
       this._logger.trace(`[ValidateReissueToken] invald refresh token`);
+      res.clearCookie("Refresh");
+      return res.status(401).json({
+        message: "authentication error",
+      });
+    }
+    if (refreshTokenDecoded.status === "expired") {
+      this._logger.trace(`[ValidateReissueToken] expired refresh token`);
       res.clearCookie("Refresh");
       return res.status(401).json({
         message: "authentication error",

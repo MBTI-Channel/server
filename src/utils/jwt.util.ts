@@ -20,8 +20,11 @@ export class JwtUtil {
     try {
       let decoded = jwt.verify(token, jwtConfig.secret);
       dto = plainToInstance(DecodedDto, decoded);
+      dto.status = "success";
     } catch (err) {
       dto = plainToInstance(DecodedDto, {});
+      if (err instanceof jwt.JsonWebTokenError) dto.status = "invalid";
+      else if (err instanceof jwt.TokenExpiredError) dto.status = "expired";
     }
     return dto;
   }
@@ -33,8 +36,10 @@ export class JwtUtil {
         complete: false,
       });
       dto = plainToInstance(DecodedDto, decodedToken);
-    } catch {
+    } catch (err) {
       dto = plainToInstance(DecodedDto, {});
+      if (err instanceof jwt.JsonWebTokenError) dto.status = "invalid";
+      else if (err instanceof jwt.TokenExpiredError) dto.status = "expired";
     }
     return dto;
   }
