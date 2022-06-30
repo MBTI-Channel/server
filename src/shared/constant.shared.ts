@@ -17,5 +17,3 @@ export const MBTI_KEY: string[] = [
   "ENFJ",
   "ENFP",
 ];
-
-export const DECODED_STATUS_KEY: string[] = ["success", "invalid", "expired"];

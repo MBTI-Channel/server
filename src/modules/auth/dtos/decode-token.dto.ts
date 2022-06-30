@@ -1,6 +1,5 @@
-import { IsIn, IsNotEmpty, IsNumber, IsString } from "class-validator";
+import { IsNotEmpty, IsNumber, IsString } from "class-validator";
 import { JwtPayload } from "jsonwebtoken";
-import { DECODED_STATUS_KEY } from "../../../shared/constant.shared";
 
 export class DecodedDto implements JwtPayload {
   @IsNumber()
@@ -28,7 +27,6 @@ export class DecodedDto implements JwtPayload {
   exp: number;
 
   @IsString()
-  @IsIn(DECODED_STATUS_KEY)
   @IsNotEmpty()
-  status: string;
+  status: "success" | "invalid" | "expired";
 }
