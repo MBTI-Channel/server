@@ -4,10 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "api-docs": "swagger-cli bundle ./src/swagger/openapi.yaml --outfile src/swagger.yaml --type yaml",
     "lint": "eslint . --ext .js,.ts",
     "start": "NODE_ENV=development ts-node --transpile-only src/main.ts",
     "start:dev": "npm run build && node dist/main.js",
-    "start:watch": "NODE_ENV=development nodemon src/main.ts --trace-warnings",
+    "start:watch": "NODE_ENV=development npm run api-docs && nodemon src/main.ts --trace-warnings",
     "build-dev": "tsc && node ./dist/main.js",
     "build": "tsc",
     "test": "jest",
