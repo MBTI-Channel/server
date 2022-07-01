@@ -22,6 +22,9 @@ export class User {
   @PrimaryGeneratedColumn()
   id: number;
 
+  @Column({ type: "uuid" })
+  uuid: string;
+
   @Column({
     type: "tinyint",
     default: 1,
@@ -56,8 +59,11 @@ export class User {
   })
   providerId!: string;
 
-  @Column({ nullable: true, type: "text", comment: "소셜에서 받은 데이터" })
-  providerData: string;
+  @Column({ default: 0, type: "tinyint", comment: "0: null 1: male 2: female" })
+  gender: number;
+
+  @Column({ default: 0, length: 10, comment: "0: null" })
+  ageRange: string;
 
   @CreateDateColumn({ type: "datetime", comment: "생성 날짜시간" })
   datetime!: Date;
