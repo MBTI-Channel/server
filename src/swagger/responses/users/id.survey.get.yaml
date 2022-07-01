@@ -1,0 +1,46 @@
+"200":
+  description: 참여한 공식질문 조회 성공
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          surveyId:
+            type: array
+            example: [1, 2, 3]
+          isMe:
+            type: boolean
+            example: 1
+
+"401":
+  description: access token 유효하지 않음
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          message:
+            type: string
+            example: authentication error
+
+"403":
+  description: 접근 권한이 없음
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          message:
+            type: string
+            example: authorization error
+
+"404":
+  description: 존재하지 않는 유저
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          message:
+            type: string
+            example: not exists user

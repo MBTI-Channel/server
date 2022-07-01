@@ -1,0 +1,35 @@
+post:
+  tags:
+    - users
+  description: 회원가입, 닉네임, mbti를 입력하여 회원가입을 완료
+  requestBody:
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            id:
+              type: uuid
+              example: asdfadssadfd-asdf1wf1f12-f122f1f12f21
+            nickname:
+              type: string
+              example: 지나가는 나그네
+            mbti:
+              type: string
+              example: ENFP
+  responses:
+    $ref: "../../responses/users/index.post.yaml"
+
+get:
+  tags:
+    - users
+  description: 닉네임 중복 검사
+  parameters:
+    - name: nickname
+      in: query
+      description: 사용자가 원하는 닉네임
+      required: true
+      type: string
+      example: 지나가는 나그네
+  responses:
+    $ref: "../../responses/users/index.get.yaml"

@@ -1,0 +1,20 @@
+post:
+  tags:
+    - users
+  description: 클라이언트한테 인증서비스 종류, 인증코드 받아 소셜 로그인
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            provider:
+              type: string
+              enum: [kakao, naver]
+              example: kakao
+            authCode:
+              type: string
+              example: QwemdonjdZKsel
+  responses:
+    $ref: "../../responses/users/login.post.yaml"

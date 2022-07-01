@@ -1,0 +1,101 @@
+openapi: "3.0.0"
+info:
+  version: 1.0.0
+  title: MBTI channel API docs
+  description: MBTI channel의 API 문서입니다
+  license:
+    name: MIT
+
+servers:
+  - url: http://localhost:8001/
+
+tags:
+  - name: "users"
+    description: 유저
+  - name: "posts"
+    description: 게시글
+  - name: "comments"
+    description: 댓글 | 대댓글
+
+paths:
+  # users
+  /users/login:
+    $ref: "./paths/users/login.yaml"
+  /users/me:
+    $ref: "./paths/users/me.yaml"
+  /users/accessToken:
+    $ref: "./paths/users/access-token.yaml"
+  /users/logout:
+    $ref: "./paths/users/logout.yaml"
+  /users:
+    $ref: "./paths/users/index.yaml"
+  /users/{id}:
+    parameters:
+      - in: path
+        name: id
+        type: integer
+        description: User ID
+    $ref: "./paths/users/id.yaml"
+  /users/{id}/posts:
+    parameters:
+      - in: path
+        name: id
+        type: integer
+        description: User ID
+    $ref: "./paths/users/id.posts.yaml"
+  /users/{id}/comments:
+    parameters:
+      - in: path
+        name: id
+        type: integer
+        description: User ID
+    $ref: "./paths/users/id.comments.yaml"
+  /users/{id}/survey:
+    parameters:
+      - in: path
+        name: id
+        type: integer
+        description: User ID
+    $ref: "./paths/users/id.survey.yaml"
+  /users/{id}/bookmarks:
+    parameters:
+      - in: path
+        name: id
+        type: integer
+        description: User ID
+    $ref: "./paths/users/id.bookmarks.yaml"
+
+  # posts
+  /posts:
+    $ref: "./paths/posts/index.yaml"
+  /posts/trending:
+    $ref: "./paths/posts/trending.yaml"
+  /posts/search:
+    $ref: "./paths/posts/search.yaml"
+  /posts/{id}:
+    parameters:
+      - in: path
+        name: id
+        type: integer
+        description: Post ID
+    $ref: "./paths/posts/id.yaml"
+
+  # comments
+  /comments:
+    $ref: "./paths/comments/index.yaml"
+  /comments/{id}:
+    parameters:
+      - in: path
+        name: id
+        type: integer
+        description: Comment ID
+    $ref: "./paths/comments/id.yaml"
+  /comments/{id}/replies:
+    parameters:
+      - in: path
+        name: id
+        type: integer
+        description: Comment ID
+    $ref: "./paths/comments/id.replies.yaml"
+  /comments/replies:
+    $ref: "./paths/comments/replies.yaml"

@@ -10,6 +10,11 @@ import { DatabaseService } from "./modules/database/database.service";
 import { Logger } from "./utils/logger.util";
 import { HttpException } from "./errors/http.exception";
 import { RedisService } from "./modules/redis/redis.service";
+/* Swagger */
+import swaggerUi from "swagger-ui-express";
+import YAML from "yamljs";
+import { join } from "path";
+const swaggerYaml = YAML.load(join(__dirname, "./swagger.yaml"));
 
 export const server = new InversifyExpressServer(container);
 
@@ -45,6 +50,7 @@ server.setConfig((app) => {
       },
     })
   );
+  app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerYaml));
 });
 
 server.setErrorConfig((app) => {

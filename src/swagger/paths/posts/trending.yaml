@@ -1,0 +1,6 @@
+get:
+  tags:
+    - posts
+  description: 인기 게시글 조회
+  responses:
+    $ref: "../../responses/posts/trending.get.yaml"

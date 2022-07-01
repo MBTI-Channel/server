@@ -1,0 +1,13 @@
+patch:
+  tags:
+    - comments
+  description: 댓글 수정
+  responses:
+    $ref: "../../responses/comments/id.patch.yaml"
+
+delete:
+  tags:
+    - comments
+  description: 댓글 삭제
+  responses:
+    $ref: "../../responses/comments/id.delete.yaml"
