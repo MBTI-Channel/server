@@ -37,9 +37,13 @@ export class ValidateAccessToken extends BaseMiddleware {
 
       // access token 유효 여부 판단
       let decoded = this._jwtUtil.verify(accessToken);
-      if (decoded.status !== "success") {
+      if (decoded.status === "invalid") {
         this._logger.trace(`[ValidateAccessToken] jwt verify error`);
         throw new UnauthorizedException("authentication error");
+      }
+      if (decoded.status === "expired") {
+        this._logger.trace(`[ValidateAccessToken] jwt expired`);
+        throw new UnauthorizedException("access token expired");
       }
 
       // access token의 payload가 유효한 사용자 확인
