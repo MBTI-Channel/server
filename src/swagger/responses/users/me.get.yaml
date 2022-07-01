@@ -1,0 +1,24 @@
+"200":
+  description: access token 유효함
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          message:
+            type: string
+            example: access token valid
+          id:
+            type: integer
+            example: 1
+
+"401":
+  description: access token 유효하지 않음
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          message:
+            type: string
+            example: authentication error

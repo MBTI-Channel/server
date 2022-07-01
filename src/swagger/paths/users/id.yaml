@@ -1,0 +1,67 @@
+get:
+  tags:
+    - users
+  description: 유저 정보 조회
+  parameters:
+    - name: Bearer 토큰
+      in: header
+      required: true
+      type: string
+      example: asduehfinnncudI1NiIsInR5csdwd665s88db
+    - name: Refresh 토큰
+      in: cookie
+      required: true
+      type: string
+      example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+  responses:
+    $ref: "../../responses/users/id.get.yaml"
+
+patch:
+  tags:
+    - users
+  description: 유저 수정
+  parameters:
+    - name: Bearer 토큰
+      in: header
+      required: true
+      type: string
+      example: asduehfinnncudI1NiIsInR5csdwd665s88db
+    - name: Refresh 토큰
+      in: cookie
+      required: true
+      type: string
+      example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            nickname:
+              type: string
+              enum: 지나가는 나그네
+              example: kakao
+            mbti:
+              type: string
+              example: ENFP
+  responses:
+    $ref: "../../responses/users/id.patch.yaml"
+
+delete:
+  tags:
+    - users
+  description: 회원 탈퇴
+  parameters:
+    - name: Bearer 토큰
+      in: header
+      required: true
+      type: string
+      example: asduehfinnncudI1NiIsInR5csdwd665s88db
+    - name: Refresh 토큰
+      in: cookie
+      required: true
+      type: string
+      example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+  responses:
+    $ref: "../../responses/users/id.delete.yaml"

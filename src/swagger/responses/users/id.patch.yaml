@@ -1,0 +1,52 @@
+"200":
+  description: 유저 정보 수정 성공
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          nickname:
+            type: string
+            example: 지나가는 나그네
+          mbti:
+            type: string
+            example: ENFP
+          isAdmin:
+            type: boolean
+            example: 1
+          isMe:
+            type: boolean
+            example: 1
+
+"401":
+  description: access token 유효하지 않음
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          message:
+            type: string
+            example: authentication error
+
+"403":
+  description: 접근 권한이 없음
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          message:
+            type: string
+            example: authorization error
+
+"404":
+  description: 존재하지 않는 유저
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          message:
+            type: string
+            example: not exists user

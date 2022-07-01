@@ -1,0 +1,10 @@
+"200":
+  description: 중복 검사 완료
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          isExists:
+            type: boolean
+            example: true

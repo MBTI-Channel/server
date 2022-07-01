@@ -1,0 +1,20 @@
+get:
+  tags:
+    - comments
+  description: 대댓글 리스트 조회
+  parameters:
+    - name: startId
+      in: query
+      description: 시작 대댓글 id
+      required: true
+      type: integer
+      example: 45
+
+    - name: size
+      in: query
+      description: 한 번에 검색할 대댓글 개수
+      required: true
+      type: integer
+      example: 50
+  responses:
+    $ref: "../../responses/comments/id.replies.get.yaml"

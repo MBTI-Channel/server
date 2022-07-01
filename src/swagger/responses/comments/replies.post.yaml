@@ -1,0 +1,24 @@
+"201":
+  description: 대댓글 등록 완료
+
+"401":
+  description: access token 유효하지 않음
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          message:
+            type: string
+            example: authentication error
+
+"404":
+  description: 존재하지 않는 (삭제된) 게시글 | 댓글
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          message:
+            type: string
+            example: not exists post

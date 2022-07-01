@@ -1,0 +1,36 @@
+post:
+  tags:
+    - comments
+  description: 대댓글 등록
+  parameters:
+    - name: Bearer 토큰
+      in: header
+      required: false
+      type: string
+      example: asduehfinnncudI1NiIsInR5csdwd665s88db
+    - name: Refresh 토큰
+      in: cookie
+      required: true
+      type: string
+      example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+  requestBody:
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            postId:
+              type: integer
+              example: 45
+            commentId:
+              type: integer
+              example: 23
+            taggedId:
+              type: integer
+              required: false
+              example: 12
+            content:
+              type: string
+              example: 저는 김치찌개요!!
+  responses:
+    $ref: "../../responses/comments/replies.post.yaml"

@@ -1,0 +1,44 @@
+"200":
+  description: 회원가입 성공
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          nickname:
+            type: string
+            example: 지나가는 나그네
+          mbti:
+            type: string
+            example: ENFP
+          isAdmin:
+            type: boolean
+            example: 1
+          accessToken:
+            type: string
+            example: asduehfinnncudI1NiIsInR5csdwd665s88db
+          refreshToken:
+            type: string
+            example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+"401":
+  description: 존재하는 유저 id이거나, 회원가입이 가능한 상태가 아님
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          message:
+            type: string
+            example: not exists user or invalid request
+
+"409":
+  description: 중복 닉네임
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          message:
+            type: string
+            example: already exists nickname
