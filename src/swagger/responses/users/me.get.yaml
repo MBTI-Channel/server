@@ -5,15 +5,18 @@
       schema:
         type: object
         properties:
-          message:
+          nickname:
             type: string
-            example: access token valid
-          id:
-            type: integer
-            example: 1
+            example: 루피
+          mbti:
+            type: string
+            example: INFP
+          isAdmin:
+            type: boolean
+            example: 0
 
 "401":
-  description: access token 유효하지 않음
+  description: access token 유효하지 않음 또는 만료됨
   content:
     application/json:
       schema:
@@ -21,4 +24,7 @@
         properties:
           message:
             type: string
-            example: authentication error
+            #example: authentication error || access token expired
+            example:
+              ex1: authentication error
+              ex2: access token expired
