@@ -4,14 +4,14 @@ import { User } from "./entity/user.entity";
 import { IUserService } from "./interfaces/IUser.service";
 import { TYPES } from "../../core/type.core";
 import { IUserRepository } from "./interfaces/IUser.repository";
+import { IAuthService } from "../auth/interfaces/IAuth.service";
 import {
   ConflictException,
   NotFoundException,
   UnauthorizedException,
-} from "../../errors/all.exception";
-import { IAuthService } from "../auth/interfaces/IAuth.service";
-import { Logger } from "../../utils/logger.util";
-import { JwtUtil } from "../../utils/jwt.util";
+} from "../../shared/errors/all.exception";
+import { Logger } from "../../shared/utils/logger.util";
+import { JwtUtil } from "../../shared/utils/jwt.util";
 import {
   LoginDto,
   SignUpDto,

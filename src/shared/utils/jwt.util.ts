@@ -1,7 +1,7 @@
 import { injectable } from "inversify";
 import jwt from "jsonwebtoken";
-import config from "../config/index";
-import { DecodedDto } from "../modules/auth/dtos/decode-token.dto";
+import config from "../../config/index";
+import { DecodedDto } from "../../modules/auth/dtos/decode-token.dto";
 import { plainToInstance } from "class-transformer";
 
 const { jwt: jwtConfig } = config;

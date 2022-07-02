@@ -3,7 +3,7 @@ import { plainToInstance } from "class-transformer";
 import { inject, injectable } from "inversify";
 import { TYPES } from "../../core/type.core";
 import { IApiService } from "./interfaces/IApi.service";
-import { Logger } from "../../utils/logger.util";
+import { Logger } from "../../shared/utils/logger.util";
 import { KaKaoAccountDto } from "./dto/kakao-account.dto";
 import config from "../../config";
 

@@ -3,9 +3,9 @@ import { TYPES } from "../../core/type.core";
 import { KakaoApiService } from "../api/kakao-api.service";
 import { NaverApiService } from "../api/naver-api.service";
 import { IOauthService } from "./interfaces/IOauth.service";
-import { Logger } from "../../utils/logger.util";
+import { Logger } from "../../shared/utils/logger.util";
 import { Provider } from "../type.shared";
-import { UnauthorizedException } from "../../errors/all.exception";
+import { UnauthorizedException } from "../../shared/errors/all.exception";
 
 @injectable()
 export class OauthService implements IOauthService {

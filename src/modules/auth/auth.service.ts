@@ -1,13 +1,13 @@
 import { inject, injectable } from "inversify";
 import { User } from "../user/entity/user.entity";
-import { Logger } from "../../utils/logger.util";
+import { Logger } from "../../shared/utils/logger.util";
 import { IAuthService } from "./interfaces/IAuth.service";
 import { ITokenPayload } from "./interfaces/ITokenPayload";
 import { TYPES } from "../../core/type.core";
 import { SignOptions } from "jsonwebtoken";
-import { JwtUtil } from "../../utils/jwt.util";
+import { JwtUtil } from "../../shared/utils/jwt.util";
 import config from "../../config";
-import { UnauthorizedException } from "../../errors/all.exception";
+import { UnauthorizedException } from "../../shared/errors/all.exception";
 import { UserRepository } from "../user/user.repository";
 import { DecodedDto } from "./dtos/decode-token.dto";
 

@@ -1,7 +1,7 @@
 import { inject, injectable } from "inversify";
 import { QueryDeepPartialEntity } from "typeorm/query-builder/QueryPartialEntity";
 import { TYPES } from "../../core/type.core";
-import { IDatabaseService } from "../database/interfaces/IDatabase.service";
+import { IDatabaseService } from "../../shared/database/interfaces/IDatabase.service";
 import { IUserRepository } from "./interfaces/IUser.repository";
 import { CreateUserDto, LoginDto } from "./dto";
 import { User } from "./entity/user.entity";
