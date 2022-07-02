@@ -6,10 +6,10 @@ import cors from "cors";
 import { InversifyExpressServer } from "inversify-express-utils";
 import container from "./core/container.core";
 import { TYPES } from "./core/type.core";
-import { DatabaseService } from "./modules/database/database.service";
-import { Logger } from "./utils/logger.util";
-import { HttpException } from "./errors/http.exception";
-import { RedisService } from "./modules/redis/redis.service";
+import { DatabaseService } from "./shared/database/database.service";
+import { Logger } from "./shared/utils/logger.util";
+import { HttpException } from "./shared/errors/http.exception";
+import { RedisService } from "./shared/redis/redis.service";
 /* Swagger */
 import swaggerUi from "swagger-ui-express";
 import YAML from "yamljs";

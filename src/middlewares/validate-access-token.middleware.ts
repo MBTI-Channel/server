@@ -3,9 +3,9 @@ import { inject, injectable } from "inversify";
 import { BaseMiddleware } from "inversify-express-utils";
 import { TYPES } from "../core/type.core";
 import { AuthService } from "../modules/auth/auth.service";
-import { JwtUtil } from "../utils/jwt.util";
-import { Logger } from "../utils/logger.util";
-import { UnauthorizedException } from "../errors/all.exception";
+import { JwtUtil } from "../shared/utils/jwt.util";
+import { Logger } from "../shared/utils/logger.util";
+import { UnauthorizedException } from "../shared/errors/all.exception";
 
 @injectable()
 export class ValidateAccessToken extends BaseMiddleware {

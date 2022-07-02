@@ -2,11 +2,11 @@
 import { Container } from "inversify";
 import { TYPES } from "./type.core";
 /* database import */
-import { IDatabaseService } from "../modules/database/interfaces/IDatabase.service";
-import { DatabaseService } from "../modules/database/database.service";
+import { IDatabaseService } from "../shared/database/interfaces/IDatabase.service";
+import { DatabaseService } from "../shared/database/database.service";
 /* redis import */
-import { IRedisService } from "../modules/redis/interfaces/IRedis.service";
-import { RedisService } from "../modules/redis/redis.service";
+import { IRedisService } from "../shared/redis/interfaces/IRedis.service";
+import { RedisService } from "../shared/redis/redis.service";
 /* middleware import */
 import { GetProviderUserByOauth } from "../middlewares/get-provider-user-by-oauth.middleware";
 import { SocialSignUp } from "../middlewares/social-sign-up.middleware";
@@ -23,8 +23,8 @@ import { UserService } from "../modules/user/user.service";
 import { IUserRepository } from "../modules/user/interfaces/IUser.repository";
 import { UserRepository } from "../modules/user/user.repository";
 /* util import */
-import { Logger } from "../utils/logger.util";
-import { JwtUtil } from "../utils/jwt.util";
+import { Logger } from "../shared/utils/logger.util";
+import { JwtUtil } from "../shared/utils/jwt.util";
 /* shared import */
 import { OauthService } from "../shared/oauth/oauth.service";
 import { KakaoApiService } from "../shared/api/kakao-api.service";

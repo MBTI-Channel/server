@@ -5,7 +5,7 @@ import { BaseMiddleware } from "inversify-express-utils";
 import { TYPES } from "../core/type.core";
 import { UserBase } from "../modules/user/entity/userbase";
 import { IOauthService } from "../shared/oauth/interfaces/IOauth.service";
-import { Logger } from "../utils/logger.util";
+import { Logger } from "../shared/utils/logger.util";
 
 /**
  * Oauth 2.0 인증 후 reqeust.user에 user를 할당해준다.
