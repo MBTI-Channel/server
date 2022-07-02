@@ -3,11 +3,11 @@ import { inject, injectable } from "inversify";
 import { BaseMiddleware } from "inversify-express-utils";
 import { plainToClass } from "class-transformer";
 import { TYPES } from "../core/type.core";
-import { User } from "../modules/user/entity/user.entity";
 import { UnauthorizedException } from "../errors/all.exception";
 import { Logger } from "../utils/logger.util";
 import { IUserService } from "../modules/user/interfaces/IUser.service";
 import { CreateUserDto } from "../modules/user/dto/create-user.dto";
+import { UserBase } from "../modules/user/entity/userbase";
 
 @injectable()
 export class SocialSignUp extends BaseMiddleware {
@@ -20,15 +20,15 @@ export class SocialSignUp extends BaseMiddleware {
       // req.user 없다면 인증 에러
       this._logger.trace(`[SocialSignUp] check if 'req.user' exists`);
       if (!req.user) throw new UnauthorizedException("authentication error");
-      const { provider, providerId, providerData } = req.user as User;
+      const { provider, providerId, gender, ageRange } = req.user as UserBase;
 
       this._logger.trace(
         `[SocialSignUp] checking if provider && providerId exists in database`
       );
-      const foundUser = await this._userService.findOneByProviderInfo({
+      const foundUser = await this._userService.findOneByProviderInfo(
         provider,
-        providerId,
-      });
+        providerId
+      );
 
       // provider info에 해당하는 user가 없다면 생성후 need sign up 리턴
       if (!foundUser) {
@@ -38,7 +38,8 @@ export class SocialSignUp extends BaseMiddleware {
         const dto = plainToClass(CreateUserDto, {
           provider,
           providerId,
-          providerData,
+          gender,
+          ageRange,
         });
         const newUser = await this._userService.create(dto);
 

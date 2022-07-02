@@ -1,7 +1,10 @@
-import { IProviderUserInfo } from "./IProviderUserInfo";
+import { UserBase } from "../../../modules/user/entity/userbase";
+import { IAccountDto } from "../../api/interfaces/IAccount.dto";
+import { Provider } from "../../type.shared";
 
 export interface IOauthService {
-  getProviderAccessToken(authCode: string): Promise<string | null>;
-  getProviderUserInfo(accessToken: string): Promise<IProviderUserInfo | null>;
-  expiresProviderToken(accessToken: string): Promise<void>;
+  getUserInfoByProvider(
+    accessToken: string,
+    provider: Provider
+  ): Promise<IAccountDto>;
 }

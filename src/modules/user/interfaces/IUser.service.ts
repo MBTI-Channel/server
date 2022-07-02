@@ -1,4 +1,5 @@
 import { QueryDeepPartialEntity } from "typeorm/query-builder/QueryPartialEntity";
+import { Provider } from "../../../shared/type.shared";
 import {
   LoginDto,
   SignUpDto,
@@ -10,7 +11,10 @@ import { User } from "../entity/user.entity";
 export interface IUserService {
   create(dto: CreateUserDto): Promise<User>;
   findOneById(id: number): Promise<User | null>;
-  findOneByProviderInfo(dto: LoginDto): Promise<User | null>;
+  findOneByProviderInfo(
+    provider: Provider,
+    providerId: string
+  ): Promise<User | null>;
   update(
     id: number,
     payload: QueryDeepPartialEntity<User>

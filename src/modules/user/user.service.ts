@@ -18,6 +18,7 @@ import {
   NicknameDuplicateCheckDto,
   CreateUserDto,
 } from "./dto";
+import { Provider } from "../../shared/type.shared";
 import config from "../../config";
 
 @injectable()
@@ -39,8 +40,15 @@ export class UserService implements IUserService {
     return await this._userRepository.findOneById(id);
   }
 
-  public async findOneByProviderInfo(dto: LoginDto): Promise<User | null> {
-    return await this._userRepository.findOneByProviderInfo(dto);
+  public async findOneByProviderInfo(
+    provider: Provider,
+    providerId: string
+  ): Promise<User | null> {
+    this._logger.trace(`[UserService] findOneByProviderInfo start`);
+    return await this._userRepository.findOneByProviderInfo({
+      provider,
+      providerId,
+    });
   }
 
   public async update(id: number, payload: QueryDeepPartialEntity<User>) {

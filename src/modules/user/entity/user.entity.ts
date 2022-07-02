@@ -5,9 +5,8 @@ import {
   OneToMany,
   UpdateDateColumn,
   CreateDateColumn,
+  Generated,
 } from "typeorm";
-import { Provider } from "../../../shared/type.shared";
-
 import { Bookmark } from "../../bookmark/entity/bookmark.entity";
 import { Comment } from "../../comment/entity/comment.entity";
 import { Like } from "../../like/entity/like.entity";
@@ -16,11 +15,16 @@ import { Notification } from "../../notifications/entity/notification.entity";
 import { Post } from "../../post/entity/post.entity";
 import { Report } from "../../report/entity/report.entity";
 import { Survey } from "../../survey/entity/survey.entity";
+import { UserBase } from "./userbase";
 
 @Entity("User")
-export class User {
+export class User extends UserBase {
   @PrimaryGeneratedColumn()
   id: number;
+
+  @Generated("uuid")
+  @Column({ type: "uuid" })
+  uuid: string;
 
   @Column({
     type: "tinyint",
@@ -45,32 +49,17 @@ export class User {
   nickname: string;
 
   @Column({
-    length: "255",
-    comment: "kakao | naver",
+    type: "tinyint",
+    default: 0,
+    comment: "어드민 여부",
   })
-  provider!: Provider;
-
-  @Column({
-    length: "255",
-    comment: "소셜 계정 고유 아이디",
-  })
-  providerId!: string;
-
-  @Column({ nullable: true, type: "text", comment: "소셜에서 받은 데이터" })
-  providerData: string;
+  isAdmin!: boolean;
 
   @CreateDateColumn({ type: "datetime", comment: "생성 날짜시간" })
   datetime!: Date;
 
   @UpdateDateColumn({ type: "datetime", comment: "업데이트 날짜시간" })
   updateDatetime?: Date;
-
-  @Column({
-    type: "tinyint",
-    default: 0,
-    comment: "어드민 여부",
-  })
-  isAdmin!: boolean;
 
   // User (1) <-> Like(*)
   @OneToMany(() => Like, (like) => like.user, {
