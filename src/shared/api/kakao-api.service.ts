@@ -21,13 +21,14 @@ export class KakaoApiService implements IApiService {
           "Content-Type": "application/x-www-form-urlencoded;charset=utf-8",
         },
       });
+
       this._logger.trace(
         `[KakaoApiService] access token successfully received`
       );
       return data.access_token;
-    } catch (err) {
+    } catch (err: any) {
       this._logger.warn(
-        `[KakaoApiService] invalid 'authCode' or check 'restApiKey' & 'redirectUri' of kakao`
+        `[KakaoApiService] getAccessToken fail : ${err.response.data.error_description}`
       );
       return null;
     }
@@ -49,8 +50,10 @@ export class KakaoApiService implements IApiService {
         ageRange: data.kakao_account.age_range,
         gender: data.kakao_account.gender,
       });
-    } catch (err) {
-      this._logger.warn(`[KakaoApiService] invalid access token`);
+    } catch (err: any) {
+      this._logger.warn(
+        `[KakaoApiService] getUserInfo fail : ${err.response.data.error_description}`
+      );
       return null;
     }
   }
@@ -66,8 +69,10 @@ export class KakaoApiService implements IApiService {
       });
       this._logger.trace(`[KakaoApiService] expires token successful`);
       return;
-    } catch (err) {
-      this._logger.warn(`[KakaoApiService] invaid access token`);
+    } catch (err: any) {
+      this._logger.warn(
+        `[KakaoApiService] expiresToken fail : ${err.response.data.error_description}`
+      );
       return;
     }
   }

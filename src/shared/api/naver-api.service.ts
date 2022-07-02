@@ -21,13 +21,17 @@ export class NaverApiService implements IApiService {
           "Content-Type": "application/x-www-form-urlencoded;charset=utf-8",
         },
       });
+      if (data.error) {
+        throw new Error(`${data.error_description}`);
+      }
+
       this._logger.trace(
         `[NaverApiService] access token successfully received`
       );
       return data.access_token;
-    } catch (err) {
+    } catch (err: any) {
       this._logger.warn(
-        `[NaverApiService] invalid 'authCode' or check 'clientId' & 'clientSecret' of naver`
+        `[NaverApiService] getAccessToken fail : ${err.message}`
       );
       return null;
     }
@@ -42,10 +46,12 @@ export class NaverApiService implements IApiService {
           "Content-Type": "application/x-www-form-urlencoded;charset=utf-8",
         },
       });
+      console.log(data);
+
       this._logger.trace(`[NaverApiService] user info successfully received`);
       return plainToInstance(NaverAccountDto, data.response);
-    } catch (err) {
-      this._logger.warn(`[NaverApiService] invalid access token`);
+    } catch (err: any) {
+      this._logger.warn(`[NaverApiService] getUserInfo fail : ${err.message}`);
       return null;
     }
   }
