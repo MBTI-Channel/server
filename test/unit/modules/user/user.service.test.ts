@@ -3,7 +3,7 @@ import { TYPES } from "../../../../src/core/type.core";
 import {
   NotFoundException,
   UnauthorizedException,
-} from "../../../../src/errors/all.exception";
+} from "../../../../src/shared/errors/all.exception";
 import {
   LoginDto,
   NicknameDuplicateCheckDto,

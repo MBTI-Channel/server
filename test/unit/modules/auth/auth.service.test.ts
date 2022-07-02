@@ -1,6 +1,6 @@
 import container from "../../../../src/core/container.core";
 import { TYPES } from "../../../../src/core/type.core";
-import { UnauthorizedException } from "../../../../src/errors/all.exception";
+import { UnauthorizedException } from "../../../../src/shared/errors/all.exception";
 import { DecodedDto } from "../../../../src/modules/auth/dtos/decode-token.dto";
 import { IAuthService } from "../../../../src/modules/auth/interfaces/IAuth.service";
 import { User } from "../../../../src/modules/user/entity/user.entity";
