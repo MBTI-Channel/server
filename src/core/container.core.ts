@@ -29,6 +29,7 @@ import { JwtUtil } from "../shared/utils/jwt.util";
 import { OauthService } from "../shared/oauth/oauth.service";
 import { KakaoApiService } from "../shared/api/kakao-api.service";
 import { NaverApiService } from "../shared/api/naver-api.service";
+import { IsNotLoggedIn } from "../middlewares/is-not-logged-in.middleware";
 
 const container = new Container();
 
@@ -42,6 +43,7 @@ container.bind<IRedisService>(TYPES.IRedisService).to(RedisService);
 container
   .bind(TYPES.GetProviderUserByOauthMiddleware)
   .to(GetProviderUserByOauth);
+container.bind(TYPES.IsNotLoggedInMiddleware).to(IsNotLoggedIn);
 container.bind(TYPES.SocialSignUpMiddleware).to(SocialSignUp);
 container.bind(TYPES.ValidateAccessTokenMiddleware).to(ValidateAccessToken);
 container.bind(TYPES.ValidateReissueTokenMiddleware).to(ValidateReissueToken);

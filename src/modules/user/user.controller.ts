@@ -24,7 +24,7 @@ export class UserController extends BaseHttpController {
   @inject(TYPES.IUserService) private readonly _userService: IUserService;
 
   // 회원가입 (nickname, mbti 설정)
-  @httpPost("/", bodyValidator(SignUpDto))
+  @httpPost("/", bodyValidator(SignUpDto), TYPES.IsNotLoggedInMiddleware)
   async signUp(@requestBody() body: SignUpDto, req: Request, res: Response) {
     const { user, accessToken, refreshToken } = await this._userService.signUp(
       body
@@ -54,6 +54,7 @@ export class UserController extends BaseHttpController {
   @httpPost(
     "/login",
     bodyValidator(OauthLoginDto),
+    TYPES.IsNotLoggedInMiddleware,
     TYPES.GetProviderUserByOauthMiddleware,
     TYPES.SocialSignUpMiddleware
   )

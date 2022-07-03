@@ -15,6 +15,7 @@ export const TYPES = {
   GetProviderUserByOauthMiddleware: Symbol.for(
     "GetProviderUserByOauthMiddleware"
   ),
+  IsNotLoggedInMiddleware: Symbol.for("IsNotLoggedInMiddleware"),
   SocialSignUpMiddleware: Symbol.for("SocialSignUpMiddleware"),
   ValidateAccessTokenMiddleware: Symbol.for("ValidateAccessTokenMiddleware"),
   ValidateReissueTokenMiddleware: Symbol.for("ValidateReissueTokenMiddleware"),
