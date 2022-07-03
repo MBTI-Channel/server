@@ -35,18 +35,6 @@ export class IsNotLoggedIn extends BaseMiddleware {
         }
       }
 
-      // refresh token 유효 여부 판단
-      // 로그인 | 회원가입 시 유효한 refresh token 있으면 안됨
-      refreshToken = req.cookies.Refresh;
-      if (refreshToken) {
-        const { status: refreshTokenStatus } =
-          this._jwtUtil.verify(refreshToken);
-        if (refreshTokenStatus === "success") {
-          this._logger.trace(`[IsNotLoggedIn] jwt is valid`);
-          throw new UnauthorizedException("authentication error");
-        }
-      }
-
       this._logger.trace(`[IsNotLoggedIn] call next`);
       return next();
     } catch (err) {
