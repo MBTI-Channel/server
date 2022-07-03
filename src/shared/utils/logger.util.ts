@@ -2,8 +2,8 @@ import { injectable } from "inversify";
 import WinstonDaily from "winston-daily-rotate-file";
 import winston from "winston";
 import path from "path";
+import { nodeEnv } from "../constant.shared";
 
-const nodeEnv = process.env.NODE_ENV;
 const logDir = path.join(__dirname + "../../../logs");
 
 @injectable()

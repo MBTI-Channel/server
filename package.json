@@ -1,18 +1,16 @@
 {
-  "name": "server",
+  "name": "mbti-channel",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "main.js",
   "scripts": {
-    "api-docs": "swagger-cli bundle ./src/swagger/openapi.yaml --outfile src/swagger.yaml --type yaml",
-    "lint": "eslint . --ext .js,.ts",
-    "start": "NODE_ENV=development ts-node --transpile-only src/main.ts",
-    "start:dev": "npm run build && node dist/main.js",
-    "start:watch": "NODE_ENV=development npm run api-docs && nodemon src/main.ts --trace-warnings",
-    "build-dev": "tsc && node ./dist/main.js",
+    "start": "NODE_ENV=production node dist/main.js",
+    "dev": "NODE_ENV=development npm run api-docs && nodemon src/main.ts",
     "build": "tsc",
+    "lint": "eslint . --ext .js,.ts",
     "test": "jest",
-    "test:coverage": "jest --coverage"
+    "test:c": "jest --coverage",
+    "api-docs": "swagger-cli bundle ./src/swagger/openapi.yaml --outfile src/swagger.yaml --type yaml"
   },
   "repository": {
     "type": "git",
