@@ -12,7 +12,7 @@ export class DatabaseService implements IDatabaseService {
 
   private async _getConnection(): Promise<DataSource> {
     if (DatabaseService.myDataSource?.isInitialized) {
-      this._logger.info(
+      this._logger.trace(
         "[DatabaseService] database connection already established"
       );
       return DatabaseService.myDataSource;
