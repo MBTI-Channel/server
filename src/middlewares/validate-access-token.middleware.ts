@@ -47,7 +47,8 @@ export class ValidateAccessToken extends BaseMiddleware {
       }
 
       // access token의 payload가 유효한 사용자 확인
-      await this._authService.validateUserWithToken(decoded);
+      const { id, nickname, mbti } = decoded;
+      await this._authService.validateUserWithToken(id, nickname, mbti);
 
       req.user = {
         id: decoded.id,

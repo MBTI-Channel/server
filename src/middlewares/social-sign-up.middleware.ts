@@ -35,13 +35,12 @@ export class SocialSignUp extends BaseMiddleware {
         this._logger.trace(
           `[SocialSignUp] matching user in 'provider info' does not exist`
         );
-        const dto = plainToClass(CreateUserDto, {
+        const newUser = await this._userService.create(
           provider,
           providerId,
           gender,
-          ageRange,
-        });
-        const newUser = await this._userService.create(dto);
+          ageRange
+        );
 
         return res.status(201).json({
           id: newUser.id,

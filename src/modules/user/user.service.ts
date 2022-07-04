@@ -1,20 +1,11 @@
 import { inject, injectable } from "inversify";
-import { QueryDeepPartialEntity } from "typeorm/query-builder/QueryPartialEntity";
 import { plainToInstance } from "class-transformer";
 import { TYPES } from "../../core/type.core";
 import { IUserService } from "./interfaces/IUser.service";
 import { IAuthService } from "../auth/interfaces/IAuth.service";
 import { IUserRepository } from "./interfaces/IUser.repository";
 import { User } from "./entity/user.entity";
-import {
-  LoginDto,
-  SignUpDto,
-  NicknameDuplicateCheckDto,
-  CreateUserDto,
-  UserTokenResponseDto,
-  UserResponseDto,
-  TokenResponseDto,
-} from "./dto";
+import { UserTokenResponseDto, UserResponseDto, TokenResponseDto } from "./dto";
 import { Logger } from "../../shared/utils/logger.util";
 import { JwtUtil } from "../../shared/utils/jwt.util";
 import {
@@ -69,10 +60,21 @@ export class UserService implements IUserService {
     });
   }
 
-  public async create(dto: CreateUserDto) {
+  public async create(
+    provider: Provider,
+    providerId: string,
+    gender?: number,
+    ageRange?: string
+  ) {
     this._logger.trace(`[UserService] create start`);
     //TODO: 생성전 중복 회원 검증 로직
-    const user = await this._userRepository.create(dto);
+    const userEntity = await this._userRepository.createEntity(
+      provider,
+      providerId,
+      gender,
+      ageRange
+    );
+    const user = await this._userRepository.create(userEntity);
     return this._toUserResponseDto(user);
   }
 
@@ -85,23 +87,29 @@ export class UserService implements IUserService {
 
   public async findOneByProviderInfo(provider: Provider, providerId: string) {
     this._logger.trace(`[UserService] findOneByProviderInfo start`);
-    const user = await this._userRepository.findOneByProviderInfo({
+    const user = await this._userRepository.findOneByProviderInfo(
       provider,
-      providerId,
-    });
+      providerId
+    );
     if (!user) return null;
     return this._toUserResponseDto(user);
   }
 
-  public async update(id: number, payload: QueryDeepPartialEntity<User>) {
+  public async update(id: number, payload: Partial<User>) {
     const user = await this._userRepository.findOneById(id);
     if (!user) throw new NotFoundException("not exists user");
     const updatedUser = await this._userRepository.update(id, payload);
     return this._toUserResponseDto(updatedUser);
   }
 
-  public async login(dto: LoginDto): Promise<UserTokenResponseDto> {
-    const user = await this._userRepository.findOneByProviderInfo(dto);
+  public async login(
+    provider: Provider,
+    providerId: string
+  ): Promise<UserTokenResponseDto> {
+    const user = await this._userRepository.findOneByProviderInfo(
+      provider,
+      providerId
+    );
     if (!user) {
       throw new NotFoundException("not exists user");
     }
@@ -114,8 +122,7 @@ export class UserService implements IUserService {
     return this._toUserTokenResponseDto(user, accessToken, refreshToken);
   }
 
-  public async signUp(dto: SignUpDto) {
-    const { id, nickname, mbti } = dto;
+  public async signUp(id: number, nickname: string, mbti: string) {
     // 존재하는 유저 id인지, 회원가입 가능한 상태인지 확인
     // 악성 가입 요청을 방지하기 위해 동일한 인증에러, 메세지 반환
     const foundUser = await this._userRepository.findOneById(id);
@@ -123,7 +130,7 @@ export class UserService implements IUserService {
       throw new UnauthorizedException("not exists user or invalid request");
 
     // 중복 닉네임이라면 에러
-    const foundNickname = await this.isExistsNickname({ nickname });
+    const foundNickname = await this.isExistsNickname(nickname);
     if (foundNickname) throw new ConflictException("already exists nickname");
 
     // 업데이트 및 토큰 발급
@@ -140,8 +147,7 @@ export class UserService implements IUserService {
     return this._toUserTokenResponseDto(user, accessToken, refreshToken);
   }
 
-  public async isExistsNickname(dto: NicknameDuplicateCheckDto) {
-    const { nickname } = dto;
+  public async isExistsNickname(nickname: string) {
     const foundNickname = await this._userRepository.findOneByNickname(
       nickname
     );

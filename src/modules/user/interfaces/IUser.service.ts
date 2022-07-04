@@ -1,10 +1,5 @@
-import { QueryDeepPartialEntity } from "typeorm/query-builder/QueryPartialEntity";
 import { Provider } from "../../../shared/type.shared";
 import {
-  LoginDto,
-  SignUpDto,
-  NicknameDuplicateCheckDto,
-  CreateUserDto,
   UserTokenResponseDto,
   TokenResponseDto,
   UserResponseDto,
@@ -12,19 +7,25 @@ import {
 import { User } from "../entity/user.entity";
 
 export interface IUserService {
-  create(dto: CreateUserDto): Promise<UserResponseDto>;
+  create(
+    provider: Provider,
+    providerId: string,
+    gender?: number,
+    ageRange?: string
+  ): Promise<UserResponseDto>;
   findOneById(id: number): Promise<UserResponseDto | null>;
   findOneByProviderInfo(
     provider: Provider,
     providerId: string
   ): Promise<UserResponseDto | null>;
-  update(
-    id: number,
-    payload: QueryDeepPartialEntity<User>
-  ): Promise<UserResponseDto | null>;
+  update(id: number, payload: Partial<User>): Promise<UserResponseDto | null>;
 
-  login(dto: LoginDto): Promise<UserTokenResponseDto>;
-  signUp(dto: SignUpDto): Promise<UserTokenResponseDto>;
-  isExistsNickname(dto: NicknameDuplicateCheckDto): Promise<boolean>;
+  login(provider: Provider, providerId: string): Promise<UserTokenResponseDto>;
+  signUp(
+    id: number,
+    nickname: string,
+    mbti: string
+  ): Promise<UserTokenResponseDto>;
+  isExistsNickname(nickname: string): Promise<boolean>;
   reissueAccessToken(accessToken: string): Promise<TokenResponseDto>;
 }

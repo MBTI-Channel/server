@@ -50,10 +50,12 @@ export class AuthService implements IAuthService {
   /**
    * payload의 데이터가 이상이 없는지 확인하는 함수
    */
-  public async validateUserWithToken(dto: DecodedDto) {
+  public async validateUserWithToken(
+    id: number,
+    nickname: string,
+    mbti: string
+  ) {
     this._logger.trace(`[validateUserWithToken] start`);
-
-    const { id, nickname, mbti } = dto;
 
     const user = await this._userRepository.findOneById(id);
 

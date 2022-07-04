@@ -3,8 +3,8 @@ import { QueryDeepPartialEntity } from "typeorm/query-builder/QueryPartialEntity
 import { TYPES } from "../../core/type.core";
 import { IDatabaseService } from "../../shared/database/interfaces/IDatabase.service";
 import { IUserRepository } from "./interfaces/IUser.repository";
-import { CreateUserDto, LoginDto } from "./dto";
 import { User } from "./entity/user.entity";
+import { Provider } from "../../shared/type.shared";
 
 @injectable()
 export class UserRepository implements IUserRepository {
@@ -12,10 +12,26 @@ export class UserRepository implements IUserRepository {
     @inject(TYPES.IDatabaseService) private readonly _database: IDatabaseService
   ) {}
 
-  async create(dto: CreateUserDto): Promise<User> {
+  async createEntity(
+    provider: Provider,
+    providerId: string,
+    gender: number,
+    ageRange: string
+  ) {
     const repository = await this._database.getRepository(User);
-    const user = await repository.create(dto);
-    await repository.insert(user);
+    const userEntity = await repository.create({
+      provider,
+      providerId,
+      gender,
+      ageRange,
+    });
+
+    return userEntity;
+  }
+
+  async create(userEntity: User): Promise<User> {
+    const repository = await this._database.getRepository(User);
+    const user = await repository.save(userEntity);
     return user;
   }
 
@@ -29,19 +45,18 @@ export class UserRepository implements IUserRepository {
     return await repository.findOne({ where: { nickname } });
   }
 
-  async findOneByProviderInfo(dto: LoginDto): Promise<User | null> {
-    const { provider, providerId } = dto;
+  async findOneByProviderInfo(
+    provider: Provider,
+    providerId: string
+  ): Promise<User | null> {
     const repository = await this._database.getRepository(User);
     return await repository.findOne({ where: { provider, providerId } });
   }
 
-  async update(
-    id: number,
-    payload: QueryDeepPartialEntity<User>
-  ): Promise<User> {
+  async update(id: number, payload: Partial<User>): Promise<User> {
     const repository = await this._database.getRepository(User);
     const updatedUser = await repository
-      .update(id, payload)
+      .update(id, payload as QueryDeepPartialEntity<User>)
       .then(async () => await repository.findOne({ where: { id } }));
     return updatedUser;
   }
