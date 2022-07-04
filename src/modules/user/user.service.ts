@@ -1,23 +1,27 @@
 import { inject, injectable } from "inversify";
 import { QueryDeepPartialEntity } from "typeorm/query-builder/QueryPartialEntity";
-import { User } from "./entity/user.entity";
-import { IUserService } from "./interfaces/IUser.service";
+import { plainToClass, plainToInstance } from "class-transformer";
 import { TYPES } from "../../core/type.core";
-import { IUserRepository } from "./interfaces/IUser.repository";
+import { IUserService } from "./interfaces/IUser.service";
 import { IAuthService } from "../auth/interfaces/IAuth.service";
-import {
-  ConflictException,
-  NotFoundException,
-  UnauthorizedException,
-} from "../../shared/errors/all.exception";
-import { Logger } from "../../shared/utils/logger.util";
-import { JwtUtil } from "../../shared/utils/jwt.util";
+import { IUserRepository } from "./interfaces/IUser.repository";
+import { User } from "./entity/user.entity";
 import {
   LoginDto,
   SignUpDto,
   NicknameDuplicateCheckDto,
   CreateUserDto,
+  UserTokenResponseDto,
+  UserResponseDto,
+  TokenResponseDto,
 } from "./dto";
+import { Logger } from "../../shared/utils/logger.util";
+import { JwtUtil } from "../../shared/utils/jwt.util";
+import {
+  ConflictException,
+  NotFoundException,
+  UnauthorizedException,
+} from "../../shared/errors/all.exception";
 import { Provider } from "../../shared/type.shared";
 import config from "../../config";
 
@@ -32,34 +36,71 @@ export class UserService implements IUserService {
     @inject(TYPES.JwtUtil) private readonly _jwtUtil: JwtUtil
   ) {}
 
-  public async create(dto: CreateUserDto): Promise<User> {
-    return await this._userRepository.create(dto);
+  private _toUserResponseDto(user: User) {
+    return plainToClass(UserResponseDto, {
+      id: user.id,
+      mbti: user.mbti,
+      nickname: user.nickname,
+      isAdmin: user.isAdmin,
+      isActive: user.status !== config.user.status.withdrawal ? true : false,
+    });
   }
 
-  public async findOneById(id: number): Promise<User | null> {
-    return await this._userRepository.findOneById(id);
+  private _toUserTokenResponseDto(
+    user: User,
+    accessToken: string,
+    refreshToken: string
+  ) {
+    return plainToInstance(UserTokenResponseDto, {
+      id: user.id,
+      mbti: user.mbti,
+      nickname: user.nickname,
+      isAdmin: user.isAdmin,
+      isActive: user.status !== config.user.status.withdrawal ? true : false,
+      accessToken,
+      refreshToken,
+    });
   }
 
-  public async findOneByProviderInfo(
-    provider: Provider,
-    providerId: string
-  ): Promise<User | null> {
+  private _toTokenResponseDto(accessToken: string, refreshToken: string) {
+    return plainToInstance(TokenResponseDto, {
+      accessToken,
+      refreshToken,
+    });
+  }
+
+  public async create(dto: CreateUserDto) {
+    this._logger.trace(`[UserService] create start`);
+    //TODO: 생성전 중복 회원 검증 로직
+    const user = await this._userRepository.create(dto);
+    return this._toUserResponseDto(user);
+  }
+
+  public async findOneById(id: number) {
+    this._logger.trace(`[UserService] findOneById start`);
+    const user = await this._userRepository.findOneById(id);
+    if (!user) return null;
+    return this._toUserResponseDto(user);
+  }
+
+  public async findOneByProviderInfo(provider: Provider, providerId: string) {
     this._logger.trace(`[UserService] findOneByProviderInfo start`);
-    return await this._userRepository.findOneByProviderInfo({
+    const user = await this._userRepository.findOneByProviderInfo({
       provider,
       providerId,
     });
+    if (!user) return null;
+    return this._toUserResponseDto(user);
   }
 
   public async update(id: number, payload: QueryDeepPartialEntity<User>) {
     const user = await this._userRepository.findOneById(id);
     if (!user) throw new NotFoundException("not exists user");
     const updatedUser = await this._userRepository.update(id, payload);
-
-    return updatedUser;
+    return this._toUserResponseDto(updatedUser);
   }
 
-  public async login(dto: LoginDto): Promise<any> {
+  public async login(dto: LoginDto): Promise<UserTokenResponseDto> {
     const user = await this._userRepository.findOneByProviderInfo(dto);
     if (!user) {
       throw new NotFoundException("not exists user");
@@ -70,10 +111,10 @@ export class UserService implements IUserService {
       this._authService.generateRefreshToken(),
     ]);
 
-    return { user, accessToken, refreshToken };
+    return this._toUserTokenResponseDto(user, accessToken, refreshToken);
   }
 
-  public async signUp(dto: SignUpDto): Promise<any> {
+  public async signUp(dto: SignUpDto) {
     const { id, nickname, mbti } = dto;
     // 존재하는 유저 id인지, 회원가입 가능한 상태인지 확인
     // 악성 가입 요청을 방지하기 위해 동일한 인증에러, 메세지 반환
@@ -96,7 +137,7 @@ export class UserService implements IUserService {
       this._authService.generateRefreshToken(),
     ]);
 
-    return { user, accessToken, refreshToken };
+    return this._toUserTokenResponseDto(user, accessToken, refreshToken);
   }
 
   public async isExistsNickname(dto: NicknameDuplicateCheckDto) {
@@ -109,8 +150,14 @@ export class UserService implements IUserService {
   }
 
   public async reissueAccessToken(oldAccessToken: string) {
-    const decodedToken = this._jwtUtil.decode(oldAccessToken);
     // TODO: 수정필요
+    const decodedToken = this._jwtUtil.decode(oldAccessToken);
+    return {
+      accessToken: "1",
+      refreshToken: "1",
+    };
+    // return this._toTokenResponseDto(accessToken, refreshToken)
+
     // if (decodedToken.status !== "success") {
     //   throw new UnauthorizedException("token is not validate");
     // }
