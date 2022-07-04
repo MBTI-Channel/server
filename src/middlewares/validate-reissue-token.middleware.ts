@@ -53,7 +53,13 @@ export class ValidateReissueToken extends BaseMiddleware {
 
       // access token의 payload가 유효한 사용자 확인
       const accessTokenDecoded = this._jwtUtil.decode(accessToken);
-      await this._authService.validateUserWithToken(accessTokenDecoded!);
+      if (!accessTokenDecoded) {
+        this._logger.trace(`[ValidateReissueToken] authentication error`);
+        throw new UnauthorizedException("authentication error");
+      }
+
+      const { id, nickname, mbti } = accessTokenDecoded;
+      await this._authService.validateUserWithToken(id, nickname, mbti);
 
       // refresh token이 쿠키에 있는지 확인
       refreshToken = req.cookies.Refresh;
