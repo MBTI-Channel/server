@@ -9,9 +9,7 @@ export interface IUserRepository {
     gender?: number,
     ageRange?: string
   ): Promise<QueryDeepPartialEntity<User>>;
-  create(
-    userEntity: QueryDeepPartialEntity<User>
-  ): Promise<QueryDeepPartialEntity<User>>;
+  create(userEntity: QueryDeepPartialEntity<User>): Promise<User>;
   findOneById(id: number): Promise<User | null>;
   findOneByNickname(nickname: string): Promise<User | null>;
   findOneByProviderInfo(

@@ -29,12 +29,10 @@ export class UserRepository implements IUserRepository {
     return userEntity;
   }
 
-  async create(
-    userEntity: QueryDeepPartialEntity<User>
-  ): Promise<QueryDeepPartialEntity<User>> {
+  async create(userEntity: QueryDeepPartialEntity<User>): Promise<User> {
     const repository = await this._database.getRepository(User);
-    await repository.insert(userEntity);
-    return userEntity;
+    const user = await repository.save(userEntity);
+    return user;
   }
 
   async findOneById(id: number): Promise<User | null> {

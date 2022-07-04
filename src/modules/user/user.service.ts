@@ -28,7 +28,7 @@ export class UserService implements IUserService {
     @inject(TYPES.JwtUtil) private readonly _jwtUtil: JwtUtil
   ) {}
 
-  private _toUserResponseDto(user: QueryDeepPartialEntity<User>) {
+  private _toUserResponseDto(user: User) {
     return plainToInstance(UserResponseDto, {
       id: user.id,
       mbti: user.mbti,
