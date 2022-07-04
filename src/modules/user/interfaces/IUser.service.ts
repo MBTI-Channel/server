@@ -1,4 +1,3 @@
-import { QueryDeepPartialEntity } from "typeorm/query-builder/QueryPartialEntity";
 import { Provider } from "../../../shared/type.shared";
 import {
   UserTokenResponseDto,
@@ -19,10 +18,7 @@ export interface IUserService {
     provider: Provider,
     providerId: string
   ): Promise<UserResponseDto | null>;
-  update(
-    id: number,
-    payload: QueryDeepPartialEntity<User>
-  ): Promise<UserResponseDto | null>;
+  update(id: number, payload: Partial<User>): Promise<UserResponseDto | null>;
 
   login(provider: Provider, providerId: string): Promise<UserTokenResponseDto>;
   signUp(

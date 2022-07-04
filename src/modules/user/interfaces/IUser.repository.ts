@@ -1,4 +1,3 @@
-import { QueryDeepPartialEntity } from "typeorm/query-builder/QueryPartialEntity";
 import { Provider } from "../../../shared/type.shared";
 import { User } from "../entity/user.entity";
 
@@ -8,13 +7,13 @@ export interface IUserRepository {
     providerId: string,
     gender?: number,
     ageRange?: string
-  ): Promise<QueryDeepPartialEntity<User>>;
-  create(userEntity: QueryDeepPartialEntity<User>): Promise<User>;
+  ): Promise<User>;
+  create(userEntity: User): Promise<User>;
   findOneById(id: number): Promise<User | null>;
   findOneByNickname(nickname: string): Promise<User | null>;
   findOneByProviderInfo(
     provider: Provider,
     providerId: string
   ): Promise<User | null>;
-  update(id: number, payload: QueryDeepPartialEntity<User>): Promise<User>;
+  update(id: number, payload: Partial<User>): Promise<User>;
 }

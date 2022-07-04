@@ -1,5 +1,4 @@
 import { inject, injectable } from "inversify";
-import { QueryDeepPartialEntity } from "typeorm/query-builder/QueryPartialEntity";
 import { plainToInstance } from "class-transformer";
 import { TYPES } from "../../core/type.core";
 import { IUserService } from "./interfaces/IUser.service";
@@ -96,7 +95,7 @@ export class UserService implements IUserService {
     return this._toUserResponseDto(user);
   }
 
-  public async update(id: number, payload: QueryDeepPartialEntity<User>) {
+  public async update(id: number, payload: Partial<User>) {
     const user = await this._userRepository.findOneById(id);
     if (!user) throw new NotFoundException("not exists user");
     const updatedUser = await this._userRepository.update(id, payload);

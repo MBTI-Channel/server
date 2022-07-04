@@ -29,7 +29,7 @@ export class UserRepository implements IUserRepository {
     return userEntity;
   }
 
-  async create(userEntity: QueryDeepPartialEntity<User>): Promise<User> {
+  async create(userEntity: User): Promise<User> {
     const repository = await this._database.getRepository(User);
     const user = await repository.save(userEntity);
     return user;
@@ -53,13 +53,10 @@ export class UserRepository implements IUserRepository {
     return await repository.findOne({ where: { provider, providerId } });
   }
 
-  async update(
-    id: number,
-    payload: QueryDeepPartialEntity<User>
-  ): Promise<User> {
+  async update(id: number, payload: Partial<User>): Promise<User> {
     const repository = await this._database.getRepository(User);
     const updatedUser = await repository
-      .update(id, payload)
+      .update(id, payload as QueryDeepPartialEntity<User>)
       .then(async () => await repository.findOne({ where: { id } }));
     return updatedUser;
   }
