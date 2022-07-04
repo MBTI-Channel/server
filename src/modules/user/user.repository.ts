@@ -3,8 +3,8 @@ import { QueryDeepPartialEntity } from "typeorm/query-builder/QueryPartialEntity
 import { TYPES } from "../../core/type.core";
 import { IDatabaseService } from "../../shared/database/interfaces/IDatabase.service";
 import { IUserRepository } from "./interfaces/IUser.repository";
-import { CreateUserDto, LoginDto } from "./dto";
 import { User } from "./entity/user.entity";
+import { Provider } from "../../shared/type.shared";
 
 @injectable()
 export class UserRepository implements IUserRepository {
@@ -12,11 +12,29 @@ export class UserRepository implements IUserRepository {
     @inject(TYPES.IDatabaseService) private readonly _database: IDatabaseService
   ) {}
 
-  async create(dto: CreateUserDto): Promise<User> {
+  async createEntity(
+    provider: Provider,
+    providerId: string,
+    gender: number,
+    ageRange: string
+  ) {
     const repository = await this._database.getRepository(User);
-    const user = await repository.create(dto);
-    await repository.insert(user);
-    return user;
+    const userEntity = await repository.create({
+      provider,
+      providerId,
+      gender,
+      ageRange,
+    });
+
+    return userEntity;
+  }
+
+  async create(
+    userEntity: QueryDeepPartialEntity<User>
+  ): Promise<QueryDeepPartialEntity<User>> {
+    const repository = await this._database.getRepository(User);
+    await repository.insert(userEntity);
+    return userEntity;
   }
 
   async findOneById(id: number): Promise<User | null> {
@@ -29,8 +47,10 @@ export class UserRepository implements IUserRepository {
     return await repository.findOne({ where: { nickname } });
   }
 
-  async findOneByProviderInfo(dto: LoginDto): Promise<User | null> {
-    const { provider, providerId } = dto;
+  async findOneByProviderInfo(
+    provider: Provider,
+    providerId: string
+  ): Promise<User | null> {
     const repository = await this._database.getRepository(User);
     return await repository.findOne({ where: { provider, providerId } });
   }
