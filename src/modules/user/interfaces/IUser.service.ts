@@ -5,22 +5,26 @@ import {
   SignUpDto,
   NicknameDuplicateCheckDto,
   CreateUserDto,
+  UserTokenResponseDto,
+  TokenResponseDto,
+  UserResponseDto,
 } from "../dto";
 import { User } from "../entity/user.entity";
 
 export interface IUserService {
-  create(dto: CreateUserDto): Promise<User>;
-  findOneById(id: number): Promise<User | null>;
+  create(dto: CreateUserDto): Promise<UserResponseDto>;
+  findOneById(id: number): Promise<UserResponseDto | null>;
   findOneByProviderInfo(
     provider: Provider,
     providerId: string
-  ): Promise<User | null>;
+  ): Promise<UserResponseDto | null>;
   update(
     id: number,
     payload: QueryDeepPartialEntity<User>
-  ): Promise<User | null>;
-  login(dto: LoginDto): Promise<any>;
-  signUp(dto: SignUpDto): Promise<any>;
+  ): Promise<UserResponseDto | null>;
+
+  login(dto: LoginDto): Promise<UserTokenResponseDto>;
+  signUp(dto: SignUpDto): Promise<UserTokenResponseDto>;
   isExistsNickname(dto: NicknameDuplicateCheckDto): Promise<boolean>;
-  reissueAccessToken(accessToken: string): Promise<any>;
+  reissueAccessToken(accessToken: string): Promise<TokenResponseDto>;
 }

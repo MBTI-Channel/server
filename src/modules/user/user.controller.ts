@@ -26,17 +26,8 @@ export class UserController extends BaseHttpController {
   // 회원가입 (nickname, mbti 설정)
   @httpPost("/", bodyValidator(SignUpDto))
   async signUp(@requestBody() body: SignUpDto, req: Request, res: Response) {
-    const { user, accessToken, refreshToken } = await this._userService.signUp(
-      body
-    );
-
-    return res.status(201).json({
-      nickname: user.nickname,
-      mbti: user.mbti,
-      isAdmin: user.isAdmin,
-      accessToken,
-      refreshToken,
-    });
+    const data = await this._userService.signUp(body);
+    return res.status(201).json(data);
   }
 
   // 닉네임 중복확인
@@ -59,22 +50,15 @@ export class UserController extends BaseHttpController {
   )
   async oauthLogin(req: Request, res: Response) {
     const dto = req.user as LoginDto;
-    const { user, accessToken, refreshToken } = await this._userService.login(
-      dto
-    );
-    res.cookie("Refresh", refreshToken, {
+    const data = await this._userService.login(dto);
+
+    res.cookie("Refresh", data.refreshToken, {
       httpOnly: true,
       secure: false, // true
       maxAge: config.cookie.refreshTokenMaxAge,
     });
 
-    return res.status(201).json({
-      nickname: user.nickname,
-      mbti: user.mbti,
-      isAdmin: user.isAdmin,
-      accessToken,
-      refreshToken,
-    });
+    return res.status(201).json(data);
   }
 
   // access token 재발급
@@ -82,11 +66,9 @@ export class UserController extends BaseHttpController {
   async reissueAccessToken(req: Request, res: Response) {
     const accessToken = req.headers!.authorization!.replace("Bearer ", "");
 
-    const { newAccessToken } = await this._userService.reissueAccessToken(
-      accessToken
-    );
+    const data = await this._userService.reissueAccessToken(accessToken);
     return res.status(200).json({
-      newAccessToken,
+      data,
     });
   }
 
