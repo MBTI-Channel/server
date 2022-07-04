@@ -33,8 +33,8 @@ export class GetProviderUserByOauth extends BaseMiddleware {
       req.user = plainToInstance(UserBase, {
         provider,
         providerId: providerUserInfo.id,
-        gender: providerUserInfo.getGender(),
-        ageRange: providerUserInfo.getAgeRange(),
+        gender: providerUserInfo.gender,
+        ageRange: providerUserInfo.ageRange,
       });
 
       this._logger.trace(`[GetProviderUserByOauth] call next`);
