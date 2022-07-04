@@ -1,6 +1,6 @@
 import { inject, injectable } from "inversify";
 import { QueryDeepPartialEntity } from "typeorm/query-builder/QueryPartialEntity";
-import { plainToClass, plainToInstance } from "class-transformer";
+import { plainToInstance } from "class-transformer";
 import { TYPES } from "../../core/type.core";
 import { IUserService } from "./interfaces/IUser.service";
 import { IAuthService } from "../auth/interfaces/IAuth.service";
@@ -37,7 +37,7 @@ export class UserService implements IUserService {
   ) {}
 
   private _toUserResponseDto(user: User) {
-    return plainToClass(UserResponseDto, {
+    return plainToInstance(UserResponseDto, {
       id: user.id,
       mbti: user.mbti,
       nickname: user.nickname,
