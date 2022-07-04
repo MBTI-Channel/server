@@ -46,7 +46,6 @@ export class NaverApiService implements IApiService {
           "Content-Type": "application/x-www-form-urlencoded;charset=utf-8",
         },
       });
-      console.log(data);
 
       this._logger.trace(`[NaverApiService] user info successfully received`);
       return plainToInstance(NaverAccountDto, data.response);
