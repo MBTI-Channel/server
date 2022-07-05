@@ -20,7 +20,7 @@ export class SocialSignUp extends BaseMiddleware {
     try {
       this._logger.trace(`[SocialSignUp] start`);
       this._logger.trace(`[SocialSignUp] check if 'req.user' exists`);
-      // err: req.err 없음
+      // err: req.user 없음
       if (!req.user) throw new UnauthorizedException("authentication error");
 
       const { provider, providerId, gender, ageRange } = req.user as UserBase;
