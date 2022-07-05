@@ -69,6 +69,8 @@ export class SocialSignUp extends BaseMiddleware {
         });
       }
 
+      req.user = user;
+
       this._logger.trace(`[SocialSignUp] call next`);
       return next();
     } catch (err) {

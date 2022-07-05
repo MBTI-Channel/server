@@ -115,16 +115,25 @@ export class UserService implements IUserService {
   }
 
   public async login(
-    provider: Provider,
+    id: number,
     providerId: string
   ): Promise<UserTokenResponseDto> {
-    const user = await this._userRepository.findOneByProviderInfo(
-      provider,
-      providerId
-    );
+    this._logger.trace(`[UserService] login start`);
+
+    const user = await this._userRepository.findOneById(id);
+
+    // err: 존재하지 않는 user id
+    this._logger.trace(`[UserService] check is exists user id`);
     if (!user) {
       throw new NotFoundException("not exists user");
     }
+
+    // err: user providerId와 요청 providerId 다름
+    this._logger.trace(
+      `[UserService] check user providerId and providerId match`
+    );
+    if (user.providerId !== providerId)
+      throw new UnauthorizedException("user does not match");
 
     const [accessToken, refreshToken] = await Promise.all([
       this._authService.generateAccessToken(user),

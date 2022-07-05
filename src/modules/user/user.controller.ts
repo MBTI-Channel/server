@@ -51,8 +51,8 @@ export class UserController extends BaseHttpController {
     TYPES.SocialSignUpMiddleware
   )
   async oauthLogin(req: Request, res: Response) {
-    const { provider, providerId } = req.user as LoginDto;
-    const data = await this._userService.login(provider, providerId);
+    const { id, providerId } = req.user as User;
+    const data = await this._userService.login(id, providerId);
 
     res.cookie("Refresh", data.refreshToken, {
       httpOnly: true,
