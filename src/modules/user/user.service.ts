@@ -5,7 +5,12 @@ import { IUserService } from "./interfaces/IUser.service";
 import { IAuthService } from "../auth/interfaces/IAuth.service";
 import { IUserRepository } from "./interfaces/IUser.repository";
 import { User } from "./entity/user.entity";
-import { UserTokenResponseDto, UserResponseDto, TokenResponseDto } from "./dto";
+import {
+  UserTokenResponseDto,
+  UserResponseDto,
+  TokenResponseDto,
+  NeedSignUpResponseDto,
+} from "./dto";
 import { Logger } from "../../shared/utils/logger.util";
 import { JwtUtil } from "../../shared/utils/jwt.util";
 import {
@@ -61,6 +66,13 @@ export class UserService implements IUserService {
     });
   }
 
+  private _toNeedSignUpResponseDto(user: User) {
+    return plainToInstance(NeedSignUpResponseDto, {
+      id: user.id,
+      uuid: user.uuid,
+    });
+  }
+
   public async create(
     provider: Provider,
     providerId: string,
@@ -68,7 +80,6 @@ export class UserService implements IUserService {
     ageRange?: string
   ) {
     this._logger.trace(`[UserService] create start`);
-    //TODO: 생성전 중복 회원 검증 로직
     const userEntity = await this._userRepository.createEntity(
       provider,
       providerId,
@@ -76,7 +87,7 @@ export class UserService implements IUserService {
       ageRange
     );
     const user = await this._userRepository.create(userEntity);
-    return this._toUserResponseDto(user);
+    return this._toNeedSignUpResponseDto(user);
   }
 
   public async findOneById(id: number) {
