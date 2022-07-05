@@ -5,10 +5,16 @@ import { IUserService } from "./interfaces/IUser.service";
 import { IAuthService } from "../auth/interfaces/IAuth.service";
 import { IUserRepository } from "./interfaces/IUser.repository";
 import { User } from "./entity/user.entity";
-import { UserTokenResponseDto, UserResponseDto, TokenResponseDto } from "./dto";
+import {
+  UserTokenResponseDto,
+  UserResponseDto,
+  TokenResponseDto,
+  NeedSignUpResponseDto,
+} from "./dto";
 import { Logger } from "../../shared/utils/logger.util";
 import { JwtUtil } from "../../shared/utils/jwt.util";
 import {
+  BadReqeustException,
   ConflictException,
   NotFoundException,
   UnauthorizedException,
@@ -60,6 +66,13 @@ export class UserService implements IUserService {
     });
   }
 
+  private _toNeedSignUpResponseDto(user: User) {
+    return plainToInstance(NeedSignUpResponseDto, {
+      id: user.id,
+      uuid: user.uuid,
+    });
+  }
+
   public async create(
     provider: Provider,
     providerId: string,
@@ -67,7 +80,6 @@ export class UserService implements IUserService {
     ageRange?: string
   ) {
     this._logger.trace(`[UserService] create start`);
-    //TODO: 생성전 중복 회원 검증 로직
     const userEntity = await this._userRepository.createEntity(
       provider,
       providerId,
@@ -75,7 +87,7 @@ export class UserService implements IUserService {
       ageRange
     );
     const user = await this._userRepository.create(userEntity);
-    return this._toUserResponseDto(user);
+    return this._toNeedSignUpResponseDto(user);
   }
 
   public async findOneById(id: number) {
@@ -103,16 +115,25 @@ export class UserService implements IUserService {
   }
 
   public async login(
-    provider: Provider,
+    id: number,
     providerId: string
   ): Promise<UserTokenResponseDto> {
-    const user = await this._userRepository.findOneByProviderInfo(
-      provider,
-      providerId
-    );
+    this._logger.trace(`[UserService] login start`);
+
+    const user = await this._userRepository.findOneById(id);
+
+    // err: 존재하지 않는 user id
+    this._logger.trace(`[UserService] check is exists user id`);
     if (!user) {
       throw new NotFoundException("not exists user");
     }
+
+    // err: user providerId와 요청 providerId 다름
+    this._logger.trace(
+      `[UserService] check user providerId and providerId match`
+    );
+    if (user.providerId !== providerId)
+      throw new UnauthorizedException("user does not match");
 
     const [accessToken, refreshToken] = await Promise.all([
       this._authService.generateAccessToken(user),
@@ -122,19 +143,30 @@ export class UserService implements IUserService {
     return this._toUserTokenResponseDto(user, accessToken, refreshToken);
   }
 
-  public async signUp(id: number, nickname: string, mbti: string) {
-    // 존재하는 유저 id인지, 회원가입 가능한 상태인지 확인
-    // 악성 가입 요청을 방지하기 위해 동일한 인증에러, 메세지 반환
-    const foundUser = await this._userRepository.findOneById(id);
-    if (!foundUser || foundUser.status !== config.user.status.new)
-      throw new UnauthorizedException("not exists user or invalid request");
+  public async signUp(
+    id: number,
+    uuid: string,
+    nickname: string,
+    mbti: string
+  ) {
+    const user = await this._userRepository.findOneById(id);
+    // err: 존재하지 않는 user id
+    if (!user) throw new NotFoundException("not exists user");
 
-    // 중복 닉네임이라면 에러
+    // err: user uuid와 요청 uuid 다름
+    if (user.uuid !== uuid)
+      throw new UnauthorizedException("user does not match");
+
+    // err: 이미 가입한 상태
+    if (user.status !== config.user.status.new)
+      throw new BadReqeustException("already sign up user");
+
+    // err: 중복 닉네임
     const foundNickname = await this.isExistsNickname(nickname);
     if (foundNickname) throw new ConflictException("already exists nickname");
 
-    // 업데이트 및 토큰 발급
-    const user = await this._userRepository.update(id, {
+    // suc: 업데이트 및 토큰 발급
+    const updatedUser = await this._userRepository.update(user.id, {
       nickname,
       mbti,
       status: config.user.status.normal,
@@ -144,7 +176,7 @@ export class UserService implements IUserService {
       this._authService.generateRefreshToken(),
     ]);
 
-    return this._toUserTokenResponseDto(user, accessToken, refreshToken);
+    return this._toUserTokenResponseDto(updatedUser, accessToken, refreshToken);
   }
 
   public async isExistsNickname(nickname: string) {

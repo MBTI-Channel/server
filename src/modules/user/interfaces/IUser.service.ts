@@ -3,6 +3,7 @@ import {
   UserTokenResponseDto,
   TokenResponseDto,
   UserResponseDto,
+  NeedSignUpResponseDto,
 } from "../dto";
 import { User } from "../entity/user.entity";
 
@@ -12,17 +13,17 @@ export interface IUserService {
     providerId: string,
     gender?: number,
     ageRange?: string
-  ): Promise<UserResponseDto>;
+  ): Promise<NeedSignUpResponseDto>;
   findOneById(id: number): Promise<UserResponseDto | null>;
   findOneByProviderInfo(
     provider: Provider,
     providerId: string
   ): Promise<UserResponseDto | null>;
   update(id: number, payload: Partial<User>): Promise<UserResponseDto | null>;
-
-  login(provider: Provider, providerId: string): Promise<UserTokenResponseDto>;
+  login(id: number, providerId: string): Promise<UserTokenResponseDto>;
   signUp(
     id: number,
+    uuid: string,
     nickname: string,
     mbti: string
   ): Promise<UserTokenResponseDto>;

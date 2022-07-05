@@ -20,8 +20,6 @@ export class UserTokenResponseDto extends UserResponseDto {
 }
 
 export class NeedSignUpResponseDto {
-  /**
-   * @id : `uuid`
-   */
-  id: string;
+  id: number;
+  uuid: string;
 }

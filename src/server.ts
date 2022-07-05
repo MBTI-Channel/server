@@ -14,7 +14,6 @@ import { RedisService } from "./shared/redis/redis.service";
 import swaggerUi from "swagger-ui-express";
 import YAML from "yamljs";
 import { join } from "path";
-import { nodeEnv } from "./shared/constant.shared";
 
 export const server = new InversifyExpressServer(container);
 
@@ -50,7 +49,7 @@ server.setConfig((app) => {
       },
     })
   );
-  if (nodeEnv === "development") {
+  if (process.env.NODE_ENV === "development") {
     const swaggerYaml = YAML.load(join(__dirname, "./swagger.yaml"));
     app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerYaml));
   }

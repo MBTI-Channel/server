@@ -15,5 +15,9 @@ export interface IUserRepository {
     provider: Provider,
     providerId: string
   ): Promise<User | null>;
+  findAllByProviderInfo(
+    provider: Provider,
+    providerId: string
+  ): Promise<User[]>;
   update(id: number, payload: Partial<User>): Promise<User>;
 }

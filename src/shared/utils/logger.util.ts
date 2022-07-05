@@ -2,7 +2,6 @@ import { injectable } from "inversify";
 import WinstonDaily from "winston-daily-rotate-file";
 import winston from "winston";
 import path from "path";
-import { nodeEnv } from "../constant.shared";
 
 const logDir = path.join(__dirname + "../../../logs");
 
@@ -52,7 +51,7 @@ export class Logger {
 
   constructor() {
     this._logger = winston.createLogger({
-      level: nodeEnv === "production" ? "info" : "trace",
+      level: process.env.NODE_ENV === "production" ? "info" : "trace",
       levels: this._customLevels.levels,
       transports: [
         new winston.transports.Console({

@@ -3,6 +3,7 @@ import {
   IsNotEmpty,
   IsNumber,
   IsString,
+  IsUUID,
   Length,
   Matches,
 } from "class-validator";
@@ -12,6 +13,10 @@ export class SignUpDto {
   @IsNumber()
   @IsNotEmpty()
   id: number;
+
+  @IsUUID()
+  @IsNotEmpty()
+  uuid: string;
 
   @IsString()
   @Length(2, 10)
