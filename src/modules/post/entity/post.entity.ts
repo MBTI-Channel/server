@@ -26,19 +26,27 @@ export class Post {
   @ManyToOne((type) => User, (user) => user.id)
   user!: User;
 
-  @Column({ comment: "게시글 종류 [1: post, 2: survey, 3: notice]" })
-  type: boolean;
+  @Column({
+    type: "tinyint",
+    default: 1,
+    comment: "게시글 종류 [1: post, 2: survey, 3: notice]",
+  })
+  type: number;
 
-  @Column({ length: 4, comment: "작성자 MBTI" })
+  @Column({ length: "4", comment: "작성자 MBTI" })
   userMbti: string;
 
-  @Column({ length: 10, comment: "작성자 닉네임" })
+  @Column({ length: "10", comment: "작성자 닉네임", unique: true })
   userNickname: string;
 
-  @Column({ comment: "작성자 익명 여부" })
+  @Column({
+    type: "tinyint",
+    default: 0,
+    comment: "작성자 익명 여부 [0: 실명, 1: 익명]",
+  })
   isSecret: boolean;
 
-  @Column({ length: 30, comment: "게시글 제목" })
+  @Column({ length: "30", comment: "게시글 제목" })
   title: string;
 
   @Column({ type: "text", comment: "게시글 내용" })
@@ -56,17 +64,21 @@ export class Post {
   @Column({ default: 0, comment: "신고수" })
   reportCount: number;
 
-  @Column({ comment: "게시글 비활성 여부" })
+  @Column({
+    type: "tinyint",
+    default: 0,
+    comment: "게시글 비활성 여부 [0: 활성, 1: 비활성]",
+  })
   isDisabled: boolean;
 
   @CreateDateColumn({
     default: () => "(CURRENT_DATE)",
     comment: "게시글 생성 날짜시간",
   })
-  datetime: Date;
+  datetime!: Date;
 
   @Column({ nullable: true, comment: "게시글 수정 날짜시간" })
-  updateDatetime: Date;
+  updateDatetime?: Date;
 
   // Post (1) <-> Comment (*)
   @OneToMany(() => Comment, (comment) => comment.id, { cascade: true })
