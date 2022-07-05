@@ -5,6 +5,8 @@ export interface IPostRepository {
     categoryId: number,
     isSecret: boolean,
     title: string,
-    content: string
+    content: string,
+    userMbti: string,
+    userNickname: string
   ): Promise<Post>;
 }
