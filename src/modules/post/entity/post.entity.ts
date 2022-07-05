@@ -36,7 +36,7 @@ export class Post {
   @Column({ length: "4", comment: "작성자 MBTI" })
   userMbti: string;
 
-  @Column({ length: "10", comment: "작성자 닉네임", unique: true })
+  @Column({ length: "10", comment: "작성자 닉네임" })
   userNickname: string;
 
   @Column({
