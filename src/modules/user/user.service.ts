@@ -172,7 +172,7 @@ export class UserService implements IUserService {
       status: config.user.status.normal,
     });
     const [accessToken, refreshToken] = await Promise.all([
-      this._authService.generateAccessToken(user),
+      this._authService.generateAccessToken(updatedUser),
       this._authService.generateRefreshToken(),
     ]);
 
