@@ -9,6 +9,9 @@ post:
           type: object
           properties:
             id:
+              type: integer
+              example: 1
+            uuid:
               type: uuid
               example: asdfadssadfd-asdf1wf1f12-f122f1f12f21
             nickname:

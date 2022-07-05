@@ -21,8 +21,8 @@
             type: string
             example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 
-"401":
-  description: 존재하는 유저 id이거나, 회원가입이 가능한 상태가 아님
+"400":
+  description: 이미 가입한 유저
   content:
     application/json:
       schema:
@@ -30,7 +30,29 @@
         properties:
           message:
             type: string
-            example: not exists user or invalid request
+            example: already sign up user
+
+"401":
+  description: uuid가 일치하지 않음
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          message:
+            type: string
+            example: user does not match
+
+"404":
+  description: 존재하지 않는 유저
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          message:
+            type: string
+            example: not exists user
 
 "409":
   description: 중복 닉네임
