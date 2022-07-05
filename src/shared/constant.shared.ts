@@ -1,5 +1,3 @@
-export const nodeEnv = process.env.NODE_ENV;
-
 export const NOT_ACCEPT = undefined;
 export const MALE = 1;
 export const FEMALE = 2;
