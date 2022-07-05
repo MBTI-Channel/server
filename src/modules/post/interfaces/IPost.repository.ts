@@ -1,7 +1,7 @@
 import { Post } from "../entity/post.entity";
 
 export interface IPostRepository {
-  createPost(
+  createEntity(
     categoryId: number,
     isSecret: boolean,
     title: string,
@@ -9,4 +9,5 @@ export interface IPostRepository {
     userMbti: string,
     userNickname: string
   ): Promise<Post>;
+  create(postEntity: Post): Promise<Post>;
 }
