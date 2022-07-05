@@ -19,10 +19,10 @@ export interface IUserService {
     providerId: string
   ): Promise<UserResponseDto | null>;
   update(id: number, payload: Partial<User>): Promise<UserResponseDto | null>;
-
   login(provider: Provider, providerId: string): Promise<UserTokenResponseDto>;
   signUp(
     id: number,
+    uuid: string,
     nickname: string,
     mbti: string
   ): Promise<UserTokenResponseDto>;

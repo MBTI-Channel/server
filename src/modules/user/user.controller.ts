@@ -26,8 +26,8 @@ export class UserController extends BaseHttpController {
   // 회원가입 (nickname, mbti 설정)
   @httpPost("/", bodyValidator(SignUpDto))
   async signUp(@requestBody() body: SignUpDto, req: Request, res: Response) {
-    const { id, nickname, mbti } = body;
-    const data = await this._userService.signUp(id, nickname, mbti);
+    const { id, uuid, nickname, mbti } = body;
+    const data = await this._userService.signUp(id, uuid, nickname, mbti);
     return res.status(201).json(data);
   }
 
