@@ -3,9 +3,11 @@ import { TYPES } from "../../../../src/core/type.core";
 import { UnauthorizedException } from "../../../../src/shared/errors/all.exception";
 import { DecodedDto } from "../../../../src/modules/auth/dtos/decode-token.dto";
 import { IAuthService } from "../../../../src/modules/auth/interfaces/IAuth.service";
-import { User } from "../../../../src/modules/user/entity/user.entity";
 
 describe("AuthService ", () => {
+  const mockUserId = 1;
+  const mockNickname = "1";
+  const mockMbti = "1";
   beforeEach(() => {
     // 각 단위 테스트가 다른 단위 테스트를 중단하지 않고 수정할 수 있도록 스냅샷 생성
     container.snapshot();
@@ -31,10 +33,9 @@ describe("AuthService ", () => {
 
     it("Success: 존재하는 user id && status === normal && 닉네임, mbti가 일치", async () => {
       // given
-      const mockUser: Partial<User> = {
-        id: 1,
-        nickname: "exmaple",
-        mbti: "ISTP",
+      const mockUser = {
+        nickname: mockNickname,
+        mbti: mockMbti,
         status: +process.env.USER_STATUS_NORMAL!,
       };
       const mockUserRepository = {
@@ -46,17 +47,21 @@ describe("AuthService ", () => {
       const authService = container.get<IAuthService>(TYPES.IAuthService);
 
       // when
-      const result = await authService.validateUserWithToken(mockDto);
+      const result = await authService.validateUserWithToken(
+        mockUserId,
+        mockNickname,
+        mockMbti
+      );
 
       // then
       expect(result).toBe(undefined);
       expect(mockUserRepository.findOneById).toHaveBeenCalledTimes(1);
     });
 
-    it("Error: DB에 존재하지 않는 id라면 UnauthorizedException 발생", async () => {
+    it("Error: 존재하지 않는 user id라면 UnauthorizedException 발생", async () => {
       // given
       const mockUserRepository = {
-        findOneById: jest.fn(() => false),
+        findOneById: jest.fn(() => null),
       };
       container.unbind(TYPES.IUserRepository);
       container.bind(TYPES.IUserRepository).toConstantValue(mockUserRepository);
@@ -65,7 +70,11 @@ describe("AuthService ", () => {
 
       // when, then
       await expect(async () => {
-        await authService.validateUserWithToken(mockDto);
+        await authService.validateUserWithToken(
+          mockUserId,
+          mockNickname,
+          mockMbti
+        );
       }).rejects.toThrowError(
         new UnauthorizedException("authentication error")
       );
@@ -74,10 +83,7 @@ describe("AuthService ", () => {
 
     it("Error: user status가 normal이 아니라면 UnauthorizedException 발생", async () => {
       // given
-      const mockUser: Partial<User> = {
-        id: 1,
-        nickname: "exmaple",
-        mbti: "ISTP",
+      const mockUser = {
         status: +process.env.USER_STATUS_NEW!,
       };
       const mockUserRepository = {
@@ -89,7 +95,11 @@ describe("AuthService ", () => {
       const authService = container.get<IAuthService>(TYPES.IAuthService);
 
       await expect(async () => {
-        await authService.validateUserWithToken(mockDto);
+        await authService.validateUserWithToken(
+          mockUserId,
+          mockNickname,
+          mockMbti
+        );
       }).rejects.toThrowError(
         new UnauthorizedException("authentication error")
       );
@@ -99,8 +109,7 @@ describe("AuthService ", () => {
     it("Error: payload의 mbti가 db와 일치하지 않다면 UnauthorizedException 발생", async () => {
       // given
       const NOT_MATCH = "ERROR";
-      const mockUser: Partial<User> = {
-        id: 1,
+      const mockUser = {
         nickname: "exmaple",
         mbti: NOT_MATCH,
         status: +process.env.USER_STATUS_NORMAL!,
@@ -114,7 +123,11 @@ describe("AuthService ", () => {
       const authService = container.get<IAuthService>(TYPES.IAuthService);
 
       await expect(async () => {
-        await authService.validateUserWithToken(mockDto);
+        await authService.validateUserWithToken(
+          mockUserId,
+          mockNickname,
+          mockMbti
+        );
       }).rejects.toThrowError(
         new UnauthorizedException("authentication error")
       );
@@ -124,8 +137,7 @@ describe("AuthService ", () => {
     it("Error: payload의 nickname이 db와 일치하지 않다면 UnauthorizedException 발생", async () => {
       // given
       const NOT_MATCH = "ERROR";
-      const mockUser: Partial<User> = {
-        id: 1,
+      const mockUser = {
         nickname: NOT_MATCH,
         mbti: "ISTP",
         status: +process.env.USER_STATUS_NORMAL!,
@@ -139,7 +151,11 @@ describe("AuthService ", () => {
       const authService = container.get<IAuthService>(TYPES.IAuthService);
 
       await expect(async () => {
-        await authService.validateUserWithToken(mockDto);
+        await authService.validateUserWithToken(
+          mockUserId,
+          mockNickname,
+          mockMbti
+        );
       }).rejects.toThrowError(
         new UnauthorizedException("authentication error")
       );
