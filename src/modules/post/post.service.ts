@@ -3,8 +3,7 @@ import { inject, injectable } from "inversify";
 import { TYPES } from "../../core/type.core";
 import { NotFoundException } from "../../shared/errors/all.exception";
 import { Logger } from "../../shared/utils/logger.util";
-import { Category } from "../category/entity/category.entity";
-import { ICategoryService } from "../category/interfaces/ICategory.service";
+import { ICategoryRepository } from "../category/interfaces/ICategory.repository";
 import { User } from "../user/entity/user.entity";
 import { PostCreateResponseDto } from "./dto/all-response.dto";
 import { Post } from "./entity/post.entity";
@@ -16,8 +15,8 @@ export class PostService implements IPostService {
   constructor(
     @inject(TYPES.IPostRepository)
     private readonly _postRepository: IPostRepository,
-    @inject(TYPES.ICategoryService)
-    private readonly _categoryService: ICategoryService,
+    @inject(TYPES.ICategoryRepository)
+    private readonly _categoryRepository: ICategoryRepository,
     @inject(TYPES.Logger) private readonly _logger: Logger
   ) {}
 
@@ -29,13 +28,14 @@ export class PostService implements IPostService {
     isSecret: boolean,
     title: string,
     content: string,
-    category: Category,
+    categoryId: number,
     user: User
   ): Promise<PostCreateResponseDto> {
     this._logger.trace(`[PostService] create start`);
+    const category = await this._categoryRepository.findOneById(categoryId);
 
-    if (!(await this._categoryService.findOneById(category.id))) {
-      throw new NotFoundException("not exists categoryId");
+    if (!category || category.isDisabled) {
+      throw new NotFoundException("category id error");
     }
 
     // TODO: 나만의 mbti 게시판일 경우, 사용자 mbti 확인
