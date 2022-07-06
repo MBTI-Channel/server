@@ -1,8 +1,10 @@
 import { plainToInstance } from "class-transformer";
 import { inject, injectable } from "inversify";
 import { TYPES } from "../../core/type.core";
+import { NotFoundException } from "../../shared/errors/all.exception";
 import { Logger } from "../../shared/utils/logger.util";
 import { Category } from "../category/entity/category.entity";
+import { ICategoryService } from "../category/interfaces/ICategory.service";
 import { User } from "../user/entity/user.entity";
 import { PostCreateResponseDto } from "./dto/all-response.dto";
 import { Post } from "./entity/post.entity";
@@ -14,6 +16,8 @@ export class PostService implements IPostService {
   constructor(
     @inject(TYPES.IPostRepository)
     private readonly _postRepository: IPostRepository,
+    @inject(TYPES.ICategoryService)
+    private readonly _categoryService: ICategoryService,
     @inject(TYPES.Logger) private readonly _logger: Logger
   ) {}
 
@@ -30,12 +34,11 @@ export class PostService implements IPostService {
   ): Promise<PostCreateResponseDto> {
     this._logger.trace(`[PostService] create start`);
 
-    // TODO: 카테고리 아이디 유효한지 확인
-    // mbti check (임의로 mbti 게시판은 1로 지정)
-    if (category.id === 1) {
-      // TODO: user mbti 확인
+    if (!(await this._categoryService.findOneById(category.id))) {
+      throw new NotFoundException("not exists categoryId");
     }
 
+    // TODO: 나만의 mbti 게시판일 경우, 사용자 mbti 확인
     const { mbti, nickname } = user;
     const postEntity = await this._postRepository.createEntity(
       isSecret,

@@ -14,6 +14,9 @@ export const TYPES = {
   /* post */
   IPostService: Symbol.for("IPostService"),
   IPostRepository: Symbol.for("IPostRepository"),
+  /* category */
+  ICategoryService: Symbol.for("ICategoryService"),
+  ICategoryRepository: Symbol.for("ICategoryRepository"),
   /* middleware */
   GetProviderUserByOauthMiddleware: Symbol.for(
     "GetProviderUserByOauthMiddleware"
