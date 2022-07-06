@@ -27,6 +27,11 @@ import { IPostService } from "../modules/post/interfaces/IPost.service";
 import { PostService } from "../modules/post/post.service";
 import { IPostRepository } from "../modules/post/interfaces/IPost.repository";
 import { PostRepository } from "../modules/post/post.repository";
+/* comment import */
+import { ICommentService } from "../modules/comment/interfaces/IComment.service";
+import { CommentService } from "../modules/comment/comment.service";
+import { ICommentRepository } from "../modules/comment/interfaces/IComment.repository";
+import { CommentRepository } from "../modules/comment/comment.repository";
 /* util import */
 import { Logger } from "../shared/utils/logger.util";
 import { JwtUtil } from "../shared/utils/jwt.util";
@@ -61,6 +66,12 @@ container.bind<IUserRepository>(TYPES.IUserRepository).to(UserRepository);
 /* post */
 container.bind<IPostService>(TYPES.IPostService).to(PostService);
 container.bind<IPostRepository>(TYPES.IPostRepository).to(PostRepository);
+
+/* comment */
+container.bind<ICommentService>(TYPES.ICommentService).to(CommentService);
+container
+  .bind<ICommentRepository>(TYPES.ICommentRepository)
+  .to(CommentRepository);
 
 /* utils */
 container.bind(TYPES.Logger).to(Logger);
