@@ -28,7 +28,7 @@ describe("UserService ", () => {
 
   /* 로그인 */
   describe("login", () => {
-    it("Success: D존재하는 user id + providerID 일치라면 UserTokenResponseDto 리턴한다.", async () => {
+    it("Success: 존재하는 user id + providerID 일치라면 UserTokenResponseDto 리턴한다.", async () => {
       // given
       const mockUser = { providerId: "1" };
       const mockUserRepository = {
