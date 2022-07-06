@@ -29,13 +29,11 @@ export class PostService implements IPostService {
     user: User
   ): Promise<PostCreateResponseDto> {
     this._logger.trace(`[PostService] create start`);
-    // TODO: user.status 체크 해야하는지 ?
 
+    // TODO: 카테고리 아이디 유효한지 확인
     // mbti check (임의로 mbti 게시판은 1로 지정)
     if (category.id === 1) {
-      // TODO: category === 'mbti' 내부적으로 16가지로 나뉘어지는데,
-      // 유저와 mbti 비교를 위해 우째할까?
-      //
+      // TODO: user mbti 확인
     }
 
     const { mbti, nickname } = user;
