@@ -2,6 +2,8 @@ import { plainToInstance } from "class-transformer";
 import { inject, injectable } from "inversify";
 import { TYPES } from "../../core/type.core";
 import { Logger } from "../../shared/utils/logger.util";
+import { Category } from "../category/entity/category.entity";
+import { User } from "../user/entity/user.entity";
 import { PostCreateResponseDto } from "./dto/all-response.dto";
 import { Post } from "./entity/post.entity";
 import { IPostRepository } from "./interfaces/IPost.repository";
@@ -20,29 +22,31 @@ export class PostService implements IPostService {
     return plainToInstance(PostCreateResponseDto, { id: post.id });
   }
   public async create(
-    categoryId: number,
     isSecret: boolean,
     title: string,
     content: string,
-    mbti: string,
-    nickname: string
+    category: Category,
+    user: User
   ): Promise<PostCreateResponseDto> {
     this._logger.trace(`[PostService] create start`);
     // TODO: user.status 체크 해야하는지 ?
 
     // mbti check (임의로 mbti 게시판은 1로 지정)
-    if (categoryId === 1) {
+    if (category.id === 1) {
       // TODO: category === 'mbti' 내부적으로 16가지로 나뉘어지는데,
       // 유저와 mbti 비교를 위해 우째할까?
+      //
     }
 
+    const { mbti, nickname } = user;
     const postEntity = await this._postRepository.createEntity(
-      categoryId,
       isSecret,
       title,
       content,
       mbti,
-      nickname
+      nickname,
+      category,
+      user
     );
     const createdPost = await this._postRepository.create(postEntity);
     return this._toPostCreateResponseDto(createdPost);
