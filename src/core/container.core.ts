@@ -27,6 +27,9 @@ import { IPostService } from "../modules/post/interfaces/IPost.service";
 import { PostService } from "../modules/post/post.service";
 import { IPostRepository } from "../modules/post/interfaces/IPost.repository";
 import { PostRepository } from "../modules/post/post.repository";
+/* category import */
+import { ICategoryRepository } from "../modules/category/interfaces/ICategory.repository";
+import { CategoryRepository } from "../modules/category/category.repository";
 /* comment import */
 import { ICommentService } from "../modules/comment/interfaces/IComment.service";
 import { CommentService } from "../modules/comment/comment.service";
@@ -66,6 +69,11 @@ container.bind<IUserRepository>(TYPES.IUserRepository).to(UserRepository);
 /* post */
 container.bind<IPostService>(TYPES.IPostService).to(PostService);
 container.bind<IPostRepository>(TYPES.IPostRepository).to(PostRepository);
+
+/* category */
+container
+  .bind<ICategoryRepository>(TYPES.ICategoryRepository)
+  .to(CategoryRepository);
 
 /* comment */
 container.bind<ICommentService>(TYPES.ICommentService).to(CommentService);

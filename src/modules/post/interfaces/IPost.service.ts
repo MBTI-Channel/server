@@ -7,7 +7,7 @@ export interface IPostService {
     isSecret: boolean,
     title: string,
     content: string,
-    category: Category,
+    categoryId: number,
     user: User
   ): Promise<PostCreateResponseDto>;
 }
