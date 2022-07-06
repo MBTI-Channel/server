@@ -1,1 +1,2 @@
 export { UserController } from "./user/user.controller";
+export { PostController } from "./post/post.controller";
