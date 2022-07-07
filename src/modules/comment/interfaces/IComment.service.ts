@@ -1,4 +1,5 @@
 import { User } from "../../user/entity/user.entity";
+import { CommentResponseDto } from "../dto/all-response.dto";
 
 export interface ICommentService {
   createComment(
@@ -6,7 +7,7 @@ export interface ICommentService {
     postId: number,
     content: string,
     isSecret: boolean
-  ): Promise<any>;
+  ): Promise<CommentResponseDto>;
   // findAllComment(
   //   user: User,
   //   postId: number,
