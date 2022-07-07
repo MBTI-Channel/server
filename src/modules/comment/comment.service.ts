@@ -23,7 +23,8 @@ export class CommentService implements ICommentService {
     private readonly _postRepository: IPostRepository,
     @inject(TYPES.IPostService)
     private readonly _postService: IPostService,
-    @inject(TYPES.IDatabaseService) private readonly _database: IDatabaseService
+    @inject(TYPES.IDatabaseService)
+    private readonly _dbService: IDatabaseService
   ) {}
 
   private _toCommentResponseDto(comment: Comment) {
@@ -50,7 +51,7 @@ export class CommentService implements ICommentService {
     commentEntity.content = content;
     commentEntity.isSecret = isSecret;
 
-    const t = await this._database.getTransaction();
+    const t = await this._dbService.getTransaction();
     await t.startTransaction();
     try {
       const comment = await this._commentRepository.createComment(
