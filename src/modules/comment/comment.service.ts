@@ -58,6 +58,7 @@ export class CommentService implements ICommentService {
         commentEntity
       );
       await this._postService.increaseCommentCount(post.id);
+      //TODO: 유저에게 댓글 알림
       await t.commitTransaction();
       return this._toCommentResponseDto(comment);
     } catch (err: any) {
