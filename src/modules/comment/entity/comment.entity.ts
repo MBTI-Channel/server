@@ -34,7 +34,7 @@ export class Comment {
   @Column({ length: 4, comment: "작성자 MBTI" })
   userMbti: string;
 
-  @Column({ default: 0, comment: "작성자 익명 여부" })
+  @Column({ default: false, comment: "작성자 익명 여부" })
   isSecret: boolean;
 
   @Column({ type: "text", comment: "댓글 내용" })
@@ -49,7 +49,7 @@ export class Comment {
   @Column({ default: 0, comment: "신고수" })
   reportCount: number;
 
-  @Column({ comment: "댓글 비활성 여부" })
+  @Column({ default: false, comment: "댓글 비활성 여부" })
   isDisabled: boolean;
 
   @CreateDateColumn({
