@@ -13,4 +13,5 @@ export interface IPostRepository {
     user: User
   ): Promise<Post>;
   create(postEntity: Post): Promise<Post>;
+  findOneById(id: number): Promise<Post | null>;
 }

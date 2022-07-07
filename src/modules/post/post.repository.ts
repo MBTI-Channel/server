@@ -39,4 +39,10 @@ export class PostRepository implements IPostRepository {
     const post = await repository.save(postEntity);
     return post;
   }
+
+  public async findOneById(id: number): Promise<Post | null> {
+    const repository = await this._database.getRepository(Post);
+    const post = await repository.findOne({ where: { id } });
+    return post;
+  }
 }
