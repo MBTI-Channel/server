@@ -1,4 +1,5 @@
 import { inject, injectable } from "inversify";
+import { plainToInstance } from "class-transformer";
 import { TYPES } from "../../core/type.core";
 import { ICommentService } from "./interfaces/IComment.service";
 import { ICommentRepository } from "./interfaces/IComment.repository";
@@ -7,6 +8,7 @@ import { Comment } from "./entity/comment.entity";
 import { User } from "../user/entity/user.entity";
 import { NotFoundException } from "../../shared/errors/all.exception";
 import { Logger } from "../../shared/utils/logger.util";
+import { CommentResponseDto } from "./dto/all-response.dto";
 
 @injectable()
 export class CommentService implements ICommentService {
@@ -17,6 +19,10 @@ export class CommentService implements ICommentService {
     @inject(TYPES.IPostRepository)
     private readonly _postRepository: IPostRepository
   ) {}
+
+  private _toCommentResponseDto(comment: Comment) {
+    return plainToInstance(CommentResponseDto, { id: comment.id });
+  }
 
   async createComment(
     user: User,
@@ -31,14 +37,15 @@ export class CommentService implements ICommentService {
       throw new NotFoundException(`not exists post`);
 
     const commentEntity = new Comment();
+    commentEntity.post = post;
     commentEntity.user = user;
     commentEntity.userNickname = user.nickname;
-    commentEntity.post = post;
     commentEntity.userMbti = user.mbti;
     commentEntity.content = content;
     commentEntity.isSecret = isSecret;
 
     const comment = await this._commentRepository.createComment(commentEntity);
-    return comment;
+
+    return this._toCommentResponseDto(comment);
   }
 }

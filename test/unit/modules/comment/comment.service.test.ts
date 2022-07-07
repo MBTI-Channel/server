@@ -24,6 +24,7 @@ describe("CommentService ", () => {
     it("Success: 존재하는 post id, 댓글 생성", async () => {
       //given
       const mockComment = "";
+      const mockCommentResponseDto = "";
       const mockPostRepository = {
         findOneById: () => true,
       };
@@ -41,6 +42,9 @@ describe("CommentService ", () => {
       const commentService = container.get<ICommentService>(
         TYPES.ICommentService
       );
+      jest
+        .spyOn(commentService as any, "_toCommentResponseDto")
+        .mockReturnValue(mockCommentResponseDto);
 
       //when
       const result = await commentService.createComment(
@@ -51,7 +55,7 @@ describe("CommentService ", () => {
       );
 
       //then
-      expect(result).toBe(mockComment);
+      expect(result).toBe(mockCommentResponseDto);
     });
 
     it("Error: 존재하지 않는 post id, NotFoundError 발생", async () => {
