@@ -52,4 +52,20 @@ export class PostService implements IPostService {
     const createdPost = await this._postRepository.create(postEntity);
     return this._toPostCreateResponseDto(createdPost);
   }
+
+  public async increaseCommentCount(id: number): Promise<void> {
+    this._logger.trace(`[PostService] increaseCommentCount start`);
+    this._logger.trace(`[PostService] check exists post id: ${id}`);
+    const post = await this._postRepository.findOneById(id);
+    // err: 존재하지 않는 || 삭제된 게시글 id
+    if (!post || post.isDisabled === true)
+      throw new NotFoundException(`not exists post`);
+
+    this._logger.trace(`[PostService] try post id ${id} comment count + 1...`);
+    const hasIncreased = await this._postRepository.increaseCommentCount(id);
+    this._logger.trace(`[PostService] check comment count has increased`);
+    // err: 업데이트 도중 삭제된 게시글 id
+    if (!hasIncreased) throw new NotFoundException(`not exists post`);
+    this._logger.trace(`[PostService] clear`);
+  }
 }

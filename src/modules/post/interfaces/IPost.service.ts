@@ -10,4 +10,5 @@ export interface IPostService {
     categoryId: number,
     user: User
   ): Promise<PostCreateResponseDto>;
+  increaseCommentCount(id: number): Promise<void>;
 }

@@ -14,4 +14,5 @@ export interface IPostRepository {
   ): Promise<Post>;
   create(postEntity: Post): Promise<Post>;
   findOneById(id: number): Promise<Post | null>;
+  increaseCommentCount(id: number): Promise<boolean>;
 }
