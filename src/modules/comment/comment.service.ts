@@ -2,6 +2,7 @@ import { inject, injectable } from "inversify";
 import { plainToInstance } from "class-transformer";
 import { TYPES } from "../../core/type.core";
 import { ICommentService } from "./interfaces/IComment.service";
+import { IPostService } from "../post/interfaces/IPost.service";
 import { ICommentRepository } from "./interfaces/IComment.repository";
 import { IPostRepository } from "../post/interfaces/IPost.repository";
 import { Comment } from "./entity/comment.entity";
@@ -9,6 +10,8 @@ import { User } from "../user/entity/user.entity";
 import { NotFoundException } from "../../shared/errors/all.exception";
 import { Logger } from "../../shared/utils/logger.util";
 import { CommentResponseDto } from "./dto/all-response.dto";
+import { IDatabaseService } from "../../shared/database/interfaces/IDatabase.service";
+import { HttpException } from "../../shared/errors/http.exception";
 
 @injectable()
 export class CommentService implements ICommentService {
@@ -17,7 +20,10 @@ export class CommentService implements ICommentService {
     @inject(TYPES.ICommentRepository)
     private readonly _commentRepository: ICommentRepository,
     @inject(TYPES.IPostRepository)
-    private readonly _postRepository: IPostRepository
+    private readonly _postRepository: IPostRepository,
+    @inject(TYPES.IPostService)
+    private readonly _postService: IPostService,
+    @inject(TYPES.IDatabaseService) private readonly _database: IDatabaseService
   ) {}
 
   private _toCommentResponseDto(comment: Comment) {
@@ -29,7 +35,7 @@ export class CommentService implements ICommentService {
     postId: number,
     content: string,
     isSecret: boolean
-  ): Promise<any> {
+  ): Promise<CommentResponseDto> {
     const post = await this._postRepository.findOneById(postId);
 
     // err: 존재하지않는 || 삭제된 post
@@ -44,8 +50,20 @@ export class CommentService implements ICommentService {
     commentEntity.content = content;
     commentEntity.isSecret = isSecret;
 
-    const comment = await this._commentRepository.createComment(commentEntity);
-
-    return this._toCommentResponseDto(comment);
+    const t = await this._database.getTransaction();
+    await t.startTransaction();
+    try {
+      const comment = await this._commentRepository.createComment(
+        commentEntity
+      );
+      await this._postService.increaseCommentCount(post.id);
+      await t.commitTransaction();
+      return this._toCommentResponseDto(comment);
+    } catch (err: any) {
+      await t.rollbackTransaction();
+      throw new HttpException(err.name, err.message, err.status);
+    } finally {
+      await t.release();
+    }
   }
 }
