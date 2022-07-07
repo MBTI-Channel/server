@@ -31,6 +31,12 @@ describe("CommentService ", () => {
       container.unbind(TYPES.IPostRepository);
       container.bind(TYPES.IPostRepository).toConstantValue(mockPostRepository);
 
+      const mockPostService = {
+        increaseCommentCount: () => true,
+      };
+      container.unbind(TYPES.IPostService);
+      container.bind(TYPES.IPostService).toConstantValue(mockPostService);
+
       const mockCommentRepository = {
         createComment: () => mockComment,
       };
@@ -45,6 +51,10 @@ describe("CommentService ", () => {
       jest
         .spyOn(commentService as any, "_toCommentResponseDto")
         .mockReturnValue(mockCommentResponseDto);
+      const spyIncreaseCommentCount = jest.spyOn(
+        mockPostService,
+        "increaseCommentCount"
+      );
 
       //when
       const result = await commentService.createComment(
@@ -55,6 +65,7 @@ describe("CommentService ", () => {
       );
 
       //then
+      expect(spyIncreaseCommentCount).toBeCalledTimes(1);
       expect(result).toBe(mockCommentResponseDto);
     });
 
