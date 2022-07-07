@@ -48,6 +48,11 @@ export class DatabaseService implements IDatabaseService {
     entity: ObjectType<any>
   ): Promise<Repository<any>> {
     const connection = await this._getConnection(); // _getConnection -> 연결 성공 후 앱 어디에서나 연결할 수 있음
-    return await connection?.getRepository(entity);
+    return connection?.getRepository(entity);
+  }
+
+  public async getTransaction() {
+    const connection = await this._getConnection();
+    return connection.createQueryRunner();
   }
 }
