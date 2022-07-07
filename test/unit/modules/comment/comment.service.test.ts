@@ -21,10 +21,23 @@ describe("CommentService ", () => {
   });
 
   describe("createComment", () => {
+    const mockDBService = {
+      getTransaction: () => {
+        return {
+          startTransaction: jest.fn(),
+          commitTransaction: jest.fn(),
+          rollbackTransaction: jest.fn(),
+          release: jest.fn(),
+        };
+      },
+    };
+
     it("Success: 존재하는 post id, 댓글 생성", async () => {
       //given
       const mockComment = "";
       const mockCommentResponseDto = "";
+      container.unbind(TYPES.IDatabaseService);
+      container.bind(TYPES.IDatabaseService).toConstantValue(mockDBService);
       const mockPostRepository = {
         findOneById: () => true,
       };
@@ -71,6 +84,8 @@ describe("CommentService ", () => {
 
     it("Error: 존재하지 않는 post id, NotFoundError 발생", async () => {
       //given
+      container.unbind(TYPES.IDatabaseService);
+      container.bind(TYPES.IDatabaseService).toConstantValue(mockDBService);
       const mockPostRepository = {
         findOneById: () => null,
       };
