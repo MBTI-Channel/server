@@ -1,4 +1,4 @@
-"200":
+"204":
   description: 댓글 삭제 성공
 
 "401":
@@ -32,4 +32,4 @@
         properties:
           message:
             type: string
-            example: not exists post
+            example: not exists comment

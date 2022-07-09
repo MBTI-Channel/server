@@ -15,7 +15,7 @@ export interface ICommentService {
   //   size: number
   // ): Promise<any>;
   // update(user: User, id: number, content: string): Promise<any>;
-  // delete(user: User, id: number): Promise<any>;
+  delete(user: User, id: number): Promise<void>;
   // createReply(
   //   user: User,
   //   postId: number,
