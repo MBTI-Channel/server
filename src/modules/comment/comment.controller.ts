@@ -1,15 +1,19 @@
 import { Request, Response } from "express";
 import { inject } from "inversify";
 import {
-  BaseHttpController,
   controller,
+  httpDelete,
   httpPost,
   requestBody,
+  requestParam,
 } from "inversify-express-utils";
 import { TYPES } from "../../core/type.core";
-import { bodyValidator } from "../../middlewares/validator.middleware";
+import {
+  bodyValidator,
+  paramsValidator,
+} from "../../middlewares/validator.middleware";
 import { User } from "../user/entity/user.entity";
-import { CreateCommentDto } from "./dto/create-comment-dto";
+import { CreateCommentDto, DeleteCommentDto } from "./dto";
 import { ICommentService } from "./interfaces/IComment.service";
 
 @controller("/comments")
@@ -38,5 +42,23 @@ export class CommentController {
     );
 
     return res.status(201).json(data);
+  }
+
+  @httpDelete(
+    "/:id",
+    TYPES.ValidateAccessTokenMiddleware,
+    paramsValidator(DeleteCommentDto)
+  )
+  async delete(
+    @requestParam() param: DeleteCommentDto,
+    req: Request,
+    res: Response
+  ) {
+    const user = (req.user as User) ?? null;
+    const { id } = param;
+
+    await this._commentService.delete(user, id);
+
+    return res.status(204);
   }
 }

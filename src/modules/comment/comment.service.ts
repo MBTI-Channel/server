@@ -7,7 +7,10 @@ import { ICommentRepository } from "./interfaces/IComment.repository";
 import { IPostRepository } from "../post/interfaces/IPost.repository";
 import { Comment } from "./entity/comment.entity";
 import { User } from "../user/entity/user.entity";
-import { NotFoundException } from "../../shared/errors/all.exception";
+import {
+  ForbiddenException,
+  NotFoundException,
+} from "../../shared/errors/all.exception";
 import { Logger } from "../../shared/utils/logger.util";
 import { CommentResponseDto } from "./dto/all-response.dto";
 import { IDatabaseService } from "../../shared/database/interfaces/IDatabase.service";
@@ -67,5 +70,25 @@ export class CommentService implements ICommentService {
     } finally {
       await t.release();
     }
+  }
+
+  async delete(user: User, id: number): Promise<void> {
+    this._logger.trace(`[CommentService] delete start`);
+    const comment = await this._commentRepository.findById(id);
+
+    this._logger.trace(`[CommentService] check exists comment id ${id}`);
+    //err: 존재하지 않는 댓글 || 비활성화된 댓글
+    if (!comment || comment.isDisabled)
+      throw new NotFoundException("not exists comment");
+
+    this._logger.trace(
+      `[CommentService] check user authorization u: ${id} c: ${comment.id}`
+    );
+    //err: 권한 없음
+    if (comment.userId !== user.id)
+      throw new ForbiddenException("authorization error");
+
+    this._logger.trace(`[CommentService] remove comment ${id}`);
+    await this._commentRepository.remove(id);
   }
 }
