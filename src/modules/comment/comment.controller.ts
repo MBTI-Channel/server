@@ -54,7 +54,7 @@ export class CommentController {
     req: Request,
     res: Response
   ) {
-    const user = (req.user as User) ?? null;
+    const user = req.user as User;
     const { id } = param;
 
     await this._commentService.delete(user, id);
