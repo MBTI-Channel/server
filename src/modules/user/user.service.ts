@@ -179,14 +179,6 @@ export class UserService implements IUserService {
     return this._toUserTokenResponseDto(updatedUser, accessToken, refreshToken);
   }
 
-  public async isExistsNickname(nickname: string) {
-    const foundNickname = await this._userRepository.findOneByNickname(
-      nickname
-    );
-    if (foundNickname) return true;
-    return false;
-  }
-
   public async reissueAccessToken(oldAccessToken: string) {
     // TODO: 수정필요
     const decodedToken = this._jwtUtil.decode(oldAccessToken);
@@ -209,5 +201,22 @@ export class UserService implements IUserService {
 
     // const newAccessToken = await this._authService.generateAccessToken(user);
     // return { newAccessToken };
+  }
+
+  public async isExistsNickname(nickname: string) {
+    const foundNickname = await this._userRepository.findOneByNickname(
+      nickname
+    );
+    if (foundNickname) return true;
+    return false;
+  }
+
+  // user가 유효한지 확인한다.
+  async isValid(id: number) {
+    this._logger.trace(`[UserService] is valid user id? : ${id}`);
+    const user = await this._userRepository.findOneStatus(id);
+    if (!user) return false;
+    if (!user.isActive()) return false;
+    return true;
   }
 }

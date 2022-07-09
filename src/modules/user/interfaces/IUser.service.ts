@@ -27,6 +27,7 @@ export interface IUserService {
     nickname: string,
     mbti: string
   ): Promise<UserTokenResponseDto>;
-  isExistsNickname(nickname: string): Promise<boolean>;
   reissueAccessToken(accessToken: string): Promise<TokenResponseDto>;
+  isExistsNickname(nickname: string): Promise<boolean>;
+  isValid(id: number): Promise<boolean>;
 }
