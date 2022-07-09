@@ -21,11 +21,13 @@ export class Notification {
 
   @Column({
     nullable: false,
-    type: "varchar",
-    length: "20",
-    comment: "알림 종류[comment, reply, notice]",
+    type: "tinyint",
+    comment: "알림 종류[1:comment 2:reply 3:likes 4:trend 5:notice]",
   })
-  type: string;
+  type: number;
+
+  @Column({ length: 50, comment: "알림 제목" })
+  title: string;
 
   @Column({
     nullable: false,
@@ -40,6 +42,9 @@ export class Notification {
 
   @Column({ nullable: true, type: "datetime", comment: "알림 읽은 시간" })
   read_datetime?: Date | null;
+
+  @Column()
+  userId: number;
 
   @ManyToOne(() => User, (user) => user.id, {
     onDelete: "CASCADE",
