@@ -18,9 +18,15 @@ export class Comment {
   @ManyToOne((type) => Post, (post) => post.id)
   post!: Post;
 
+  @Column()
+  postId: number;
+
   // Comment (*) <-> User (1)
   @ManyToOne((type) => User, (user) => user.id)
   user!: User;
+
+  @Column()
+  userId: number;
 
   @Column({ nullable: true, comment: "태그한 댓글 아이디" })
   taggedId: number;
