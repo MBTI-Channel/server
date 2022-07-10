@@ -83,4 +83,20 @@ export class Notification {
         return "notice";
     }
   }
+
+  // type에 따른 알림 제목 설정
+  static setTitleByType(type: NotificationType, nickname: string) {
+    switch (type) {
+      case "comment":
+        return `💬 ${nickname}님이 내 글에 댓글을 남겼어요.`;
+      case "reply":
+        return `💬 ${nickname}님이 내 댓글에 답글을 남겼어요.`;
+      case "likes":
+        return `❤️ ${nickname}님이 내 글을 좋아합니다.`;
+      case "trend":
+        return `🤩 내 글이 인기게시글에 등록되었어요.`;
+      case "notice":
+        return `📣 새로운 공지사항이 있습니다.`;
+    }
+  }
 }
