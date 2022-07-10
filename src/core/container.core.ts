@@ -35,6 +35,11 @@ import { ICommentService } from "../modules/comment/interfaces/IComment.service"
 import { CommentService } from "../modules/comment/comment.service";
 import { ICommentRepository } from "../modules/comment/interfaces/IComment.repository";
 import { CommentRepository } from "../modules/comment/comment.repository";
+/* notification import */
+import { INotificationService } from "../modules/notifications/interfaces/INotification.service";
+import { NotificationService } from "../modules/notifications/notification.service";
+import { INotificationRepository } from "../modules/notifications/interfaces/INotification.repository";
+import { NotificationtRepository } from "../modules/notifications/notification.repository";
 /* util import */
 import { Logger } from "../shared/utils/logger.util";
 import { JwtUtil } from "../shared/utils/jwt.util";
@@ -80,6 +85,14 @@ container.bind<ICommentService>(TYPES.ICommentService).to(CommentService);
 container
   .bind<ICommentRepository>(TYPES.ICommentRepository)
   .to(CommentRepository);
+
+/* notification */
+container
+  .bind<INotificationService>(TYPES.INotificationService)
+  .to(NotificationService);
+container
+  .bind<INotificationRepository>(TYPES.INotificationRepository)
+  .to(NotificationtRepository);
 
 /* utils */
 container.bind(TYPES.Logger).to(Logger);

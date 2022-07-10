@@ -16,6 +16,9 @@ import { Post } from "../../post/entity/post.entity";
 import { Report } from "../../report/entity/report.entity";
 import { Survey } from "../../survey/entity/survey.entity";
 import { UserBase } from "./userbase";
+import config from "../../../config";
+
+const { status } = config.user;
 
 @Entity("User")
 export class User extends UserBase {
@@ -102,4 +105,10 @@ export class User extends UserBase {
   // User (1) <-> Comment(*)
   @OneToMany(() => Comment, (comment: any) => comment.user, { cascade: true })
   commentId!: Comment[];
+
+  isActive() {
+    if (this.status === status.new || this.status === status.withdrawal)
+      return false;
+    return true;
+  }
 }

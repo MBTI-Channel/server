@@ -61,6 +61,14 @@ export class UserRepository implements IUserRepository {
     return await repository.find({ where: { provider, providerId } });
   }
 
+  async findOneStatus(id: number): Promise<User | null> {
+    const repository = await this._database.getRepository(User);
+    return await repository.findOne({
+      select: ["id", "status"],
+      where: { id },
+    });
+  }
+
   async update(id: number, payload: Partial<User>): Promise<User> {
     const repository = await this._database.getRepository(User);
     const updatedUser = await repository
