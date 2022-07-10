@@ -26,6 +26,9 @@ export class Post {
   @ManyToOne((type) => User, (user) => user.id)
   user!: User;
 
+  @Column()
+  userId: number;
+
   @Column({
     type: "tinyint",
     default: 1,
