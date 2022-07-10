@@ -3,6 +3,8 @@ import { plainToInstance } from "class-transformer";
 import { TYPES } from "../../core/type.core";
 import { ICommentService } from "./interfaces/IComment.service";
 import { IPostService } from "../post/interfaces/IPost.service";
+import { INotificationService } from "../notifications/interfaces/INotification.service";
+import { IDatabaseService } from "../../shared/database/interfaces/IDatabase.service";
 import { ICommentRepository } from "./interfaces/IComment.repository";
 import { IPostRepository } from "../post/interfaces/IPost.repository";
 import { Comment } from "./entity/comment.entity";
@@ -13,7 +15,6 @@ import {
 } from "../../shared/errors/all.exception";
 import { Logger } from "../../shared/utils/logger.util";
 import { CommentResponseDto } from "./dto/all-response.dto";
-import { IDatabaseService } from "../../shared/database/interfaces/IDatabase.service";
 import { HttpException } from "../../shared/errors/http.exception";
 
 @injectable()
@@ -26,6 +27,8 @@ export class CommentService implements ICommentService {
     private readonly _postRepository: IPostRepository,
     @inject(TYPES.IPostService)
     private readonly _postService: IPostService,
+    @inject(TYPES.INotificationService)
+    private readonly _notificationService: INotificationService,
     @inject(TYPES.IDatabaseService)
     private readonly _dbService: IDatabaseService
   ) {}
@@ -61,7 +64,12 @@ export class CommentService implements ICommentService {
         commentEntity
       );
       await this._postService.increaseCommentCount(post.id);
-      //TODO: 유저에게 댓글 알림
+      await this._notificationService.createByTargetUser(
+        user,
+        post.userId,
+        postId,
+        "comment"
+      );
       await t.commitTransaction();
       return this._toCommentResponseDto(comment);
     } catch (err: any) {
