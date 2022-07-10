@@ -52,6 +52,23 @@ export class Notification {
   })
   user: User;
 
+  static of(
+    targetUser: User,
+    userId: number,
+    targetId: number,
+    type: NotificationType
+  ) {
+    const notification = new Notification();
+    notification.targetUserId = targetUser.id;
+    notification.userId = type === "notice" ? 1 : userId; // 1:admin
+    notification.targetId = targetId;
+    notification.url = ""; //TODO: 논의 필요//Notification.setUrlByType(type);
+    notification.type = Notification.typeTo(type);
+    notification.title = Notification.setTitleByType(type, targetUser.nickname);
+
+    return notification;
+  }
+
   // db로 넣을때
   static typeTo(type: NotificationType) {
     switch (type) {
