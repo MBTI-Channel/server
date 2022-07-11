@@ -75,7 +75,6 @@ export class Post {
   isDisabled: boolean;
 
   @CreateDateColumn({
-    default: () => "(CURRENT_DATE)",
     comment: "게시글 생성 날짜시간",
   })
   datetime!: Date;

@@ -59,7 +59,6 @@ export class Comment {
   isDisabled: boolean;
 
   @CreateDateColumn({
-    default: () => "(CURRENT_DATE)",
     comment: "댓글 생성 날짜시간",
   })
   datetime: Date;

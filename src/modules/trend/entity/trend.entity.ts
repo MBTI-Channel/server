@@ -18,7 +18,6 @@ export class Trend {
   post: Post;
 
   @CreateDateColumn({
-    default: () => "(CURRENT_DATE)",
     comment: "인기글 등록 날짜시간",
   })
   datetime: Date;
