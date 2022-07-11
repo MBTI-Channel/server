@@ -13,7 +13,7 @@ import { Comment } from "../../comment/entity/comment.entity";
 import { Survey } from "../../survey/entity/survey.entity";
 import { User } from "../../user/entity/user.entity";
 
-@Entity("Post")
+@Entity()
 export class Post {
   @PrimaryGeneratedColumn()
   id: number;

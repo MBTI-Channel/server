@@ -20,7 +20,7 @@ import config from "../../../config";
 
 const { status } = config.user;
 
-@Entity("User")
+@Entity()
 export class User extends UserBase {
   @PrimaryGeneratedColumn()
   id: number;

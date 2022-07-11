@@ -8,7 +8,7 @@ import {
 
 import { Post } from "../../post/entity/post.entity";
 
-@Entity("Trend")
+@Entity()
 export class Trend {
   @PrimaryGeneratedColumn()
   id: number;

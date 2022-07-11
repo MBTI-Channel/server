@@ -9,7 +9,7 @@ import { NotificationType } from "../../../shared/type.shared";
 
 import { User } from "../../user/entity/user.entity";
 
-@Entity("Notification")
+@Entity()
 export class Notification {
   @PrimaryGeneratedColumn()
   id: number;

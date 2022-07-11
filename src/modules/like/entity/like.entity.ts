@@ -8,7 +8,7 @@ import {
 
 import { User } from "../../user/entity/user.entity";
 
-@Entity("Like")
+@Entity()
 export class Like {
   @PrimaryGeneratedColumn()
   id: number;

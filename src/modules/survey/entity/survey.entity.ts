@@ -8,7 +8,7 @@ import {
 import { Post } from "../../post/entity/post.entity";
 import { User } from "../../user/entity/user.entity";
 
-@Entity("Survey")
+@Entity()
 export class Survey {
   @PrimaryGeneratedColumn()
   id: number;

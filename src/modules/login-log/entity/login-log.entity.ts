@@ -8,7 +8,7 @@ import {
 
 import { User } from "../../user/entity/user.entity";
 
-@Entity("LoginLog")
+@Entity()
 export class LoginLog {
   @PrimaryGeneratedColumn()
   id: number;
