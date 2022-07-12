@@ -93,4 +93,9 @@ export class Post {
   // Post (1) <-> Survey (*)
   @OneToMany(() => Survey, (bookmark) => bookmark.id, { cascade: true })
   survey!: Survey[];
+
+  isActive() {
+    if (this.isDisabled === true) return false;
+    return true;
+  }
 }
