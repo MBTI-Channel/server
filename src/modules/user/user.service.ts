@@ -22,7 +22,7 @@ import {
 import { Provider } from "../../shared/type.shared";
 import config from "../../config";
 
-@injectable()
+@injectable() //TODO: _toDTO 리팩토링
 export class UserService implements IUserService {
   constructor(
     @inject(TYPES.Logger) private readonly _logger: Logger,
