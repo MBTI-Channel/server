@@ -1,7 +1,7 @@
 import container from "../../../../src/core/container.core";
 import { TYPES } from "../../../../src/core/type.core";
 import { UnauthorizedException } from "../../../../src/shared/errors/all.exception";
-import { DecodedDto } from "../../../../src/modules/auth/dtos/decode-token.dto";
+import { DecodedDto } from "../../../../src/modules/auth/dto/decode-token.dto";
 import { IAuthService } from "../../../../src/modules/auth/interfaces/IAuth.service";
 
 describe("AuthService ", () => {
