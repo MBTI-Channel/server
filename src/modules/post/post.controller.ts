@@ -64,6 +64,6 @@ export class PostController extends BaseHttpController {
 
     await this._postService.delete(user, id);
 
-    return res.status(204).json({ id });
+    return res.status(204);
   }
 }
