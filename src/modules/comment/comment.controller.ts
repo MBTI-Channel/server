@@ -59,6 +59,6 @@ export class CommentController {
 
     await this._commentService.delete(user, id);
 
-    return res.status(204);
+    return res.status(204).json();
   }
 }
