@@ -46,8 +46,7 @@ export class CommentService implements ICommentService {
     const post = await this._postRepository.findOneById(postId);
 
     // err: 존재하지않는 || 삭제된 post
-    if (!post || post.isDisabled === true)
-      throw new NotFoundException(`not exists post`);
+    if (!post || !post.isActive) throw new NotFoundException(`not exists post`);
 
     const commentEntity = new Comment();
     commentEntity.post = post;
@@ -86,7 +85,7 @@ export class CommentService implements ICommentService {
 
     this._logger.trace(`[CommentService] check exists comment id ${id}`);
     //err: 존재하지 않는 댓글 || 비활성화된 댓글
-    if (!comment || comment.isDisabled)
+    if (!comment || !comment.isActive)
       throw new NotFoundException("not exists comment");
 
     this._logger.trace(

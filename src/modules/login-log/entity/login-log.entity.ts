@@ -1,21 +1,10 @@
-import {
-  Entity,
-  Column,
-  PrimaryGeneratedColumn,
-  CreateDateColumn,
-  ManyToOne,
-} from "typeorm";
+import { Entity, Column, ManyToOne } from "typeorm";
+import { BaseEntity } from "../../../shared/base.entity.";
 
 import { User } from "../../user/entity/user.entity";
 
-@Entity("LoginLog")
-export class LoginLog {
-  @PrimaryGeneratedColumn()
-  id: number;
-
-  @CreateDateColumn({ comment: "로그인한 시간" })
-  datetime: Date;
-
+@Entity()
+export class LoginLog extends BaseEntity {
   @Column({
     length: "50",
     comment: "로그인한 ip",

@@ -1,31 +1,23 @@
-import {
-  Entity,
-  Column,
-  PrimaryGeneratedColumn,
-  CreateDateColumn,
-  ManyToOne,
-} from "typeorm";
+import { Entity, Column, ManyToOne } from "typeorm";
+import { BaseEntity } from "../../../shared/base.entity.";
 
 import { User } from "../../user/entity/user.entity";
 
-@Entity("Report")
-export class Report {
-  @PrimaryGeneratedColumn()
-  id: number;
+@Entity()
+export class Report extends BaseEntity {
+  @Column()
+  userId: number;
 
   @Column({
     comment: "신고받은 게시글/댓글 아이디",
   })
-  target_id: number;
+  targetId: number;
 
   @Column({ type: "tinyint", comment: "1: 게시글, 2: 댓글" })
-  target_type: number;
+  targetType: number;
 
   @Column({ comment: "신고받은 유저 아이디" })
-  target_user_id: number;
-
-  @CreateDateColumn({ comment: "신고날짜 시간" })
-  datetime: Date;
+  targetUserId: number;
 
   @Column({ nullable: true, comment: "신고사유 (max: 300)" })
   reason?: string;

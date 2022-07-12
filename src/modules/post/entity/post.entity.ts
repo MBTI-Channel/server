@@ -1,22 +1,13 @@
-import {
-  Entity,
-  Column,
-  PrimaryGeneratedColumn,
-  CreateDateColumn,
-  ManyToOne,
-  OneToMany,
-} from "typeorm";
+import { Entity, Column, ManyToOne, OneToMany } from "typeorm";
+import { BaseEntity } from "../../../shared/base.entity.";
 import { Bookmark } from "../../bookmark/entity/bookmark.entity";
 import { Category } from "../../category/entity/category.entity";
 import { Comment } from "../../comment/entity/comment.entity";
 import { Survey } from "../../survey/entity/survey.entity";
 import { User } from "../../user/entity/user.entity";
 
-@Entity("Post")
-export class Post {
-  @PrimaryGeneratedColumn()
-  id: number;
-
+@Entity()
+export class Post extends BaseEntity {
   // Post (*) <-> Category (1)
   @ManyToOne((type) => Category, (category) => category.id)
   category!: Category;
@@ -45,9 +36,8 @@ export class Post {
   userNickname: string;
 
   @Column({
-    type: "tinyint",
     default: false,
-    comment: "작성자 익명 여부 [0: 실명, 1: 익명]",
+    comment: "작성자 익명 여부",
   })
   isSecret: boolean;
 
@@ -70,30 +60,20 @@ export class Post {
   reportCount: number;
 
   @Column({
-    type: "tinyint",
-    default: false,
-    comment: "게시글 비활성 여부 [0: 활성, 1: 비활성]",
+    default: true,
+    comment: "게시글 활성 여부]",
   })
-  isDisabled: boolean;
-
-  @CreateDateColumn({
-    default: () => "(CURRENT_DATE)",
-    comment: "게시글 생성 날짜시간",
-  })
-  datetime!: Date;
-
-  @Column({ nullable: true, comment: "게시글 수정 날짜시간" })
-  updateDatetime?: Date;
+  isActive: boolean;
 
   // Post (1) <-> Comment (*)
   @OneToMany(() => Comment, (comment) => comment.id, { cascade: true })
-  comment!: Comment[];
+  comment: Comment[];
 
   // Post (1) <-> Bookmark (*)
   @OneToMany(() => Bookmark, (bookmark) => bookmark.id, { cascade: true })
-  bookmark!: Bookmark[];
+  bookmark: Bookmark[];
 
   // Post (1) <-> Survey (*)
   @OneToMany(() => Survey, (bookmark) => bookmark.id, { cascade: true })
-  survey!: Survey[];
+  survey: Survey[];
 }

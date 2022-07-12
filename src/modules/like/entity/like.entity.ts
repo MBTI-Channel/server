@@ -1,31 +1,20 @@
-import {
-  Entity,
-  Column,
-  PrimaryGeneratedColumn,
-  CreateDateColumn,
-  ManyToOne,
-} from "typeorm";
+import { Entity, Column, ManyToOne } from "typeorm";
+import { BaseEntity } from "../../../shared/base.entity.";
 
 import { User } from "../../user/entity/user.entity";
 
-@Entity("Like")
-export class Like {
-  @PrimaryGeneratedColumn()
-  id: number;
-
+@Entity()
+export class Like extends BaseEntity {
   @Column({
     comment: "추천한 게시글/댓글 id",
   })
-  target_id: number;
+  targetId: number;
 
   @Column({
     type: "tinyint",
     comment: "1: 게시글 2; 댓글",
   })
-  target_type: number;
-
-  @CreateDateColumn({ comment: "좋아요를 누른 시간" })
-  datetime: Date;
+  targetType: number;
 
   @ManyToOne(() => User, (user) => user.id, {
     onDelete: "CASCADE",
