@@ -1,4 +1,5 @@
 import { inject, injectable } from "inversify";
+import { QueryDeepPartialEntity } from "typeorm/query-builder/QueryPartialEntity";
 import { TYPES } from "../../core/type.core";
 import { IDatabaseService } from "../../shared/database/interfaces/IDatabase.service";
 import { Category } from "../category/entity/category.entity";
@@ -51,5 +52,12 @@ export class PostRepository implements IPostRepository {
     const result = await repository.increment({ id }, "commentCount", 1);
     if (result.affected === 1) return true;
     return false;
+  }
+
+  public async remove(id: number): Promise<void> {
+    const repository = await this._database.getRepository(Post);
+    await repository.update(id, {
+      isDisabled: true,
+    } as QueryDeepPartialEntity<Post>);
   }
 }
