@@ -152,8 +152,7 @@ export class UserService implements IUserService {
     const foundNickname = await this._userRepository.findOneByNickname(
       nickname
     );
-    if (foundNickname) return true;
-    return false;
+    return foundNickname !== null;
   }
 
   // user가 유효한지 확인한다.
