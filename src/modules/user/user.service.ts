@@ -56,12 +56,6 @@ export class UserService implements IUserService {
     return new UserResponseDto(user);
   }
 
-  public async update(id: number, payload: Partial<User>) {
-    const user = await this._userRepository.findOneById(id);
-    if (!user) throw new NotFoundException("not exists user");
-    return await this._userRepository.update(id, payload);
-  }
-
   // 로그인
   public async login(
     id: number,
