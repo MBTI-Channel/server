@@ -37,6 +37,7 @@ const redisInstance = container.get<RedisService>(TYPES.IRedisService);
 server.setConfig((app) => {
   databaseInstance.init();
   redisInstance.init();
+  app.set("trust proxy", true);
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
   app.use(helmet());
