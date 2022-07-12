@@ -6,10 +6,9 @@ import { ITokenPayload } from "./interfaces/ITokenPayload";
 import { TYPES } from "../../core/type.core";
 import { SignOptions } from "jsonwebtoken";
 import { JwtUtil } from "../../shared/utils/jwt.util";
-import config from "../../config";
 import { UnauthorizedException } from "../../shared/errors/all.exception";
 import { UserRepository } from "../user/user.repository";
-import { DecodedDto } from "./dtos/decode-token.dto";
+import config from "../../config";
 
 @injectable()
 export class AuthService implements IAuthService {
