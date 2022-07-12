@@ -3,13 +3,20 @@ import { inject } from "inversify";
 import {
   BaseHttpController,
   controller,
+  httpDelete,
   httpPost,
   requestBody,
+  requestParam,
 } from "inversify-express-utils";
 import { TYPES } from "../../core/type.core";
-import { bodyValidator } from "../../middlewares/validator.middleware";
+import {
+  bodyValidator,
+  paramsValidator,
+} from "../../middlewares/validator.middleware";
+import { DeleteCommentDto } from "../comment/dto";
 import { User } from "../user/entity/user.entity";
 import { CreatePostDto } from "./dto/create-post.dto";
+import { DeletePostDto } from "./dto/delete-post.dto";
 import { IPostService } from "./interfaces/IPost.service";
 
 @controller("/posts")
@@ -39,5 +46,24 @@ export class PostController extends BaseHttpController {
     );
 
     return res.status(201).json(data);
+  }
+
+  // 게시글 삭제
+  @httpDelete(
+    "/:id",
+    TYPES.ValidateAccessTokenMiddleware,
+    paramsValidator(DeletePostDto)
+  )
+  async delete(
+    @requestParam() param: DeletePostDto,
+    req: Request,
+    res: Response
+  ) {
+    const user = req.user as User;
+    const { id } = param;
+
+    await this._postService.delete(user, id);
+
+    return res.status(204);
   }
 }

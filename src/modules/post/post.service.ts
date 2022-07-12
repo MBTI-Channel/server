@@ -1,7 +1,10 @@
 import { plainToInstance } from "class-transformer";
 import { inject, injectable } from "inversify";
 import { TYPES } from "../../core/type.core";
-import { NotFoundException } from "../../shared/errors/all.exception";
+import {
+  ForbiddenException,
+  NotFoundException,
+} from "../../shared/errors/all.exception";
 import { Logger } from "../../shared/utils/logger.util";
 import { ICategoryRepository } from "../category/interfaces/ICategory.repository";
 import { User } from "../user/entity/user.entity";
@@ -67,5 +70,20 @@ export class PostService implements IPostService {
     // err: 업데이트 도중 삭제된 게시글 id
     if (!hasIncreased) throw new NotFoundException(`not exists post`);
     this._logger.trace(`[PostService] clear`);
+  }
+
+  public async delete(user: User, id: number): Promise<void> {
+    this._logger.trace(`[PostService] delete start`);
+    const post = await this._postRepository.findOneById(id);
+
+    this._logger.trace(`[PostService] check exists post id ${id}`);
+    if (!post || post.isDisabled)
+      throw new NotFoundException("not exists post");
+
+    if (post.userId !== user.id)
+      throw new ForbiddenException("authorization error");
+
+    this._logger.trace(`[PostService] remove post ${id}`);
+    await this._postRepository.remove(id);
   }
 }

@@ -6,7 +6,6 @@ import {
   ManyToOne,
   OneToMany,
 } from "typeorm";
-
 import { Bookmark } from "../../bookmark/entity/bookmark.entity";
 import { Category } from "../../category/entity/category.entity";
 import { Comment } from "../../comment/entity/comment.entity";
@@ -29,10 +28,13 @@ export class Post {
   @Column()
   userId: number;
 
+  @Column({ comment: "카테고리 id" })
+  categoryId: number;
+
   @Column({
     type: "tinyint",
     default: 1,
-    comment: "게시글 종류 [1: post, 2: survey, 3: notice]",
+    comment: "게시글 종류 [1: post, 2: mbti, 3: survey, 4: notice]",
   })
   type: number;
 
@@ -44,7 +46,7 @@ export class Post {
 
   @Column({
     type: "tinyint",
-    default: 0,
+    default: false,
     comment: "작성자 익명 여부 [0: 실명, 1: 익명]",
   })
   isSecret: boolean;
@@ -69,7 +71,7 @@ export class Post {
 
   @Column({
     type: "tinyint",
-    default: 0,
+    default: false,
     comment: "게시글 비활성 여부 [0: 활성, 1: 비활성]",
   })
   isDisabled: boolean;
