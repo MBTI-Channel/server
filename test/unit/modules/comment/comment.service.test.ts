@@ -36,10 +36,11 @@ describe("CommentService ", () => {
       //given
       const mockComment = "";
       const mockCommentResponseDto = "";
+      const mockPost = { isActive: true };
       container.unbind(TYPES.IDatabaseService);
       container.bind(TYPES.IDatabaseService).toConstantValue(mockDBService);
       const mockPostRepository = {
-        findOneById: () => true,
+        findOneById: () => mockPost,
       };
       container.unbind(TYPES.IPostRepository);
       container.bind(TYPES.IPostRepository).toConstantValue(mockPostRepository);
