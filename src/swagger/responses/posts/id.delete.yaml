@@ -1,4 +1,4 @@
-"200":
+"204":
   description: 게시글 삭제 성공
 
 "401":
@@ -22,7 +22,6 @@
           message:
             type: string
             example: authorization error
-
 
 "404":
   description: 존재하지 않는 게시글
