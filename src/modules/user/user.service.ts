@@ -34,18 +34,12 @@ export class UserService implements IUserService {
   public async create(
     provider: Provider,
     providerId: string,
-    gender?: number,
-    ageRange?: string
+    gender: number,
+    ageRange: string
   ) {
     this._logger.trace(`[UserService] create start`);
-    const userEntity = await this._userRepository.createEntity(
-      provider,
-      providerId,
-      gender,
-      ageRange
-    );
-    const user = await this._userRepository.create(userEntity);
-
+    const userEntitiy = User.of(provider, providerId, gender, ageRange);
+    const user = await this._userRepository.create(userEntitiy);
     return new NeedSignUpResponseDto(user);
   }
 

@@ -8,8 +8,8 @@ import { Post } from "../../post/entity/post.entity";
 import { Report } from "../../report/entity/report.entity";
 import { Survey } from "../../survey/entity/survey.entity";
 import { UserBase } from "./userbase";
+import { Provider } from "../../../shared/type.shared";
 import config from "../../../config";
-import { BaseEntity } from "../../../shared/base.entity.";
 
 const { status } = config.user;
 
@@ -88,6 +88,21 @@ export class User extends UserBase {
   // User (1) <-> Comment(*)
   @OneToMany(() => Comment, (comment: any) => comment.user, { cascade: true })
   commentId: Comment[];
+
+  static of(
+    provider: Provider,
+    providerId: string,
+    gender: number,
+    ageRange: string
+  ) {
+    const user = new User();
+    user.provider = provider;
+    user.providerId = providerId;
+    user.gender = gender;
+    user.ageRange = ageRange;
+
+    return user;
+  }
 
   isActive() {
     if (this.status === status.new || this.status === status.withdrawal)
