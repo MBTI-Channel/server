@@ -1,12 +1,4 @@
-import {
-  Entity,
-  Column,
-  PrimaryGeneratedColumn,
-  OneToMany,
-  UpdateDateColumn,
-  CreateDateColumn,
-  Generated,
-} from "typeorm";
+import { Entity, Column, OneToMany, Generated } from "typeorm";
 import { Bookmark } from "../../bookmark/entity/bookmark.entity";
 import { Comment } from "../../comment/entity/comment.entity";
 import { Like } from "../../like/entity/like.entity";
@@ -17,14 +9,12 @@ import { Report } from "../../report/entity/report.entity";
 import { Survey } from "../../survey/entity/survey.entity";
 import { UserBase } from "./userbase";
 import config from "../../../config";
+import { BaseEntity } from "../../../shared/base.entity.";
 
 const { status } = config.user;
 
-@Entity("User")
+@Entity()
 export class User extends UserBase {
-  @PrimaryGeneratedColumn()
-  id: number;
-
   @Generated("uuid")
   @Column({ type: "uuid" })
   uuid: string;
@@ -52,51 +42,44 @@ export class User extends UserBase {
   nickname: string;
 
   @Column({
-    type: "tinyint",
-    default: 0,
+    default: false,
     comment: "어드민 여부",
   })
-  isAdmin!: boolean;
-
-  @CreateDateColumn({ type: "datetime", comment: "생성 날짜시간" })
-  datetime!: Date;
-
-  @UpdateDateColumn({ type: "datetime", comment: "업데이트 날짜시간" })
-  updateDatetime?: Date;
+  isAdmin: boolean;
 
   // User (1) <-> Like(*)
   @OneToMany(() => Like, (like) => like.user, {
     cascade: true,
   })
-  likeId!: Like[];
+  likeId: Like[];
 
   // User (1) <-> Bookmark(*)
   @OneToMany(() => Bookmark, (bookmark) => bookmark.user, {
     cascade: true,
   })
-  bookmarkId!: Bookmark[];
+  bookmarkId: Bookmark[];
 
   // User (1) <-> Report(*)
   @OneToMany(() => Report, (report) => report.user, { cascade: true })
-  reportId!: Report[];
+  reportId: Report[];
 
   // User (1) <-> LoginLog(*)
   @OneToMany(() => LoginLog, (loginLog) => loginLog.user, {
     cascade: true,
   })
-  loginLogId!: LoginLog[];
+  loginLogId: LoginLog[];
 
   // User (1) <-> Notification(*)
   @OneToMany(() => Notification, (notification: any) => notification.user, {
     cascade: true,
   })
-  notificationId!: Notification[];
+  notificationId: Notification[];
 
   // User (1) <-> Survey(*)
   @OneToMany(() => Survey, (survey) => survey.user, {
     cascade: true,
   })
-  surveyId!: Survey[];
+  surveyId: Survey[];
 
   // User (1) <-> Post(*)
   @OneToMany(() => Post, (post) => post.user, { cascade: true })
@@ -104,7 +87,7 @@ export class User extends UserBase {
 
   // User (1) <-> Comment(*)
   @OneToMany(() => Comment, (comment: any) => comment.user, { cascade: true })
-  commentId!: Comment[];
+  commentId: Comment[];
 
   isActive() {
     if (this.status === status.new || this.status === status.withdrawal)

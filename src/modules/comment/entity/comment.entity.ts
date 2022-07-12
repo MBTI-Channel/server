@@ -1,29 +1,21 @@
-import {
-  Column,
-  CreateDateColumn,
-  Entity,
-  ManyToOne,
-  PrimaryGeneratedColumn,
-} from "typeorm";
+import { Column, Entity, ManyToOne } from "typeorm";
+import { BaseEntity } from "../../../shared/base.entity.";
 
 import { Post } from "../../post/entity/post.entity";
 import { User } from "../../user/entity/user.entity";
 
-@Entity("Comment")
-export class Comment {
-  @PrimaryGeneratedColumn()
-  id: number;
-
+@Entity()
+export class Comment extends BaseEntity {
   // Comment (*) <-> Post (1)
   @ManyToOne((type) => Post, (post) => post.id)
-  post!: Post;
+  post: Post;
 
   @Column()
   postId: number;
 
   // Comment (*) <-> User (1)
   @ManyToOne((type) => User, (user) => user.id)
-  user!: User;
+  user: User;
 
   @Column()
   userId: number;
@@ -55,15 +47,6 @@ export class Comment {
   @Column({ default: 0, comment: "신고수" })
   reportCount: number;
 
-  @Column({ default: false, comment: "댓글 비활성 여부" })
-  isDisabled: boolean;
-
-  @CreateDateColumn({
-    default: () => "(CURRENT_DATE)",
-    comment: "댓글 생성 날짜시간",
-  })
-  datetime: Date;
-
-  @Column({ nullable: true, comment: "댓글 수정 날짜시간" })
-  updateDatetime: Date;
+  @Column({ default: true, comment: "댓글 활성 여부" })
+  isActive: boolean;
 }

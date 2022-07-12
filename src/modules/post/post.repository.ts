@@ -57,7 +57,7 @@ export class PostRepository implements IPostRepository {
   public async remove(id: number): Promise<void> {
     const repository = await this._database.getRepository(Post);
     await repository.update(id, {
-      isDisabled: true,
+      isActive: false,
     } as QueryDeepPartialEntity<Post>);
   }
 }

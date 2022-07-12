@@ -1,19 +1,11 @@
-import {
-  Entity,
-  Column,
-  PrimaryGeneratedColumn,
-  CreateDateColumn,
-  ManyToOne,
-} from "typeorm";
+import { Entity, Column, ManyToOne } from "typeorm";
+import { BaseEntity } from "../../../shared/base.entity.";
 import { NotificationType } from "../../../shared/type.shared";
 
 import { User } from "../../user/entity/user.entity";
 
-@Entity("Notification")
-export class Notification {
-  @PrimaryGeneratedColumn()
-  id: number;
-
+@Entity()
+export class Notification extends BaseEntity {
   @Column({ nullable: false, type: "int", comment: "알림을 준 유저 id" })
   targetUserId: number;
 
@@ -38,19 +30,16 @@ export class Notification {
   })
   url: string;
 
-  @CreateDateColumn({ type: "datetime", comment: "알림이 온 시간" })
-  datetime: Date;
-
   @Column({ nullable: true, type: "datetime", comment: "알림 읽은 시간" })
-  read_datetime?: Date | null;
-
-  @Column()
-  userId: number;
+  readAt: Date;
 
   @ManyToOne(() => User, (user) => user.id, {
     onDelete: "CASCADE",
   })
   user: User;
+
+  @Column()
+  userId: number;
 
   static of(
     targetUser: User,
@@ -113,7 +102,7 @@ export class Notification {
       case "trend":
         return `🤩 내 글이 인기게시글에 등록되었어요.`;
       case "notice":
-        return `📣 새로운 공지사항이 있습니다.`;
+        return `📣 새로운 공지사항이 있습니다.`; //TODO: 문의 답변 알림
     }
   }
 }

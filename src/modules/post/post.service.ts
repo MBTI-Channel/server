@@ -37,7 +37,7 @@ export class PostService implements IPostService {
     this._logger.trace(`[PostService] create start`);
     const category = await this._categoryRepository.findOneById(categoryId);
 
-    if (!category || category.isDisabled) {
+    if (!category || !category.isActive) {
       throw new NotFoundException("category id error");
     }
 
@@ -61,8 +61,7 @@ export class PostService implements IPostService {
     this._logger.trace(`[PostService] check exists post id: ${id}`);
     const post = await this._postRepository.findOneById(id);
     // err: 존재하지 않는 || 삭제된 게시글 id
-    if (!post || post.isDisabled === true)
-      throw new NotFoundException(`not exists post`);
+    if (!post || !post.isActive) throw new NotFoundException(`not exists post`);
 
     this._logger.trace(`[PostService] try post id ${id} comment count + 1...`);
     const hasIncreased = await this._postRepository.increaseCommentCount(id);
@@ -77,8 +76,7 @@ export class PostService implements IPostService {
     const post = await this._postRepository.findOneById(id);
 
     this._logger.trace(`[PostService] check exists post id ${id}`);
-    if (!post || post.isDisabled)
-      throw new NotFoundException("not exists post");
+    if (!post || !post.isActive) throw new NotFoundException("not exists post");
 
     if (post.userId !== user.id)
       throw new ForbiddenException("authorization error");

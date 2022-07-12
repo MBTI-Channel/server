@@ -1,9 +1,10 @@
 import { IsIn, IsNotEmpty, IsNumber, IsString } from "class-validator";
 import { Column } from "typeorm";
+import { BaseEntity } from "../../../shared/base.entity.";
 import { PROVIDER_KEY } from "../../../shared/constant.shared";
 import { Provider } from "../../../shared/type.shared";
 
-export class UserBase {
+export class UserBase extends BaseEntity {
   @IsString()
   @IsNotEmpty()
   @IsIn(PROVIDER_KEY)
