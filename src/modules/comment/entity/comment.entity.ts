@@ -49,4 +49,7 @@ export class Comment extends BaseEntity {
 
   @Column({ default: true, comment: "댓글 활성 여부" })
   isActive: boolean;
+
+  @Column({ default: false, comment: "게시글 작성자 여부" })
+  isPostWriter: boolean;
 }
