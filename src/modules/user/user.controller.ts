@@ -15,8 +15,8 @@ import {
 } from "../../middlewares/validator.middleware";
 import { IUserService } from "./interfaces/IUser.service";
 import { User } from "./entity/user.entity";
-import { OauthLoginDto } from "../auth/dtos/oauth-login.dto";
-import { LoginDto, SignUpDto, NicknameDuplicateCheckDto } from "./dto";
+import { OauthLoginDto } from "../auth/dto/oauth-login.dto";
+import { SignUpDto, NicknameDuplicateCheckDto } from "./dto";
 import config from "../../config";
 
 @controller("/users")

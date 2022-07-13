@@ -14,12 +14,8 @@ export interface IUserService {
     gender?: number,
     ageRange?: string
   ): Promise<NeedSignUpResponseDto>;
-  findOneById(id: number): Promise<UserResponseDto | null>;
-  findOneByProviderInfo(
-    provider: Provider,
-    providerId: string
-  ): Promise<UserResponseDto | null>;
-  update(id: number, payload: Partial<User>): Promise<UserResponseDto | null>;
+  //update(id: number, payload: Partial<User>): Promise<UserResponseDto | null>;
+  //findOne
   login(id: number, providerId: string): Promise<UserTokenResponseDto>;
   signUp(
     id: number,

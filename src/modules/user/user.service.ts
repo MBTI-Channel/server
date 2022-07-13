@@ -1,5 +1,4 @@
 import { inject, injectable } from "inversify";
-import { plainToInstance } from "class-transformer";
 import { TYPES } from "../../core/type.core";
 import { IUserService } from "./interfaces/IUser.service";
 import { IAuthService } from "../auth/interfaces/IAuth.service";
@@ -8,7 +7,6 @@ import { User } from "./entity/user.entity";
 import {
   UserTokenResponseDto,
   UserResponseDto,
-  TokenResponseDto,
   NeedSignUpResponseDto,
 } from "./dto";
 import { Logger } from "../../shared/utils/logger.util";
@@ -33,87 +31,26 @@ export class UserService implements IUserService {
     @inject(TYPES.JwtUtil) private readonly _jwtUtil: JwtUtil
   ) {}
 
-  private _toUserResponseDto(user: User) {
-    return plainToInstance(UserResponseDto, {
-      id: user.id,
-      mbti: user.mbti,
-      nickname: user.nickname,
-      isAdmin: user.isAdmin,
-      isActive: user.status !== config.user.status.withdrawal ? true : false,
-    });
-  }
-
-  private _toUserTokenResponseDto(
-    user: User,
-    accessToken: string,
-    refreshToken: string
-  ) {
-    return plainToInstance(UserTokenResponseDto, {
-      id: user.id,
-      mbti: user.mbti,
-      nickname: user.nickname,
-      isAdmin: user.isAdmin,
-      isActive: user.status !== config.user.status.withdrawal ? true : false,
-      accessToken,
-      refreshToken,
-    });
-  }
-
-  private _toTokenResponseDto(accessToken: string, refreshToken: string) {
-    return plainToInstance(TokenResponseDto, {
-      accessToken,
-      refreshToken,
-    });
-  }
-
-  private _toNeedSignUpResponseDto(user: User) {
-    return plainToInstance(NeedSignUpResponseDto, {
-      id: user.id,
-      uuid: user.uuid,
-    });
-  }
-
   public async create(
     provider: Provider,
     providerId: string,
-    gender?: number,
-    ageRange?: string
+    gender: number,
+    ageRange: string
   ) {
     this._logger.trace(`[UserService] create start`);
-    const userEntity = await this._userRepository.createEntity(
-      provider,
-      providerId,
-      gender,
-      ageRange
-    );
-    const user = await this._userRepository.create(userEntity);
-    return this._toNeedSignUpResponseDto(user);
+    const userEntitiy = User.of(provider, providerId, gender, ageRange);
+    const user = await this._userRepository.create(userEntitiy);
+    return new NeedSignUpResponseDto(user);
   }
 
   public async findOneById(id: number) {
     this._logger.trace(`[UserService] findOneById start`);
     const user = await this._userRepository.findOneById(id);
     if (!user) return null;
-    return this._toUserResponseDto(user);
+    return new UserResponseDto(user);
   }
 
-  public async findOneByProviderInfo(provider: Provider, providerId: string) {
-    this._logger.trace(`[UserService] findOneByProviderInfo start`);
-    const user = await this._userRepository.findOneByProviderInfo(
-      provider,
-      providerId
-    );
-    if (!user) return null;
-    return this._toUserResponseDto(user);
-  }
-
-  public async update(id: number, payload: Partial<User>) {
-    const user = await this._userRepository.findOneById(id);
-    if (!user) throw new NotFoundException("not exists user");
-    const updatedUser = await this._userRepository.update(id, payload);
-    return this._toUserResponseDto(updatedUser);
-  }
-
+  // 로그인
   public async login(
     id: number,
     providerId: string
@@ -140,9 +77,10 @@ export class UserService implements IUserService {
       this._authService.generateRefreshToken(),
     ]);
 
-    return this._toUserTokenResponseDto(user, accessToken, refreshToken);
+    return new UserTokenResponseDto(user, accessToken, refreshToken);
   }
 
+  // 닉네임, mbti를 update하여 회원가입 처리한다.
   public async signUp(
     id: number,
     uuid: string,
@@ -176,7 +114,7 @@ export class UserService implements IUserService {
       this._authService.generateRefreshToken(),
     ]);
 
-    return this._toUserTokenResponseDto(updatedUser, accessToken, refreshToken);
+    return new UserTokenResponseDto(user, accessToken, refreshToken);
   }
 
   public async reissueAccessToken(oldAccessToken: string) {
@@ -203,12 +141,12 @@ export class UserService implements IUserService {
     // return { newAccessToken };
   }
 
+  // 중복 닉네임이 있는지 확인한다.
   public async isExistsNickname(nickname: string) {
     const foundNickname = await this._userRepository.findOneByNickname(
       nickname
     );
-    if (foundNickname) return true;
-    return false;
+    return foundNickname !== null;
   }
 
   // user가 유효한지 확인한다.

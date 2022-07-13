@@ -12,23 +12,6 @@ export class UserRepository implements IUserRepository {
     @inject(TYPES.IDatabaseService) private readonly _database: IDatabaseService
   ) {}
 
-  async createEntity(
-    provider: Provider,
-    providerId: string,
-    gender: number,
-    ageRange: string
-  ) {
-    const repository = await this._database.getRepository(User);
-    const userEntity = await repository.create({
-      provider,
-      providerId,
-      gender,
-      ageRange,
-    });
-
-    return userEntity;
-  }
-
   async create(userEntity: User): Promise<User> {
     const repository = await this._database.getRepository(User);
     const user = await repository.save(userEntity);
