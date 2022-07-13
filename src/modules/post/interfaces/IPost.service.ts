@@ -14,5 +14,5 @@ export interface IPostService {
   ): Promise<PostCreateResponseDto>;
   increaseCommentCount(id: number): Promise<void>;
   delete(user: User, id: number): Promise<void>;
-  searchDetail(user: User, id: number): Promise<SearchDetailResponseDto>;
+  getDetail(user: User, id: number): Promise<SearchDetailResponseDto>;
 }

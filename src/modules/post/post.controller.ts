@@ -17,7 +17,7 @@ import {
 import { User } from "../user/entity/user.entity";
 import { CreatePostDto } from "./dto/create-post.dto";
 import { DeletePostDto } from "./dto/delete-post.dto";
-import { SearchDetailPostDto } from "./dto/search-detail-post.dto";
+import { getDetailPostDto } from "./dto/search-detail-post.dto";
 import { IPostService } from "./interfaces/IPost.service";
 
 @controller("/posts")
@@ -72,17 +72,17 @@ export class PostController extends BaseHttpController {
   @httpGet(
     "/:id",
     TYPES.ValidateAccessTokenMiddleware,
-    paramsValidator(SearchDetailPostDto)
+    paramsValidator(getDetailPostDto)
   )
   async searchDetail(
-    @requestParam() param: SearchDetailPostDto,
+    @requestParam() param: getDetailPostDto,
     req: Request,
     res: Response
   ) {
     const user = req.user as User;
     const { id } = param;
 
-    const data = await this._postService.searchDetail(user, id);
+    const data = await this._postService.getDetail(user, id);
     return res.status(200).json(data);
   }
 }

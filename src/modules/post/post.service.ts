@@ -13,7 +13,6 @@ import {
   PostCreateResponseDto,
   SearchDetailResponseDto,
 } from "./dto/all-response.dto";
-import { SearchDetailPostDto } from "./dto/search-detail-post.dto";
 import { IPostRepository } from "./interfaces/IPost.repository";
 import { IPostService } from "./interfaces/IPost.service";
 
@@ -87,7 +86,7 @@ export class PostService implements IPostService {
     await this._postRepository.remove(id);
   }
 
-  public async searchDetail(
+  public async getDetail(
     user: User,
     id: number
   ): Promise<SearchDetailResponseDto> {
