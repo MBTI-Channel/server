@@ -13,8 +13,10 @@ import {
   PostCreateResponseDto,
   SearchDetailResponseDto,
 } from "./dto/all-response.dto";
+import { Post } from "./entity/post.entity";
 import { IPostRepository } from "./interfaces/IPost.repository";
 import { IPostService } from "./interfaces/IPost.service";
+import config from "../../config";
 
 @injectable()
 export class PostService implements IPostService {
@@ -42,17 +44,23 @@ export class PostService implements IPostService {
       throw new NotFoundException("category id error");
     }
 
-    // TODO: 나만의 mbti 게시판일 경우, 사용자 mbti 확인
+    let postType = Post.typeTo("post");
+    if (category.name === "mbti") {
+      postType = Post.typeTo("mbti");
+    }
+
     const { mbti, nickname } = user;
-    const postEntity = await this._postRepository.createEntity(
-      isSecret,
-      title,
-      content,
-      mbti,
-      nickname,
-      category,
-      user
-    );
+
+    const postEntity = new Post();
+    postEntity.isSecret = isSecret;
+    postEntity.title = title;
+    postEntity.content = content;
+    postEntity.userMbti = mbti;
+    postEntity.userNickname = nickname;
+    postEntity.type = postType;
+    postEntity.category = category;
+    postEntity.user = user;
+
     const createdPost = await this._postRepository.create(postEntity);
     return new PostCreateResponseDto(createdPost);
   }
@@ -97,7 +105,7 @@ export class PostService implements IPostService {
     if (!post || !post.isActive) throw new NotFoundException("not exists post");
 
     // 타입이 mbti 일 경우
-    if (post.type === 2) {
+    if (Post.typeFrom(post.type) === "mbti") {
       if (user.mbti !== post.userMbti)
         throw new ForbiddenException("authorization error");
     }
@@ -110,7 +118,8 @@ export class PostService implements IPostService {
       User,
       await this._userRepository.findOneStatus(post.userId)
     );
-    if (postUser && postUser.status === 2) isActiveUser = true;
+    if (postUser && postUser.status === config.user.status.normal)
+      isActiveUser = true;
 
     // 본인 게시판이 맞는지 확인
     if (user.id === post.userId) isMy = true;
