@@ -17,7 +17,7 @@ import {
 import { User } from "../user/entity/user.entity";
 import { CreatePostDto } from "./dto/create-post.dto";
 import { DeletePostDto } from "./dto/delete-post.dto";
-import { getDetailPostDto } from "./dto/search-detail-post.dto";
+import { getDetailPostDto } from "./dto/get-detail-post.dto";
 import { IPostService } from "./interfaces/IPost.service";
 
 @controller("/posts")
