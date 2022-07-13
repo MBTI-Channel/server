@@ -1,5 +1,6 @@
 import { Entity, Column, ManyToOne, OneToMany } from "typeorm";
 import { BaseEntity } from "../../../shared/base.entity.";
+import { PostType } from "../../../shared/type.shared";
 import { Bookmark } from "../../bookmark/entity/bookmark.entity";
 import { Category } from "../../category/entity/category.entity";
 import { Comment } from "../../comment/entity/comment.entity";
@@ -76,4 +77,30 @@ export class Post extends BaseEntity {
   // Post (1) <-> Survey (*)
   @OneToMany(() => Survey, (bookmark) => bookmark.id, { cascade: true })
   survey: Survey[];
+
+  static typeTo(type: PostType) {
+    switch (type) {
+      case "post":
+        return 1;
+      case "mbti":
+        return 2;
+      case "survey":
+        return 3;
+      case "notice":
+        return 4;
+    }
+  }
+
+  static typeFrom(type: number) {
+    switch (type) {
+      case 1:
+        return "post";
+      case 2:
+        return "mbti";
+      case 3:
+        return "survey";
+      case 4:
+        return "notice";
+    }
+  }
 }

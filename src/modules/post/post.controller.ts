@@ -4,6 +4,7 @@ import {
   BaseHttpController,
   controller,
   httpDelete,
+  httpGet,
   httpPost,
   requestBody,
   requestParam,
@@ -13,10 +14,10 @@ import {
   bodyValidator,
   paramsValidator,
 } from "../../middlewares/validator.middleware";
-import { DeleteCommentDto } from "../comment/dto";
 import { User } from "../user/entity/user.entity";
 import { CreatePostDto } from "./dto/create-post.dto";
 import { DeletePostDto } from "./dto/delete-post.dto";
+import { getDetailPostDto } from "./dto/get-detail-post.dto";
 import { IPostService } from "./interfaces/IPost.service";
 
 @controller("/posts")
@@ -64,6 +65,24 @@ export class PostController extends BaseHttpController {
 
     await this._postService.delete(user, id);
 
-    return res.status(204);
+    return res.status(200).json({ id });
+  }
+
+  // 게시글 상세 조회
+  @httpGet(
+    "/:id",
+    TYPES.ValidateAccessTokenMiddleware,
+    paramsValidator(getDetailPostDto)
+  )
+  async searchDetail(
+    @requestParam() param: getDetailPostDto,
+    req: Request,
+    res: Response
+  ) {
+    const user = req.user as User;
+    const { id } = param;
+
+    const data = await this._postService.getDetail(user, id);
+    return res.status(200).json(data);
   }
 }
