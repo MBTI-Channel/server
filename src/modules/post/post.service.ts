@@ -8,14 +8,21 @@ import {
 import { Logger } from "../../shared/utils/logger.util";
 import { ICategoryRepository } from "../category/interfaces/ICategory.repository";
 import { User } from "../user/entity/user.entity";
-import { PostCreateResponseDto } from "./dto/all-response.dto";
+import { IUserRepository } from "../user/interfaces/IUser.repository";
+import {
+  PostCreateResponseDto,
+  SearchDetailResponseDto,
+} from "./dto/all-response.dto";
 import { Post } from "./entity/post.entity";
 import { IPostRepository } from "./interfaces/IPost.repository";
 import { IPostService } from "./interfaces/IPost.service";
+import config from "../../config";
 
 @injectable()
 export class PostService implements IPostService {
   constructor(
+    @inject(TYPES.IUserRepository)
+    private readonly _userRepository: IUserRepository,
     @inject(TYPES.IPostRepository)
     private readonly _postRepository: IPostRepository,
     @inject(TYPES.ICategoryRepository)
@@ -23,10 +30,6 @@ export class PostService implements IPostService {
     @inject(TYPES.Logger) private readonly _logger: Logger
   ) {}
 
-  private _toPostCreateResponseDto(post: Post) {
-    // TODO: 게시글 등록시 리턴 타입 id만 반환해도 되는지?
-    return plainToInstance(PostCreateResponseDto, { id: post.id });
-  }
   public async create(
     isSecret: boolean,
     title: string,
@@ -41,19 +44,25 @@ export class PostService implements IPostService {
       throw new NotFoundException("category id error");
     }
 
-    // TODO: 나만의 mbti 게시판일 경우, 사용자 mbti 확인
+    let postType = Post.typeTo("post");
+    if (category.name === "mbti") {
+      postType = Post.typeTo("mbti");
+    }
+
     const { mbti, nickname } = user;
-    const postEntity = await this._postRepository.createEntity(
-      isSecret,
-      title,
-      content,
-      mbti,
-      nickname,
-      category,
-      user
-    );
+
+    const postEntity = new Post();
+    postEntity.isSecret = isSecret;
+    postEntity.title = title;
+    postEntity.content = content;
+    postEntity.userMbti = mbti;
+    postEntity.userNickname = nickname;
+    postEntity.type = postType;
+    postEntity.category = category;
+    postEntity.user = user;
+
     const createdPost = await this._postRepository.create(postEntity);
-    return this._toPostCreateResponseDto(createdPost);
+    return new PostCreateResponseDto(createdPost);
   }
 
   public async increaseCommentCount(id: number): Promise<void> {
@@ -83,5 +92,38 @@ export class PostService implements IPostService {
 
     this._logger.trace(`[PostService] remove post ${id}`);
     await this._postRepository.remove(id);
+  }
+
+  public async getDetail(
+    user: User,
+    id: number
+  ): Promise<SearchDetailResponseDto> {
+    this._logger.trace(`[PostService] searchDetail start`);
+    const post = await this._postRepository.findOneById(id);
+
+    this._logger.trace(`[PostService] check exists post id ${id}`);
+    if (!post || !post.isActive) throw new NotFoundException("not exists post");
+
+    // 타입이 mbti 일 경우
+    if (Post.typeFrom(post.type) === "mbti") {
+      if (user.mbti !== post.userMbti)
+        throw new ForbiddenException("authorization error");
+    }
+
+    let isActiveUser = false;
+    let isMy = false;
+
+    // 게시글 작성자의 활성화 여부를 확인
+    const postUser = plainToInstance(
+      User,
+      await this._userRepository.findOneStatus(post.userId)
+    );
+    if (postUser && postUser.status === config.user.status.normal)
+      isActiveUser = true;
+
+    // 본인 게시판이 맞는지 확인
+    if (user.id === post.userId) isMy = true;
+
+    return new SearchDetailResponseDto(post, isActiveUser, isMy);
   }
 }

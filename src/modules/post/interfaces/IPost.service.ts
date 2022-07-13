@@ -1,6 +1,8 @@
-import { Category } from "../../category/entity/category.entity";
 import { User } from "../../user/entity/user.entity";
-import { PostCreateResponseDto } from "../dto/all-response.dto";
+import {
+  PostCreateResponseDto,
+  SearchDetailResponseDto,
+} from "../dto/all-response.dto";
 
 export interface IPostService {
   create(
@@ -12,4 +14,5 @@ export interface IPostService {
   ): Promise<PostCreateResponseDto>;
   increaseCommentCount(id: number): Promise<void>;
   delete(user: User, id: number): Promise<void>;
+  getDetail(user: User, id: number): Promise<SearchDetailResponseDto>;
 }
