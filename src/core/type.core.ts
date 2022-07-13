@@ -29,6 +29,7 @@ export const TYPES = {
   SocialSignUpMiddleware: Symbol.for("SocialSignUpMiddleware"),
   ValidateAccessTokenMiddleware: Symbol.for("ValidateAccessTokenMiddleware"),
   ValidateReissueTokenMiddleware: Symbol.for("ValidateReissueTokenMiddleware"),
+  CheckLoginStatusMiddleware: Symbol.for("CheckLoginStatusMiddleware"),
   /* shared */
   NaverApiService: Symbol.for("NaverOauthService"),
   KakaoApiService: Symbol.for("KakaoOauthService"),

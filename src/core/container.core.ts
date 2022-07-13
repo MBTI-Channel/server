@@ -12,6 +12,7 @@ import { GetProviderUserByOauth } from "../middlewares/get-provider-user-by-oaut
 import { SocialSignUp } from "../middlewares/social-sign-up.middleware";
 import { ValidateAccessToken } from "../middlewares/validate-access-token.middleware";
 import { ValidateReissueToken } from "../middlewares/validate-reissue-token.middleware";
+import { CheckLoginStatus } from "../middlewares/check-login-status.middleware";
 /* controller import */
 import "../modules/index.controller";
 /* auth import */
@@ -63,6 +64,7 @@ container
 container.bind(TYPES.SocialSignUpMiddleware).to(SocialSignUp);
 container.bind(TYPES.ValidateAccessTokenMiddleware).to(ValidateAccessToken);
 container.bind(TYPES.ValidateReissueTokenMiddleware).to(ValidateReissueToken);
+container.bind(TYPES.CheckLoginStatusMiddleware).to(CheckLoginStatus);
 
 /* auth */
 container.bind<IAuthService>(TYPES.IAuthService).to(AuthService);
