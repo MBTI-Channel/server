@@ -1,8 +1,10 @@
 import { NextFunction, Request, Response } from "express";
 import { inject, injectable } from "inversify";
 import { BaseMiddleware } from "inversify-express-utils";
+import { plainToClass } from "class-transformer";
 import { TYPES } from "../core/type.core";
 import { AuthService } from "../modules/auth/auth.service";
+import { User } from "../modules/user/entity/user.entity";
 import { JwtUtil } from "../shared/utils/jwt.util";
 import { Logger } from "../shared/utils/logger.util";
 import { UnauthorizedException } from "../shared/errors/all.exception";
@@ -50,12 +52,12 @@ export class ValidateAccessToken extends BaseMiddleware {
       const { id, nickname, mbti } = decoded;
       await this._authService.validateUserWithToken(id, nickname, mbti);
 
-      req.user = {
+      req.user = plainToClass(User, {
         id: decoded.id,
         nickname: decoded.nickname,
         mbti: decoded.mbti,
         isAdmin: decoded.isAdmin,
-      };
+      });
 
       this._logger.trace(`[ValidateAccessToken] call next`);
       return next();
