@@ -9,10 +9,11 @@ import { Logger } from "../../shared/utils/logger.util";
 import { ICategoryRepository } from "../category/interfaces/ICategory.repository";
 import { User } from "../user/entity/user.entity";
 import { IUserRepository } from "../user/interfaces/IUser.repository";
-import { PostCreateResponseDto } from "./dto/all-response.dto";
-import { SearchDetailResponseDto } from "./dto/search-detail-response.dto";
+import {
+  PostCreateResponseDto,
+  SearchDetailResponseDto,
+} from "./dto/all-response.dto";
 import { SearchDetailPostDto } from "./dto/search-detail-post.dto";
-import { Post } from "./entity/post.entity";
 import { IPostRepository } from "./interfaces/IPost.repository";
 import { IPostService } from "./interfaces/IPost.service";
 
@@ -27,23 +28,6 @@ export class PostService implements IPostService {
     private readonly _categoryRepository: ICategoryRepository,
     @inject(TYPES.Logger) private readonly _logger: Logger
   ) {}
-
-  private _toPostCreateResponseDto(post: Post) {
-    // TODO: 게시글 등록시 리턴 타입 id만 반환해도 되는지?
-    return plainToInstance(PostCreateResponseDto, { id: post.id });
-  }
-
-  private _toPostDetailResponseDto(
-    post: Post,
-    isActiveUser: boolean,
-    isMy: boolean
-  ) {
-    return plainToInstance(SearchDetailPostDto, {
-      ...post,
-      isActiveUser,
-      isMy,
-    });
-  }
 
   public async create(
     isSecret: boolean,
@@ -71,7 +55,7 @@ export class PostService implements IPostService {
       user
     );
     const createdPost = await this._postRepository.create(postEntity);
-    return this._toPostCreateResponseDto(createdPost);
+    return new PostCreateResponseDto(createdPost);
   }
 
   public async increaseCommentCount(id: number): Promise<void> {
@@ -106,7 +90,7 @@ export class PostService implements IPostService {
   public async searchDetail(
     user: User,
     id: number
-  ): Promise<SearchDetailPostDto> {
+  ): Promise<SearchDetailResponseDto> {
     this._logger.trace(`[PostService] searchDetail start`);
     const post = await this._postRepository.findOneById(id);
 
@@ -132,6 +116,6 @@ export class PostService implements IPostService {
     // 본인 게시판이 맞는지 확인
     if (user.id === post.userId) isMy = true;
 
-    return this._toPostDetailResponseDto(post, isActiveUser, isMy);
+    return new SearchDetailResponseDto(post, isActiveUser, isMy);
   }
 }
