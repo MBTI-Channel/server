@@ -7,7 +7,7 @@ import {
   Max,
   Min,
 } from "class-validator";
-import { CommentOrder } from "../../../shared/enum.shared";
+import { CommentOrder, Order } from "../../../shared/enum.shared";
 
 export class GetAllCommentDto {
   @IsInt()
@@ -32,4 +32,13 @@ export class GetAllCommentDto {
   @Type(() => Number)
   @IsOptional()
   maxResults: number = 30;
+
+  get skip(): number {
+    return (this.page - 1) * this.maxResults;
+  }
+
+  get orderOption() {
+    if (this.order === CommentOrder.LIKES_COUNT) return Order.DESC;
+    return Order.ASC;
+  }
 }
