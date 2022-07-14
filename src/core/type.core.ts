@@ -22,6 +22,9 @@ export const TYPES = {
   /* notification */
   INotificationService: Symbol.for("INotificationService"),
   INotificationRepository: Symbol.for("INotificationRepository"),
+  /* login-log */
+  ILoginLogService: Symbol.for("ILoginLogService"),
+  ILoginLogRepository: Symbol.for("ILoginLogRepository"),
   /* middleware */
   GetProviderUserByOauthMiddleware: Symbol.for(
     "GetProviderUserByOauthMiddleware"
