@@ -1,15 +1,12 @@
 import container from "../../../../src/core/container.core";
 import { TYPES } from "../../../../src/core/type.core";
+import { CommentResponseDto } from "../../../../src/modules/comment/dto/all-response.dto";
+import { Comment } from "../../../../src/modules/comment/entity/comment.entity";
 import { ICommentService } from "../../../../src/modules/comment/interfaces/IComment.service";
 import { User } from "../../../../src/modules/user/entity/user.entity";
 import { NotFoundException } from "../../../../src/shared/errors/all.exception";
 
 describe("CommentService ", () => {
-  const mockUser = {};
-  const mockPostId = 1;
-  const mockContent = "나는 댓글이다옹";
-  const mockIsSecret = true;
-
   beforeEach(() => {
     // 각 단위 테스트가 다른 단위 테스트를 중단하지 않고 수정할 수 있도록 스냅샷 생성
     container.snapshot();
@@ -21,7 +18,7 @@ describe("CommentService ", () => {
   });
 
   describe("createComment", () => {
-    const mockDBService = {
+    const mockDataBaseService = {
       getTransaction: () => {
         return {
           startTransaction: jest.fn(),
@@ -32,28 +29,45 @@ describe("CommentService ", () => {
       },
     };
 
-    it("Success: 존재하는 post id, 댓글 생성", async () => {
+    it("Success: 존재하는 post id, post의 댓글수 + 1 및 댓글 생성", async () => {
       //given
-      const mockComment = "";
-      const mockCommentResponseDto = "";
-      const mockPost = { isActive: true };
-      container.unbind(TYPES.IDatabaseService);
-      container.bind(TYPES.IDatabaseService).toConstantValue(mockDBService);
-      const mockPostRepository = {
-        findOneById: () => mockPost,
+      const mockUser = {
+        isMy: () => true,
       };
-      container.unbind(TYPES.IPostRepository);
-      container.bind(TYPES.IPostRepository).toConstantValue(mockPostRepository);
-
+      const mockPostId = 1;
+      const mockContent = "나는 댓글이다옹";
+      const mockIsSecret = true;
+      const mockComment = "";
+      const mockPost = { isActive: true };
+      const mockPostRepository = {
+        findOneById: () => {
+          return mockPost;
+        },
+      };
+      const mockEntity = {};
+      Comment.of = jest.fn().mockReturnValue(mockEntity);
       const mockPostService = {
         increaseCommentCount: () => true,
       };
-      container.unbind(TYPES.IPostService);
-      container.bind(TYPES.IPostService).toConstantValue(mockPostService);
-
+      const mockNotificationService = {
+        createByTargetUser: () => true,
+      };
       const mockCommentRepository = {
         createComment: () => mockComment,
       };
+
+      container.unbind(TYPES.IDatabaseService);
+      container
+        .bind(TYPES.IDatabaseService)
+        .toConstantValue(mockDataBaseService);
+      container.unbind(TYPES.IPostRepository);
+      container.bind(TYPES.IPostRepository).toConstantValue(mockPostRepository);
+      container.unbind(TYPES.IPostService);
+      container.bind(TYPES.IPostService).toConstantValue(mockPostService);
+      container.unbind(TYPES.INotificationService);
+      container
+        .bind(TYPES.INotificationService)
+        .toConstantValue(mockNotificationService);
       container.unbind(TYPES.ICommentRepository);
       container
         .bind(TYPES.ICommentRepository)
@@ -62,17 +76,19 @@ describe("CommentService ", () => {
       const commentService = container.get<ICommentService>(
         TYPES.ICommentService
       );
-      jest
-        .spyOn(commentService as any, "_toCommentResponseDto")
-        .mockReturnValue(mockCommentResponseDto);
+
       const spyIncreaseCommentCount = jest.spyOn(
         mockPostService,
         "increaseCommentCount"
       );
+      const spyCreateByTargetUser = jest.spyOn(
+        mockNotificationService,
+        "createByTargetUser"
+      );
 
       //when
       const result = await commentService.createComment(
-        mockUser as User,
+        mockUser as unknown as User,
         mockPostId,
         mockContent,
         mockIsSecret
@@ -80,16 +96,26 @@ describe("CommentService ", () => {
 
       //then
       expect(spyIncreaseCommentCount).toBeCalledTimes(1);
-      expect(result).toBe(mockCommentResponseDto);
+      expect(spyCreateByTargetUser).toBeCalledTimes(1);
+      expect(result).toEqual(expect.any(CommentResponseDto));
     });
 
     it("Error: 존재하지 않는 post id, NotFoundError 발생", async () => {
       //given
-      container.unbind(TYPES.IDatabaseService);
-      container.bind(TYPES.IDatabaseService).toConstantValue(mockDBService);
+      const mockUser = {
+        isMy: () => true,
+      };
+      const mockPostId = 1;
+      const mockContent = "나는 댓글이다옹";
+      const mockIsSecret = false;
       const mockPostRepository = {
         findOneById: () => null,
       };
+
+      container.unbind(TYPES.IDatabaseService);
+      container
+        .bind(TYPES.IDatabaseService)
+        .toConstantValue(mockDataBaseService);
       container.unbind(TYPES.IPostRepository);
       container.bind(TYPES.IPostRepository).toConstantValue(mockPostRepository);
 
@@ -100,7 +126,7 @@ describe("CommentService ", () => {
       //when, then
       await expect(async () => {
         await commentService.createComment(
-          mockUser as User,
+          mockUser as unknown as User,
           mockPostId,
           mockContent,
           mockIsSecret
