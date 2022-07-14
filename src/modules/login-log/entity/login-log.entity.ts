@@ -17,6 +17,11 @@ export class LoginLog extends BaseEntity {
   })
   useragent: string;
 
+  @Column({
+    comment: "유저 id",
+  })
+  userId: number;
+
   @ManyToOne(() => User, (user) => user.id, {
     onDelete: "CASCADE",
   })
