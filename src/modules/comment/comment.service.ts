@@ -1,5 +1,4 @@
 import { inject, injectable } from "inversify";
-import { plainToInstance } from "class-transformer";
 import { TYPES } from "../../core/type.core";
 import { ICommentService } from "./interfaces/IComment.service";
 import { IPostService } from "../post/interfaces/IPost.service";
@@ -33,10 +32,6 @@ export class CommentService implements ICommentService {
     private readonly _dbService: IDatabaseService
   ) {}
 
-  private _toCommentResponseDto(comment: Comment) {
-    return plainToInstance(CommentResponseDto, { id: comment.id });
-  }
-
   async createComment(
     user: User,
     postId: number,
@@ -48,13 +43,7 @@ export class CommentService implements ICommentService {
     // err: 존재하지않는 || 삭제된 post
     if (!post || !post.isActive) throw new NotFoundException(`not exists post`);
 
-    const commentEntity = new Comment();
-    commentEntity.post = post;
-    commentEntity.user = user;
-    commentEntity.userNickname = user.nickname;
-    commentEntity.userMbti = user.mbti;
-    commentEntity.content = content;
-    commentEntity.isSecret = isSecret;
+    const commentEntity = Comment.of(post, user, content, isSecret);
 
     const t = await this._dbService.getTransaction();
     await t.startTransaction();
@@ -70,7 +59,7 @@ export class CommentService implements ICommentService {
         "comment"
       );
       await t.commitTransaction();
-      return this._toCommentResponseDto(comment);
+      return new CommentResponseDto(comment, user);
     } catch (err: any) {
       await t.rollbackTransaction();
       throw new HttpException(err.name, err.message, err.status);
