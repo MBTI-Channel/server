@@ -44,6 +44,8 @@ import { NotificationtRepository } from "../modules/notifications/notification.r
 /* login-log import */
 import { ILoginLogService } from "../modules/login-log/interfaces/ILogin-log.service";
 import { LoginLogService } from "../modules/login-log/login-log.service";
+import { ILoginLogRepository } from "../modules/login-log/interfaces/ILogin-log.repository";
+import { LoginLogRepository } from "../modules/login-log/login-log.repository";
 /* util import */
 import { Logger } from "../shared/utils/logger.util";
 import { JwtUtil } from "../shared/utils/jwt.util";
@@ -101,6 +103,9 @@ container
 
 /* login-log */
 container.bind<ILoginLogService>(TYPES.ILoginLogService).to(LoginLogService);
+container
+  .bind<ILoginLogRepository>(TYPES.ILoginLogRepository)
+  .to(LoginLogRepository);
 
 /* utils */
 container.bind(TYPES.Logger).to(Logger);
