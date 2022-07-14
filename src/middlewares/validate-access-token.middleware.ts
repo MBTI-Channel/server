@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { inject, injectable } from "inversify";
 import { BaseMiddleware } from "inversify-express-utils";
-import { plainToClass } from "class-transformer";
+import { plainToInstance } from "class-transformer";
 import { TYPES } from "../core/type.core";
 import { AuthService } from "../modules/auth/auth.service";
 import { User } from "../modules/user/entity/user.entity";
@@ -52,7 +52,7 @@ export class ValidateAccessToken extends BaseMiddleware {
       const { id, nickname, mbti } = decoded;
       await this._authService.validateUserWithToken(id, nickname, mbti);
 
-      req.user = plainToClass(User, {
+      req.user = plainToInstance(User, {
         id: decoded.id,
         nickname: decoded.nickname,
         mbti: decoded.mbti,
