@@ -11,7 +11,7 @@ import { User } from "../user/entity/user.entity";
 import { IUserRepository } from "../user/interfaces/IUser.repository";
 import {
   PostCreateResponseDto,
-  SearchDetailResponseDto,
+  getDetailResponseDto,
 } from "./dto/all-response.dto";
 import { Post } from "./entity/post.entity";
 import { IPostRepository } from "./interfaces/IPost.repository";
@@ -48,8 +48,6 @@ export class PostService implements IPostService {
     if (category.name === "mbti") {
       postType = Post.typeTo("mbti");
     }
-
-    const { mbti, nickname } = user;
 
     const postEntity = Post.of(user, category, isSecret, title, content);
     const createdPost = await this._postRepository.create(postEntity);
@@ -88,7 +86,7 @@ export class PostService implements IPostService {
   public async getDetail(
     user: User,
     id: number
-  ): Promise<SearchDetailResponseDto> {
+  ): Promise<getDetailResponseDto> {
     this._logger.trace(`[PostService] searchDetail start`);
     const post = await this._postRepository.findOneById(id);
 
@@ -115,7 +113,7 @@ export class PostService implements IPostService {
     // 본인 게시판이 맞는지 확인
     if (user.id === post.userId) isMy = true;
 
-    return new SearchDetailResponseDto(post, isActiveUser, isMy);
+    return new getDetailResponseDto(post, isActiveUser, isMy);
   }
 
   public async isValid(id: number): Promise<boolean> {

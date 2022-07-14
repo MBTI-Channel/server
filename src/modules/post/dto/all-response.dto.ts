@@ -44,7 +44,7 @@ export class PostCreateResponseDto {
   }
 }
 
-export class SearchDetailResponseDto extends PostResponseDto {
+export class getDetailResponseDto extends PostResponseDto {
   isActiveUser: boolean;
   isMy: boolean;
   constructor(post: Post, isActiveUser: boolean, isMy: boolean) {
