@@ -109,4 +109,8 @@ export class User extends UserBase {
       return false;
     return true;
   }
+
+  isMy(entity: Comment | Post) {
+    return this.id === entity.userId ? true : false;
+  }
 }
