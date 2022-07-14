@@ -126,4 +126,11 @@ export class PostService implements IPostService {
 
     return new SearchDetailResponseDto(post, isActiveUser, isMy);
   }
+
+  public async isValid(id: number): Promise<boolean> {
+    this._logger.trace(`[PostService] is valid post id ? ${id}`);
+    const post = await this._postRepository.findOneById(id);
+    if (!post || !post.isActive) return false;
+    return true;
+  }
 }

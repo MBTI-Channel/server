@@ -1,7 +1,7 @@
 import {
   IsIn,
+  IsInt,
   IsNotEmpty,
-  IsNumber,
   IsString,
   IsUUID,
   Length,
@@ -10,7 +10,7 @@ import {
 import { MBTI_KEY } from "../../../shared/constant.shared";
 
 export class SignUpDto {
-  @IsNumber()
+  @IsInt()
   @IsNotEmpty()
   id: number;
 

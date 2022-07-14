@@ -1,27 +1,44 @@
-import { Expose, Type } from "class-transformer";
-import { IsIn, IsNotEmpty, IsNumber, IsOptional, Min } from "class-validator";
-import { COMMENT_ORDER_KEY } from "../../../shared/constant.shared";
+import { Type } from "class-transformer";
+import {
+  IsEnum,
+  IsInt,
+  IsNotEmpty,
+  IsOptional,
+  Max,
+  Min,
+} from "class-validator";
+import { CommentOrder, Order } from "../../../shared/enum.shared";
 
 export class GetAllCommentDto {
-  @IsNumber()
+  @IsInt()
   @Min(1)
   @Type(() => Number)
   @IsNotEmpty()
   postId: number;
 
-  @IsNumber()
+  @IsEnum(CommentOrder)
+  @IsOptional()
+  order: CommentOrder = CommentOrder.CREATED_AT;
+
+  @IsInt()
   @Min(1)
   @Type(() => Number)
   @IsOptional()
-  page?: number;
+  page: number = 1;
 
-  @IsNumber()
-  @Min(1)
+  @IsInt()
+  @Min(10)
+  @Max(50)
   @Type(() => Number)
   @IsOptional()
-  maxResults?: number;
+  maxResults: number = 30;
 
-  @IsIn(COMMENT_ORDER_KEY)
-  @IsOptional()
-  order?: string;
+  get skip(): number {
+    return (this.page - 1) * this.maxResults;
+  }
+
+  get orderOption() {
+    if (this.order === CommentOrder.LIKES_COUNT) return Order.DESC;
+    return Order.ASC;
+  }
 }

@@ -12,9 +12,10 @@ import {
   ForbiddenException,
   NotFoundException,
 } from "../../shared/errors/all.exception";
+import { GetAllCommentDto, CommentResponseDto } from "./dto";
 import { Logger } from "../../shared/utils/logger.util";
-import { CommentResponseDto } from "./dto/all-response.dto";
 import { HttpException } from "../../shared/errors/http.exception";
+import { PageResponseDto, PageInfoDto } from "../../shared/page";
 
 @injectable()
 export class CommentService implements ICommentService {
@@ -66,6 +67,29 @@ export class CommentService implements ICommentService {
     } finally {
       await t.release();
     }
+  }
+
+  async findAllComments(pageOptionsDto: GetAllCommentDto, user: User) {
+    this._logger.trace(`[CommentService] findAllComments start`);
+
+    const isValidPost = this._postService.isValid(pageOptionsDto.postId);
+    //err: 존재하지 않거나 삭제된 게시글
+    if (!isValidPost) throw new NotFoundException("not exists post");
+
+    const [commentArray, totalCount] =
+      await this._commentRepository.findAllComments(pageOptionsDto);
+
+    // 페이지 정보
+    const pageInfoDto = new PageInfoDto(
+      totalCount,
+      pageOptionsDto.maxResults,
+      pageOptionsDto.page
+    );
+
+    return new PageResponseDto(
+      pageInfoDto,
+      commentArray.map((e) => new CommentResponseDto(e, user))
+    );
   }
 
   async delete(user: User, id: number): Promise<void> {

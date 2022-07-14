@@ -45,11 +45,11 @@ get:
       type: integer
       example: 2
 
-    - name: size
+    - name: maxResults
       in: query
-      description: 한 번에 검색할 댓글 개수
+      description: 한 번에 검색할 댓글 개수. default - 30
       required: true
       type: integer
-      example: 50
+      example: 30
   responses:
     $ref: "../../responses/comments/index.get.yaml"

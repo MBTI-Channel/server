@@ -15,4 +15,5 @@ export interface IPostService {
   increaseCommentCount(id: number): Promise<void>;
   delete(user: User, id: number): Promise<void>;
   getDetail(user: User, id: number): Promise<SearchDetailResponseDto>;
+  isValid(id: number): Promise<boolean>;
 }
