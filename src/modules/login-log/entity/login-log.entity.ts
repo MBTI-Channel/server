@@ -26,4 +26,13 @@ export class LoginLog extends BaseEntity {
     onDelete: "CASCADE",
   })
   user: User;
+
+  static of(user: User, ip: string, userAgent: string) {
+    const loginLog = new LoginLog();
+    loginLog.user = user;
+    loginLog.ip = ip;
+    loginLog.useragent = userAgent;
+
+    return loginLog;
+  }
 }

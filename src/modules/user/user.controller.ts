@@ -64,8 +64,8 @@ export class UserController extends BaseHttpController {
 
     const userAgent = req.headers["user-agent"] ?? "abnormal";
     const ip = req.ip;
-
-    this._loginLogService.record(id, userAgent, ip);
+    const user = req.user as User;
+    this._loginLogService.record(user, userAgent, ip);
     return res.status(201).json(data);
   }
 
