@@ -17,6 +17,7 @@ export class CommentResponseDto {
 
   constructor(entity: Comment, user: User) {
     this.id = entity.id;
+    // 미로그인 상태일 수 있기때문에 user ? 삼항연산자 사용
     this.isMy = user ? user.isMy(entity) : false;
     this.isPostWriter = entity.isPostWriter;
     this.userMbti = entity.userMbti;
