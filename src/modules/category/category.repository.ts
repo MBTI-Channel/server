@@ -14,4 +14,9 @@ export class CategoryRepository implements ICategoryRepository {
     const repository = await this._database.getRepository(Category);
     return await repository.findOne({ where: { id } });
   }
+
+  async findOneByName(name: string): Promise<Category | null> {
+    const repository = await this._database.getRepository(Category);
+    return await repository.findOne({ where: { name } });
+  }
 }
