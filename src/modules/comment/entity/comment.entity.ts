@@ -26,7 +26,7 @@ export class Comment extends BaseEntity {
   @Column({ nullable: true, comment: "부모 댓글 아이디" })
   parentId: number;
 
-  @Column({ length: 10, comment: "작성자 닉네임" })
+  @Column({ nullable: true, length: 10, comment: "작성자 닉네임" })
   userNickname: string;
 
   @Column({ length: 4, comment: "작성자 MBTI" })
