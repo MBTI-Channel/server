@@ -1,8 +1,5 @@
 import { User } from "../../user/entity/user.entity";
-import {
-  PostCreateResponseDto,
-  getDetailResponseDto,
-} from "../dto/all-response.dto";
+import { PostResponseDto } from "../dto/post-response.dto";
 
 export interface IPostService {
   create(
@@ -11,9 +8,9 @@ export interface IPostService {
     content: string,
     categoryId: number,
     user: User
-  ): Promise<PostCreateResponseDto>;
+  ): Promise<PostResponseDto>;
   increaseCommentCount(id: number): Promise<void>;
   delete(user: User, id: number): Promise<void>;
-  getDetail(user: User, id: number): Promise<getDetailResponseDto>;
+  getDetail(user: User, id: number): Promise<PostResponseDto>;
   isValid(id: number): Promise<boolean>;
 }

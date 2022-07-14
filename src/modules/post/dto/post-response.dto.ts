@@ -1,9 +1,13 @@
+import { User } from "../../user/entity/user.entity";
 import { Post } from "../entity/post.entity";
 
 export class PostResponseDto {
   id: number;
   categoryId: number;
   type: number;
+  isActive: boolean;
+  isActiveUser: boolean = true;
+  isMy: boolean = false;
   userId: number;
   userMbti: string;
   userNickname: string;
@@ -14,13 +18,15 @@ export class PostResponseDto {
   commentCount: number;
   likesCount: number;
   reportCount: number;
-  isActive: boolean;
   createdAt: Date;
   updatedAt: Date;
-  constructor(post: Post) {
+  constructor(post: Post, user: User) {
     this.id = post.id;
     this.type = post.type;
     this.categoryId = post.categoryId;
+    this.isActive = post.isActive;
+    this.isActiveUser = user ? user.isActive() : false;
+    this.isMy = user ? user.isMy(post) : false;
     this.userId = post.userId;
     this.userMbti = post.userMbti;
     this.userNickname = post.userNickname ?? "";
@@ -31,25 +37,7 @@ export class PostResponseDto {
     this.commentCount = post.commentCount;
     this.likesCount = post.likesCount;
     this.reportCount = post.reportCount;
-    this.isActive = post.isActive;
     this.createdAt = post.createdAt;
     this.updatedAt = post.updatedAt;
-  }
-}
-
-export class PostCreateResponseDto {
-  id: number;
-  constructor(post: Post) {
-    this.id = post.id;
-  }
-}
-
-export class getDetailResponseDto extends PostResponseDto {
-  isActiveUser: boolean;
-  isMy: boolean;
-  constructor(post: Post, isActiveUser: boolean, isMy: boolean) {
-    super(post);
-    this.isActiveUser = isActiveUser;
-    this.isMy = isMy;
   }
 }
