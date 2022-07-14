@@ -1,6 +1,6 @@
 import container from "../../../../src/core/container.core";
 import { TYPES } from "../../../../src/core/type.core";
-import { CommentResponseDto } from "../../../../src/modules/comment/dto/all-response.dto";
+import { CommentResponseDto } from "../../../../src/modules/comment/dto/";
 import { Comment } from "../../../../src/modules/comment/entity/comment.entity";
 import { ICommentService } from "../../../../src/modules/comment/interfaces/IComment.service";
 import { User } from "../../../../src/modules/user/entity/user.entity";
