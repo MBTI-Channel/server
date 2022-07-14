@@ -27,7 +27,7 @@ export class Comment extends BaseEntity {
   parentId: number;
 
   @Column({ nullable: true, length: 10, comment: "작성자 닉네임" })
-  userNickname: string;
+  userNickname?: string;
 
   @Column({ length: 4, comment: "작성자 MBTI" })
   userMbti: string;
@@ -52,4 +52,16 @@ export class Comment extends BaseEntity {
 
   @Column({ default: false, comment: "게시글 작성자 여부" })
   isPostWriter: boolean;
+
+  static of(post: Post, user: User, content: string, isSecret: boolean) {
+    const comment = new Comment();
+    comment.post = post;
+    comment.user = user;
+    comment.userNickname = isSecret ? undefined : user.nickname;
+    comment.userMbti = user.mbti;
+    comment.content = content;
+    comment.isSecret = isSecret;
+    comment.isPostWriter = post.userId === user.id ? true : false;
+    return comment;
+  }
 }
