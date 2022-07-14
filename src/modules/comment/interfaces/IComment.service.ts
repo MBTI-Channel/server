@@ -1,5 +1,6 @@
 import { User } from "../../user/entity/user.entity";
-import { CommentResponseDto } from "../dto/all-response.dto";
+import { GetAllCommentDto, CommentResponseDto } from "../dto";
+import { PageInfoDto, PageResponseDto } from "../../../shared/page";
 
 export interface ICommentService {
   createComment(
@@ -8,13 +9,10 @@ export interface ICommentService {
     content: string,
     isSecret: boolean
   ): Promise<CommentResponseDto>;
-  // findAllComment(
-  //   user: User,
-  //   postId: number,
-  //   page: number,
-  //   size: number
-  // ): Promise<any>;
-  // update(user: User, id: number, content: string): Promise<any>;
+  findAllComments(
+    pageOptionsDto: GetAllCommentDto,
+    user: User
+  ): Promise<PageResponseDto<PageInfoDto, CommentResponseDto>>;
   delete(user: User, id: number): Promise<void>;
   // createReply(
   //   user: User,
