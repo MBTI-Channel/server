@@ -51,16 +51,7 @@ export class PostService implements IPostService {
 
     const { mbti, nickname } = user;
 
-    const postEntity = new Post();
-    postEntity.isSecret = isSecret;
-    postEntity.title = title;
-    postEntity.content = content;
-    postEntity.userMbti = mbti;
-    postEntity.userNickname = nickname;
-    postEntity.type = postType;
-    postEntity.category = category;
-    postEntity.user = user;
-
+    const postEntity = Post.of(user, category, isSecret, title, content);
     const createdPost = await this._postRepository.create(postEntity);
     return new PostCreateResponseDto(createdPost);
   }

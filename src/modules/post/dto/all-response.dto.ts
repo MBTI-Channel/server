@@ -23,7 +23,7 @@ export class PostResponseDto {
     this.categoryId = post.categoryId;
     this.userId = post.userId;
     this.userMbti = post.userMbti;
-    this.userNickname = post.userNickname;
+    this.userNickname = post.userNickname ?? "";
     this.isSecret = post.isSecret;
     this.title = post.title;
     this.content = post.content;

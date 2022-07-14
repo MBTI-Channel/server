@@ -33,8 +33,8 @@ export class Post extends BaseEntity {
   @Column({ length: "4", comment: "작성자 MBTI" })
   userMbti: string;
 
-  @Column({ length: "10", comment: "작성자 닉네임" })
-  userNickname: string;
+  @Column({ nullable: true, length: "10", comment: "작성자 닉네임" })
+  userNickname?: string;
 
   @Column({
     default: false,
@@ -62,7 +62,7 @@ export class Post extends BaseEntity {
 
   @Column({
     default: true,
-    comment: "게시글 활성 여부]",
+    comment: "게시글 활성 여부",
   })
   isActive: boolean;
 
@@ -77,6 +77,25 @@ export class Post extends BaseEntity {
   // Post (1) <-> Survey (*)
   @OneToMany(() => Survey, (bookmark) => bookmark.id, { cascade: true })
   survey: Survey[];
+
+  static of(
+    user: User,
+    category: Category,
+    isSecret: boolean,
+    title: string,
+    content: string
+  ) {
+    const post = new Post();
+    post.user = user;
+    post.category = category;
+    post.isSecret = isSecret;
+    post.title = title;
+    post.content = content;
+    post.userNickname = isSecret ? undefined : user.nickname;
+    post.userMbti = user.mbti;
+
+    return post;
+  }
 
   static typeTo(type: PostType) {
     switch (type) {
