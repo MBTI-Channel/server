@@ -17,8 +17,22 @@ export class LoginLog extends BaseEntity {
   })
   useragent: string;
 
+  @Column({
+    comment: "유저 id",
+  })
+  userId: number;
+
   @ManyToOne(() => User, (user) => user.id, {
     onDelete: "CASCADE",
   })
   user: User;
+
+  static of(user: User, ip: string, userAgent: string) {
+    const loginLog = new LoginLog();
+    loginLog.user = user;
+    loginLog.ip = ip;
+    loginLog.useragent = userAgent;
+
+    return loginLog;
+  }
 }

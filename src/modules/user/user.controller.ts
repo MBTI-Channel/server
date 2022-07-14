@@ -18,11 +18,13 @@ import { User } from "./entity/user.entity";
 import { OauthLoginDto } from "../auth/dto/oauth-login.dto";
 import { SignUpDto, NicknameDuplicateCheckDto } from "./dto";
 import config from "../../config";
+import { ILoginLogService } from "../login-log/interfaces/ILogin-log.service";
 
 @controller("/users")
 export class UserController extends BaseHttpController {
   @inject(TYPES.IUserService) private readonly _userService: IUserService;
-
+  @inject(TYPES.ILoginLogService)
+  private readonly _loginLogService: ILoginLogService;
   // 회원가입 (nickname, mbti 설정)
   @httpPost("/", bodyValidator(SignUpDto))
   async signUp(@requestBody() body: SignUpDto, req: Request, res: Response) {
@@ -60,6 +62,10 @@ export class UserController extends BaseHttpController {
       maxAge: config.cookie.refreshTokenMaxAge,
     });
 
+    const userAgent = req.headers["user-agent"] ?? "abnormal";
+    const ip = req.ip;
+    const user = req.user as User;
+    this._loginLogService.record(user, userAgent, ip);
     return res.status(201).json(data);
   }
 

@@ -41,6 +41,11 @@ import { INotificationService } from "../modules/notifications/interfaces/INotif
 import { NotificationService } from "../modules/notifications/notification.service";
 import { INotificationRepository } from "../modules/notifications/interfaces/INotification.repository";
 import { NotificationtRepository } from "../modules/notifications/notification.repository";
+/* login-log import */
+import { ILoginLogService } from "../modules/login-log/interfaces/ILogin-log.service";
+import { LoginLogService } from "../modules/login-log/login-log.service";
+import { ILoginLogRepository } from "../modules/login-log/interfaces/ILogin-log.repository";
+import { LoginLogRepository } from "../modules/login-log/login-log.repository";
 /* util import */
 import { Logger } from "../shared/utils/logger.util";
 import { JwtUtil } from "../shared/utils/jwt.util";
@@ -95,6 +100,12 @@ container
 container
   .bind<INotificationRepository>(TYPES.INotificationRepository)
   .to(NotificationtRepository);
+
+/* login-log */
+container.bind<ILoginLogService>(TYPES.ILoginLogService).to(LoginLogService);
+container
+  .bind<ILoginLogRepository>(TYPES.ILoginLogRepository)
+  .to(LoginLogRepository);
 
 /* utils */
 container.bind(TYPES.Logger).to(Logger);
