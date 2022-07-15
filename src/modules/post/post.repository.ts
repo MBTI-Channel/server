@@ -64,7 +64,7 @@ export class PostRepository implements IPostRepository {
         "updatedAt",
       ],
       where: { categoryId },
-      take: pageOptionsDto.maxResults,
+      take: pageOptionsDto.maxResults + 1,
       skip: pageOptionsDto.skip,
       order: { [pageOptionsDto.order]: "DESC" },
     });
@@ -97,7 +97,7 @@ export class PostRepository implements IPostRepository {
         "updatedAt",
       ],
       where: { categoryId, userMbti: mbti },
-      take: pageOptionsDto.maxResults,
+      take: pageOptionsDto.maxResults + 1,
       skip: pageOptionsDto.skip,
       order: { [pageOptionsDto.order]: "DESC" },
     });

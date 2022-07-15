@@ -135,12 +135,16 @@ export class PostService implements IPostService {
       );
     }
 
-    // 페이지 정보
-    let nextId = pageOptionsDto.startId + postArray.length + 1;
+    let nextId = null;
+    if (postArray.length === pageOptionsDto.maxResults + 1) {
+      nextId = postArray[postArray.length - 1].id;
+      postArray.pop();
+    }
+    let itemsPerPage = postArray.length;
 
     const pageInfoDto = new PageInfiniteScrollInfoDto(
       totalCount, // 결과에 맞는 개수
-      pageOptionsDto.maxResults, //
+      itemsPerPage,
       nextId
     );
 
