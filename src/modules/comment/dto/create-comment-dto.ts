@@ -1,13 +1,13 @@
 import {
   IsBoolean,
+  IsInt,
   IsNotEmpty,
-  IsNumber,
   IsString,
   Length,
 } from "class-validator";
 
 export class CreateCommentDto {
-  @IsNumber()
+  @IsInt()
   @IsNotEmpty()
   postId: number;
 
