@@ -1,5 +1,6 @@
 import { inject, injectable } from "inversify";
 import { TYPES } from "../../core/type.core";
+import { CategoryName } from "../../shared/enum.shared";
 import {
   ForbiddenException,
   NotFoundException,
@@ -117,11 +118,11 @@ export class PostService implements IPostService {
     }
     let postArray, totalCount;
 
-    if (!user && pageOptionsDto.category === "mbti") {
+    if (!user && pageOptionsDto.category === CategoryName.MBTI) {
       throw new ForbiddenException("not authorizatie");
     }
 
-    if (pageOptionsDto.category === "mbti") {
+    if (pageOptionsDto.category === CategoryName.MBTI) {
       [postArray, totalCount] = await this._postRepository.findAllPostsWithMbti(
         pageOptionsDto,
         category.id,
