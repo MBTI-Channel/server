@@ -7,7 +7,12 @@ export interface IPostRepository {
   increaseCommentCount(id: number): Promise<boolean>;
   remove(id: number): Promise<void>;
   findAllPosts(
-    query: GetAllPostDto,
+    pageOptionsDto: GetAllPostDto,
     categoryId: number
+  ): Promise<[Post[], number]>;
+  findAllPostsWithMbti(
+    pageOptionsDto: GetAllPostDto,
+    categoryId: number,
+    mbti: string
   ): Promise<[Post[], number]>;
 }

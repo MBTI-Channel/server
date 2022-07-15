@@ -44,32 +44,63 @@ export class PostRepository implements IPostRepository {
     categoryId: number
   ): Promise<[Post[], number]> {
     const repository = await this._database.getRepository(Post);
-    return await repository
-      .createQueryBuilder("post")
-      .select([
-        "post.id",
-        "post.categoryId",
-        "post.type",
-        "post.isActive",
-        "post.userId",
-        "post.userNickname",
-        "post.userMbti",
-        "post.isSecret",
-        "post.title",
-        "post.content",
-        "post.viewCount",
-        "post.commentCount",
-        "post.likesCount",
-        "post.reportCount",
-        "post.createdAt",
-        "post.updatedAt",
-      ])
-      .where("post.categoryId = :categoryId", {
-        categoryId,
-      })
-      .take(pageOptionsDto.maxResults)
-      .skip(pageOptionsDto.skip)
-      .orderBy(`post.${pageOptionsDto.order}`)
-      .getManyAndCount();
+    const [result, totalCount] = await repository.findAndCount({
+      select: [
+        "id",
+        "categoryId",
+        "type",
+        "isActive",
+        "userId",
+        "userNickname",
+        "userMbti",
+        "isSecret",
+        "title",
+        "content",
+        "viewCount",
+        "commentCount",
+        "likesCount",
+        "reportCount",
+        "createdAt",
+        "updatedAt",
+      ],
+      where: { categoryId },
+      take: pageOptionsDto.maxResults,
+      skip: pageOptionsDto.skip,
+      order: { [pageOptionsDto.order]: "DESC" },
+    });
+    return [result, totalCount];
+  }
+
+  public async findAllPostsWithMbti(
+    pageOptionsDto: GetAllPostDto,
+    categoryId: number,
+    mbti: string
+  ): Promise<[Post[], number]> {
+    const repository = await this._database.getRepository(Post);
+    const [result, totalCount] = await repository.findAndCount({
+      select: [
+        "id",
+        "categoryId",
+        "type",
+        "isActive",
+        "userId",
+        "userNickname",
+        "userMbti",
+        "isSecret",
+        "title",
+        "content",
+        "viewCount",
+        "commentCount",
+        "likesCount",
+        "reportCount",
+        "createdAt",
+        "updatedAt",
+      ],
+      where: { categoryId, userMbti: mbti },
+      take: pageOptionsDto.maxResults,
+      skip: pageOptionsDto.skip,
+      order: { [pageOptionsDto.order]: "DESC" },
+    });
+    return [result, totalCount];
   }
 }

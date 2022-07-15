@@ -117,11 +117,15 @@ export class PostService implements IPostService {
     }
     let postArray, totalCount;
 
+    if (!user && pageOptionsDto.category === "mbti") {
+      throw new ForbiddenException("not authorizatie");
+    }
+
     if (pageOptionsDto.category === "mbti") {
-      // mbti
-      [postArray, totalCount] = await this._postRepository.findAllPosts(
+      [postArray, totalCount] = await this._postRepository.findAllPostsWithMbti(
         pageOptionsDto,
-        category.id
+        category.id,
+        user.mbti
       );
     } else {
       [postArray, totalCount] = await this._postRepository.findAllPosts(
