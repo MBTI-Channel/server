@@ -4,9 +4,11 @@ import {
   ForbiddenException,
   NotFoundException,
 } from "../../shared/errors/all.exception";
+import { PageResponseDto, PageInfiniteScrollInfoDto } from "../../shared/page";
 import { Logger } from "../../shared/utils/logger.util";
 import { ICategoryRepository } from "../category/interfaces/ICategory.repository";
 import { User } from "../user/entity/user.entity";
+import { GetAllPostDto } from "./dto/get-all-post.dto";
 import { PostResponseDto } from "./dto/post-response.dto";
 import { Post } from "./entity/post.entity";
 import { IPostRepository } from "./interfaces/IPost.repository";
@@ -76,7 +78,7 @@ export class PostService implements IPostService {
   }
 
   public async getDetail(user: User, id: number): Promise<PostResponseDto> {
-    this._logger.trace(`[PostService] searchDetail start`);
+    this._logger.trace(`[PostService] getDetail start`);
     const post = await this._postRepository.findOneById(id);
 
     this._logger.trace(`[PostService] check exists post id ${id}`);
@@ -96,5 +98,50 @@ export class PostService implements IPostService {
     const post = await this._postRepository.findOneById(id);
     if (!post || !post.isActive) return false;
     return true;
+  }
+
+  public async getAll(
+    user: User,
+    pageOptionsDto: GetAllPostDto
+  ): Promise<PageResponseDto<PageInfiniteScrollInfoDto, PostResponseDto>> {
+    this._logger.trace(`[PostService] getAll start`);
+    this._logger.trace(
+      `[PostService] check category name ${pageOptionsDto.category}`
+    );
+
+    const category = await this._categoryRepository.findOneByName(
+      pageOptionsDto.category
+    );
+    if (!category || !category.isActive) {
+      throw new NotFoundException("not exists category");
+    }
+    let postArray, totalCount;
+
+    if (pageOptionsDto.category === "mbti") {
+      // mbti
+      [postArray, totalCount] = await this._postRepository.findAllPosts(
+        pageOptionsDto,
+        category.id
+      );
+    } else {
+      [postArray, totalCount] = await this._postRepository.findAllPosts(
+        pageOptionsDto,
+        category.id
+      );
+    }
+
+    // 페이지 정보
+    let nextId = pageOptionsDto.startId + postArray.length + 1;
+
+    const pageInfoDto = new PageInfiniteScrollInfoDto(
+      totalCount, // 결과에 맞는 개수
+      pageOptionsDto.maxResults, //
+      nextId
+    );
+
+    return new PageResponseDto(
+      pageInfoDto,
+      postArray.map((e) => new PostResponseDto(e, user))
+    );
   }
 }
