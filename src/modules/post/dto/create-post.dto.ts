@@ -1,4 +1,3 @@
-import { Type } from "class-transformer";
 import {
   IsBoolean,
   IsInt,
@@ -10,7 +9,6 @@ import {
 
 export class CreatePostDto {
   @IsInt()
-  @Type(() => Number)
   @IsNotEmpty()
   categoryId: number;
 
