@@ -1,28 +1,23 @@
-import { plainToInstance } from "class-transformer";
 import { inject, injectable } from "inversify";
 import { TYPES } from "../../core/type.core";
+import { CategoryName } from "../../shared/enum.shared";
 import {
   ForbiddenException,
   NotFoundException,
 } from "../../shared/errors/all.exception";
+import { PageResponseDto, PageInfiniteScrollInfoDto } from "../../shared/page";
 import { Logger } from "../../shared/utils/logger.util";
 import { ICategoryRepository } from "../category/interfaces/ICategory.repository";
 import { User } from "../user/entity/user.entity";
-import { IUserRepository } from "../user/interfaces/IUser.repository";
-import {
-  PostCreateResponseDto,
-  SearchDetailResponseDto,
-} from "./dto/all-response.dto";
+import { GetAllPostDto } from "./dto/get-all-post.dto";
+import { PostResponseDto } from "./dto/post-response.dto";
 import { Post } from "./entity/post.entity";
 import { IPostRepository } from "./interfaces/IPost.repository";
 import { IPostService } from "./interfaces/IPost.service";
-import config from "../../config";
 
 @injectable()
 export class PostService implements IPostService {
   constructor(
-    @inject(TYPES.IUserRepository)
-    private readonly _userRepository: IUserRepository,
     @inject(TYPES.IPostRepository)
     private readonly _postRepository: IPostRepository,
     @inject(TYPES.ICategoryRepository)
@@ -36,7 +31,7 @@ export class PostService implements IPostService {
     content: string,
     categoryId: number,
     user: User
-  ): Promise<PostCreateResponseDto> {
+  ): Promise<PostResponseDto> {
     this._logger.trace(`[PostService] create start`);
     const category = await this._categoryRepository.findOneById(categoryId);
 
@@ -49,20 +44,9 @@ export class PostService implements IPostService {
       postType = Post.typeTo("mbti");
     }
 
-    const { mbti, nickname } = user;
-
-    const postEntity = new Post();
-    postEntity.isSecret = isSecret;
-    postEntity.title = title;
-    postEntity.content = content;
-    postEntity.userMbti = mbti;
-    postEntity.userNickname = nickname;
-    postEntity.type = postType;
-    postEntity.category = category;
-    postEntity.user = user;
-
+    const postEntity = Post.of(user, category, isSecret, title, content);
     const createdPost = await this._postRepository.create(postEntity);
-    return new PostCreateResponseDto(createdPost);
+    return new PostResponseDto(createdPost, user);
   }
 
   public async increaseCommentCount(id: number): Promise<void> {
@@ -94,11 +78,8 @@ export class PostService implements IPostService {
     await this._postRepository.remove(id);
   }
 
-  public async getDetail(
-    user: User,
-    id: number
-  ): Promise<SearchDetailResponseDto> {
-    this._logger.trace(`[PostService] searchDetail start`);
+  public async getDetail(user: User, id: number): Promise<PostResponseDto> {
+    this._logger.trace(`[PostService] getDetail start`);
     const post = await this._postRepository.findOneById(id);
 
     this._logger.trace(`[PostService] check exists post id ${id}`);
@@ -110,21 +91,7 @@ export class PostService implements IPostService {
         throw new ForbiddenException("authorization error");
     }
 
-    let isActiveUser = false;
-    let isMy = false;
-
-    // 게시글 작성자의 활성화 여부를 확인
-    const postUser = plainToInstance(
-      User,
-      await this._userRepository.findOneStatus(post.userId)
-    );
-    if (postUser && postUser.status === config.user.status.normal)
-      isActiveUser = true;
-
-    // 본인 게시판이 맞는지 확인
-    if (user.id === post.userId) isMy = true;
-
-    return new SearchDetailResponseDto(post, isActiveUser, isMy);
+    return new PostResponseDto(post, user);
   }
 
   public async isValid(id: number): Promise<boolean> {
@@ -132,5 +99,58 @@ export class PostService implements IPostService {
     const post = await this._postRepository.findOneById(id);
     if (!post || !post.isActive) return false;
     return true;
+  }
+
+  public async getAll(
+    user: User,
+    pageOptionsDto: GetAllPostDto
+  ): Promise<PageResponseDto<PageInfiniteScrollInfoDto, PostResponseDto>> {
+    this._logger.trace(`[PostService] getAll start`);
+    this._logger.trace(
+      `[PostService] check category name ${pageOptionsDto.category}`
+    );
+
+    const category = await this._categoryRepository.findOneByName(
+      pageOptionsDto.category
+    );
+    if (!category || !category.isActive) {
+      throw new NotFoundException("not exists category");
+    }
+    let postArray, totalCount;
+
+    if (!user && pageOptionsDto.category === CategoryName.MBTI) {
+      throw new ForbiddenException("not authorizatie");
+    }
+
+    if (pageOptionsDto.category === CategoryName.MBTI) {
+      [postArray, totalCount] = await this._postRepository.findAllPostsWithMbti(
+        pageOptionsDto,
+        category.id,
+        user.mbti
+      );
+    } else {
+      [postArray, totalCount] = await this._postRepository.findAllPosts(
+        pageOptionsDto,
+        category.id
+      );
+    }
+
+    let nextId = null;
+    if (postArray.length === pageOptionsDto.maxResults + 1) {
+      nextId = postArray[postArray.length - 1].id;
+      postArray.pop();
+    }
+    let itemsPerPage = postArray.length;
+
+    const pageInfoDto = new PageInfiniteScrollInfoDto(
+      totalCount, // 결과에 맞는 개수
+      itemsPerPage,
+      nextId
+    );
+
+    return new PageResponseDto(
+      pageInfoDto,
+      postArray.map((e) => new PostResponseDto(e, user))
+    );
   }
 }

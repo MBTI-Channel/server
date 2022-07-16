@@ -6,6 +6,7 @@ import {
   httpDelete,
   httpGet,
   httpPost,
+  queryParam,
   requestBody,
   requestParam,
 } from "inversify-express-utils";
@@ -13,10 +14,12 @@ import { TYPES } from "../../core/type.core";
 import {
   bodyValidator,
   paramsValidator,
+  queryValidator,
 } from "../../middlewares/validator.middleware";
 import { User } from "../user/entity/user.entity";
 import { CreatePostDto } from "./dto/create-post.dto";
 import { DeletePostDto } from "./dto/delete-post.dto";
+import { GetAllPostDto } from "./dto/get-all-post.dto";
 import { getDetailPostDto } from "./dto/get-detail-post.dto";
 import { IPostService } from "./interfaces/IPost.service";
 
@@ -55,7 +58,7 @@ export class PostController extends BaseHttpController {
     TYPES.ValidateAccessTokenMiddleware,
     paramsValidator(DeletePostDto)
   )
-  async delete(
+  async deletePost(
     @requestParam() param: DeletePostDto,
     req: Request,
     res: Response
@@ -71,10 +74,10 @@ export class PostController extends BaseHttpController {
   // 게시글 상세 조회
   @httpGet(
     "/:id",
-    TYPES.ValidateAccessTokenMiddleware,
+    TYPES.CheckLoginStatusMiddleware,
     paramsValidator(getDetailPostDto)
   )
-  async searchDetail(
+  async getDetailPost(
     @requestParam() param: getDetailPostDto,
     req: Request,
     res: Response
@@ -83,6 +86,21 @@ export class PostController extends BaseHttpController {
     const { id } = param;
 
     const data = await this._postService.getDetail(user, id);
+    return res.status(200).json(data);
+  }
+
+  // 게시글 전체 조회
+  @httpGet("/", TYPES.CheckLoginStatusMiddleware, queryValidator(GetAllPostDto))
+  async getAllPosts(
+    @queryParam() query: GetAllPostDto,
+    req: Request,
+    res: Response
+  ) {
+    const user = req.user as User;
+    const data = await this._postService.getAll(
+      user,
+      query
+    );
     return res.status(200).json(data);
   }
 }

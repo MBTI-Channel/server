@@ -2,6 +2,8 @@ import { inject, injectable } from "inversify";
 import { QueryDeepPartialEntity } from "typeorm/query-builder/QueryPartialEntity";
 import { TYPES } from "../../core/type.core";
 import { IDatabaseService } from "../../shared/database/interfaces/IDatabase.service";
+import { PostOrder } from "../../shared/enum.shared";
+import { GetAllPostDto } from "./dto/get-all-post.dto";
 import { Post } from "./entity/post.entity";
 import { IPostRepository } from "./interfaces/IPost.repository";
 
@@ -35,5 +37,70 @@ export class PostRepository implements IPostRepository {
     await repository.update(id, {
       isActive: false,
     } as QueryDeepPartialEntity<Post>);
+  }
+
+  public async findAllPosts(
+    pageOptionsDto: GetAllPostDto,
+    categoryId: number
+  ): Promise<[Post[], number]> {
+    const repository = await this._database.getRepository(Post);
+    const [result, totalCount] = await repository.findAndCount({
+      select: [
+        "id",
+        "categoryId",
+        "type",
+        "isActive",
+        "userId",
+        "userNickname",
+        "userMbti",
+        "isSecret",
+        "title",
+        "content",
+        "viewCount",
+        "commentCount",
+        "likesCount",
+        "reportCount",
+        "createdAt",
+        "updatedAt",
+      ],
+      where: { categoryId },
+      take: pageOptionsDto.maxResults + 1,
+      skip: pageOptionsDto.skip,
+      order: { [pageOptionsDto.order]: "DESC" },
+    });
+    return [result, totalCount];
+  }
+
+  public async findAllPostsWithMbti(
+    pageOptionsDto: GetAllPostDto,
+    categoryId: number,
+    mbti: string
+  ): Promise<[Post[], number]> {
+    const repository = await this._database.getRepository(Post);
+    const [result, totalCount] = await repository.findAndCount({
+      select: [
+        "id",
+        "categoryId",
+        "type",
+        "isActive",
+        "userId",
+        "userNickname",
+        "userMbti",
+        "isSecret",
+        "title",
+        "content",
+        "viewCount",
+        "commentCount",
+        "likesCount",
+        "reportCount",
+        "createdAt",
+        "updatedAt",
+      ],
+      where: { categoryId, userMbti: mbti },
+      take: pageOptionsDto.maxResults + 1,
+      skip: pageOptionsDto.skip,
+      order: { [pageOptionsDto.order]: "DESC" },
+    });
+    return [result, totalCount];
   }
 }

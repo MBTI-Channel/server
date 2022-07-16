@@ -1,8 +1,10 @@
-import { User } from "../../user/entity/user.entity";
 import {
-  PostCreateResponseDto,
-  SearchDetailResponseDto,
-} from "../dto/all-response.dto";
+  PageInfiniteScrollInfoDto,
+  PageResponseDto,
+} from "../../../shared/page";
+import { User } from "../../user/entity/user.entity";
+import { GetAllPostDto } from "../dto/get-all-post.dto";
+import { PostResponseDto } from "../dto/post-response.dto";
 
 export interface IPostService {
   create(
@@ -11,9 +13,13 @@ export interface IPostService {
     content: string,
     categoryId: number,
     user: User
-  ): Promise<PostCreateResponseDto>;
+  ): Promise<PostResponseDto>;
   increaseCommentCount(id: number): Promise<void>;
   delete(user: User, id: number): Promise<void>;
-  getDetail(user: User, id: number): Promise<SearchDetailResponseDto>;
+  getDetail(user: User, id: number): Promise<PostResponseDto>;
   isValid(id: number): Promise<boolean>;
+  getAll(
+    user: User,
+    pageOptionsDto: GetAllPostDto
+  ): Promise<PageResponseDto<PageInfiniteScrollInfoDto, PostResponseDto>>;
 }
