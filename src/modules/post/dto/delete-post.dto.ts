@@ -1,10 +1,10 @@
 import { Type } from "class-transformer";
-import { IsNotEmpty, IsNumber, Min } from "class-validator";
+import { IsInt, IsNotEmpty, Min } from "class-validator";
 
 export class DeletePostDto {
-  @IsNumber()
-  @Min(1)
+  @IsInt()
   @Type(() => Number)
+  @Min(1)
   @IsNotEmpty()
   id: number;
 }

@@ -15,15 +15,15 @@ export class GetAllPostDto {
   category: CategoryName;
 
   @IsInt()
-  @Min(0)
   @Type(() => Number)
+  @Min(10)
   @IsOptional()
   startId: number = 0;
 
   @IsInt()
+  @Type(() => Number)
   @Min(10)
   @Max(50)
-  @Type(() => Number)
   @IsOptional()
   maxResults: number = 30;
 

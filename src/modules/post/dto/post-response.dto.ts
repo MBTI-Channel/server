@@ -19,7 +19,7 @@ export class PostResponseDto {
   likesCount: number;
   reportCount: number;
   createdAt: Date;
-  updatedAt: Date;
+  updatedAt: Date | null;
   constructor(post: Post, user: User) {
     this.id = post.id;
     this.type = post.type;
@@ -38,6 +38,9 @@ export class PostResponseDto {
     this.likesCount = post.likesCount;
     this.reportCount = post.reportCount;
     this.createdAt = post.createdAt;
-    this.updatedAt = post.updatedAt;
+    this.updatedAt =
+      post.createdAt.getTime() === post.updatedAt.getTime()
+        ? null
+        : post.updatedAt;
   }
 }
