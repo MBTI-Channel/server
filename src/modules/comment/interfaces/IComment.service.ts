@@ -9,10 +9,23 @@ export interface ICommentService {
     content: string,
     isSecret: boolean
   ): Promise<CommentResponseDto>;
+  // createReply(
+  //   user: User,
+  //   content: string,
+  //   isSecret: boolean,
+  //   postId: number,
+  //   parentId: number,
+  //   taggedId: number
+  // ): Promise<any>;
+  // postId  게시글 아이디
+  // commentId 댓글 아이디
+  // taggedId? 태그한 댓글 아이디
+  // content 대댓글 내용
   findAllComments(
     pageOptionsDto: GetAllCommentDto,
     user: User
   ): Promise<PageResponseDto<PageInfoDto, CommentResponseDto>>;
+  update(user: User, id: number, content: string): Promise<CommentResponseDto>;
   delete(user: User, id: number): Promise<void>;
   // createReply(
   //   user: User,
