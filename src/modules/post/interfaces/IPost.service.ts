@@ -22,4 +22,11 @@ export interface IPostService {
     user: User,
     pageOptionsDto: GetAllPostDto
   ): Promise<PageResponseDto<PageInfiniteScrollInfoDto, PostResponseDto>>;
+  update(
+    user: User,
+    id: number,
+    title: string,
+    content: string,
+    isSecret: boolean
+  ): Promise<PostResponseDto>;
 }

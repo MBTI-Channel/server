@@ -103,4 +103,11 @@ export class PostRepository implements IPostRepository {
     });
     return [result, totalCount];
   }
+
+  public async update(id: number, payload: Partial<Post>): Promise<Post> {
+    const repository = await this._database.getRepository(Post);
+    return await repository
+      .update(id, payload as QueryDeepPartialEntity<Post>)
+      .then(async () => await repository.findOne({ where: { id } }));
+  }
 }

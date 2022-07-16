@@ -18,7 +18,7 @@ export class CreatePostDto {
 
   @IsString()
   @IsNotEmpty()
-  @Length(1, 10)
+  @Length(1, 30)
   title: string;
 
   @IsString()

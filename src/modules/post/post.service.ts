@@ -152,4 +152,30 @@ export class PostService implements IPostService {
       postArray.map((e) => new PostResponseDto(e, user))
     );
   }
+
+  public async update(
+    user: User,
+    id: number,
+    title: string,
+    content: string,
+    isSecret: boolean
+  ): Promise<PostResponseDto> {
+    this._logger.trace(`[PostService] update start`);
+    const post = await this._postRepository.findOneById(id);
+
+    this._logger.trace(`[PostService] check exists post id ${id}`);
+    if (!post || !post.isActive) throw new NotFoundException("not exists post");
+
+    // 권환 확인
+    if (post.userId !== user.id)
+      throw new ForbiddenException("authorization error");
+
+    const updatedPost = await this._postRepository.update(id, {
+      title,
+      content,
+      isSecret,
+    });
+
+    return new PostResponseDto(updatedPost, user);
+  }
 }

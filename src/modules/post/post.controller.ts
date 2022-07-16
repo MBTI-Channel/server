@@ -5,6 +5,7 @@ import {
   controller,
   httpDelete,
   httpGet,
+  httpPatch,
   httpPost,
   queryParam,
   requestBody,
@@ -18,6 +19,7 @@ import {
 } from "../../middlewares/validator.middleware";
 import { User } from "../user/entity/user.entity";
 import { IdDto, CreatePostDto, GetAllPostDto } from "./dto";
+import { UpdatePostDto } from "./dto/update-post.dto";
 import { IPostService } from "./interfaces/IPost.service";
 
 @controller("/posts")
@@ -88,6 +90,33 @@ export class PostController extends BaseHttpController {
     const user = req.user as User;
     console.log(typeof query.startId);
     const data = await this._postService.getAll(user, query);
+    return res.status(200).json(data);
+  }
+
+  @httpPatch(
+    "/:id",
+    TYPES.ValidateAccessTokenMiddleware,
+    paramsValidator(IdDto),
+    bodyValidator(UpdatePostDto)
+  )
+  async updatePost(
+    @requestParam() param: IdDto,
+    @requestBody() body: UpdatePostDto,
+    req: Request,
+    res: Response
+  ) {
+    const user = req.user as User;
+    const { id } = param;
+    const { title, content, isSecret } = body;
+
+    const data = await this._postService.update(
+      user,
+      id,
+      title,
+      content,
+      isSecret
+    );
+
     return res.status(200).json(data);
   }
 }
