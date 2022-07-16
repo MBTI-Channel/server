@@ -1,7 +1,7 @@
 import { Type } from "class-transformer";
 import { IsInt, IsNotEmpty, Min } from "class-validator";
 
-export class getDetailPostDto {
+export class IdDto {
   @IsInt()
   @Type(() => Number)
   @Min(1)
