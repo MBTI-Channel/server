@@ -105,6 +105,7 @@ export class User extends UserBase {
   }
 
   isActive() {
+    // TODO: 회원가입 후 isActive: false임
     if (this.status === status.new || this.status === status.withdrawal)
       return false;
     return true;
