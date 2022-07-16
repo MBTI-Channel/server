@@ -114,7 +114,7 @@ export class UserService implements IUserService {
       this._authService.generateRefreshToken(),
     ]);
 
-    return new UserTokenResponseDto(user, accessToken, refreshToken);
+    return new UserTokenResponseDto(updatedUser, accessToken, refreshToken);
   }
 
   public async reissueAccessToken(oldAccessToken: string) {
