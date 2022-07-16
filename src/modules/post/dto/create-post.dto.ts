@@ -1,17 +1,21 @@
+import { Type } from "class-transformer";
 import {
   IsBoolean,
+  IsInt,
   IsNotEmpty,
-  IsNumber,
+  IsOptional,
   IsString,
   Length,
 } from "class-validator";
 
 export class CreatePostDto {
-  @IsNumber()
+  @IsInt()
+  @Type(() => Number)
   @IsNotEmpty()
   categoryId: number;
 
   @IsBoolean()
+  @IsOptional()
   isSecret: boolean;
 
   @IsString()
