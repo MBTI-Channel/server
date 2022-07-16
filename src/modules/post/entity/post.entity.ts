@@ -1,6 +1,5 @@
 import { Entity, Column, ManyToOne, OneToMany } from "typeorm";
 import { BaseEntity } from "../../../shared/base.entity.";
-import { PostType } from "../../../shared/type.shared";
 import { Bookmark } from "../../bookmark/entity/bookmark.entity";
 import { Category } from "../../category/entity/category.entity";
 import { Comment } from "../../comment/entity/comment.entity";
@@ -97,7 +96,7 @@ export class Post extends BaseEntity {
     return post;
   }
 
-  static typeTo(type: PostType) {
+  static typeTo(type: string) {
     switch (type) {
       case "post":
         return 1;

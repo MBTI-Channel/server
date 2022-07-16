@@ -1,6 +1,6 @@
 import { inject, injectable } from "inversify";
 import { TYPES } from "../../core/type.core";
-import { CategoryName } from "../../shared/enum.shared";
+import { CategoryName, PostType } from "../../shared/enum.shared";
 import {
   ForbiddenException,
   NotFoundException,
@@ -39,9 +39,9 @@ export class PostService implements IPostService {
       throw new NotFoundException("category id error");
     }
 
-    let postType = Post.typeTo("post");
-    if (category.name === "mbti") {
-      postType = Post.typeTo("mbti");
+    let postType = Post.typeTo(PostType.POST);
+    if (category.name === CategoryName.MBTI) {
+      postType = Post.typeTo(PostType.MBTI);
     }
 
     const postEntity = Post.of(user, category, isSecret, title, content);
@@ -86,7 +86,7 @@ export class PostService implements IPostService {
     if (!post || !post.isActive) throw new NotFoundException("not exists post");
 
     // 타입이 mbti 일 경우
-    if (Post.typeFrom(post.type) === "mbti") {
+    if (Post.typeFrom(post.type) === PostType.MBTI) {
       if (user.mbti !== post.userMbti)
         throw new ForbiddenException("authorization error");
     }
