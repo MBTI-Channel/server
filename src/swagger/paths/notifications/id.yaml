@@ -1,0 +1,15 @@
+patch:
+  tags:
+    - notifications
+  description: 알림 하나 읽음 처리
+  # requestBody:
+  #   content:
+  #     application/json:
+  #       schema:
+  #         type: object
+  #         properties:
+  #           content:
+  #             type: stirng
+  #             example: 나는 뭐 먹지..?
+  responses:
+    $ref: "../../responses/notifications/id.patch.yaml"

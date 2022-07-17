@@ -99,3 +99,12 @@ paths:
     $ref: "./paths/comments/id.replies.yaml"
   /comments/replies:
     $ref: "./paths/comments/replies.yaml"
+
+  # notification
+  /notifications/{id}:
+    parameters:
+      - in: path
+        name: id
+        type: integer
+        description: Notification ID
+    $ref: "./paths/notifications/id.yaml"
