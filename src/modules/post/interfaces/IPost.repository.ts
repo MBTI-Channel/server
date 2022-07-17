@@ -15,4 +15,5 @@ export interface IPostRepository {
     categoryId: number,
     mbti: string
   ): Promise<[Post[], number]>;
+  update(id: number, payload: Partial<Post>): Promise<Post>;
 }

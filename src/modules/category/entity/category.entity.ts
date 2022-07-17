@@ -1,6 +1,5 @@
 import { Entity, Column, OneToMany } from "typeorm";
 import { BaseEntity } from "../../../shared/base.entity.";
-import { CategoryType } from "../../../shared/type.shared";
 import { Post } from "../../post/entity/post.entity";
 
 @Entity()
@@ -15,7 +14,7 @@ export class Category extends BaseEntity {
   @OneToMany((type) => Post, (post) => post.id, { cascade: true })
   post!: Post[];
 
-  static typeTo(type: CategoryType) {
+  static typeTo(type: string) {
     switch (type) {
       case "game":
         return 1;

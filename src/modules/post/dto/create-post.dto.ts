@@ -1,22 +1,24 @@
 import {
   IsBoolean,
+  IsInt,
   IsNotEmpty,
-  IsNumber,
+  IsOptional,
   IsString,
   Length,
 } from "class-validator";
 
 export class CreatePostDto {
-  @IsNumber()
+  @IsInt()
   @IsNotEmpty()
   categoryId: number;
 
   @IsBoolean()
+  @IsOptional()
   isSecret: boolean;
 
   @IsString()
   @IsNotEmpty()
-  @Length(1, 10)
+  @Length(1, 30)
   title: string;
 
   @IsString()

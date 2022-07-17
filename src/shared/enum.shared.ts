@@ -14,6 +14,13 @@ export enum PostOrder {
   VIEW_COUNT = "viewCount",
 }
 
+export enum PostType {
+  POST = "post",
+  MBTI = "mbti",
+  SURVEY = "survey",
+  NOTICE = "notice",
+}
+
 export enum CategoryName {
   TRIP = "trip",
   MBTI = "mbti",

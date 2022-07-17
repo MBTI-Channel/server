@@ -1,6 +1,6 @@
 import { inject, injectable } from "inversify";
 import { TYPES } from "../../core/type.core";
-import { CategoryName } from "../../shared/enum.shared";
+import { CategoryName, PostType } from "../../shared/enum.shared";
 import {
   ForbiddenException,
   NotFoundException,
@@ -9,8 +9,7 @@ import { PageResponseDto, PageInfiniteScrollInfoDto } from "../../shared/page";
 import { Logger } from "../../shared/utils/logger.util";
 import { ICategoryRepository } from "../category/interfaces/ICategory.repository";
 import { User } from "../user/entity/user.entity";
-import { GetAllPostDto } from "./dto/get-all-post.dto";
-import { PostResponseDto } from "./dto/post-response.dto";
+import { GetAllPostDto, PostResponseDto } from "./dto";
 import { Post } from "./entity/post.entity";
 import { IPostRepository } from "./interfaces/IPost.repository";
 import { IPostService } from "./interfaces/IPost.service";
@@ -39,9 +38,9 @@ export class PostService implements IPostService {
       throw new NotFoundException("category id error");
     }
 
-    let postType = Post.typeTo("post");
-    if (category.name === "mbti") {
-      postType = Post.typeTo("mbti");
+    let postType = Post.typeTo(PostType.POST);
+    if (category.name === CategoryName.MBTI) {
+      postType = Post.typeTo(PostType.MBTI);
     }
 
     const postEntity = Post.of(user, category, isSecret, title, content);
@@ -86,7 +85,7 @@ export class PostService implements IPostService {
     if (!post || !post.isActive) throw new NotFoundException("not exists post");
 
     // 타입이 mbti 일 경우
-    if (Post.typeFrom(post.type) === "mbti") {
+    if (Post.typeFrom(post.type) === PostType.MBTI) {
       if (user.mbti !== post.userMbti)
         throw new ForbiddenException("authorization error");
     }
@@ -152,5 +151,31 @@ export class PostService implements IPostService {
       pageInfoDto,
       postArray.map((e) => new PostResponseDto(e, user))
     );
+  }
+
+  public async update(
+    user: User,
+    id: number,
+    title: string,
+    content: string,
+    isSecret: boolean
+  ): Promise<PostResponseDto> {
+    this._logger.trace(`[PostService] update start`);
+    const post = await this._postRepository.findOneById(id);
+
+    this._logger.trace(`[PostService] check exists post id ${id}`);
+    if (!post || !post.isActive) throw new NotFoundException("not exists post");
+
+    // 권환 확인
+    if (post.userId !== user.id)
+      throw new ForbiddenException("authorization error");
+
+    const updatedPost = await this._postRepository.update(id, {
+      title,
+      content,
+      isSecret,
+    });
+
+    return new PostResponseDto(updatedPost, user);
   }
 }

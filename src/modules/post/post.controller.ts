@@ -5,6 +5,7 @@ import {
   controller,
   httpDelete,
   httpGet,
+  httpPatch,
   httpPost,
   queryParam,
   requestBody,
@@ -17,10 +18,8 @@ import {
   queryValidator,
 } from "../../middlewares/validator.middleware";
 import { User } from "../user/entity/user.entity";
-import { CreatePostDto } from "./dto/create-post.dto";
-import { DeletePostDto } from "./dto/delete-post.dto";
-import { GetAllPostDto } from "./dto/get-all-post.dto";
-import { getDetailPostDto } from "./dto/get-detail-post.dto";
+import { IdDto, CreatePostDto, GetAllPostDto } from "./dto";
+import { UpdatePostDto } from "./dto/update-post.dto";
 import { IPostService } from "./interfaces/IPost.service";
 
 @controller("/posts")
@@ -56,13 +55,9 @@ export class PostController extends BaseHttpController {
   @httpDelete(
     "/:id",
     TYPES.ValidateAccessTokenMiddleware,
-    paramsValidator(DeletePostDto)
+    paramsValidator(IdDto)
   )
-  async deletePost(
-    @requestParam() param: DeletePostDto,
-    req: Request,
-    res: Response
-  ) {
+  async deletePost(@requestParam() param: IdDto, req: Request, res: Response) {
     const user = req.user as User;
     const { id } = param;
 
@@ -72,13 +67,9 @@ export class PostController extends BaseHttpController {
   }
 
   // 게시글 상세 조회
-  @httpGet(
-    "/:id",
-    TYPES.CheckLoginStatusMiddleware,
-    paramsValidator(getDetailPostDto)
-  )
+  @httpGet("/:id", TYPES.CheckLoginStatusMiddleware, paramsValidator(IdDto))
   async getDetailPost(
-    @requestParam() param: getDetailPostDto,
+    @requestParam() param: IdDto,
     req: Request,
     res: Response
   ) {
@@ -97,10 +88,35 @@ export class PostController extends BaseHttpController {
     res: Response
   ) {
     const user = req.user as User;
-    const data = await this._postService.getAll(
+    console.log(typeof query.startId);
+    const data = await this._postService.getAll(user, query);
+    return res.status(200).json(data);
+  }
+
+  @httpPatch(
+    "/:id",
+    TYPES.ValidateAccessTokenMiddleware,
+    paramsValidator(IdDto),
+    bodyValidator(UpdatePostDto)
+  )
+  async updatePost(
+    @requestParam() param: IdDto,
+    @requestBody() body: UpdatePostDto,
+    req: Request,
+    res: Response
+  ) {
+    const user = req.user as User;
+    const { id } = param;
+    const { title, content, isSecret } = body;
+
+    const data = await this._postService.update(
       user,
-      query
+      id,
+      title,
+      content,
+      isSecret
     );
+
     return res.status(200).json(data);
   }
 }
