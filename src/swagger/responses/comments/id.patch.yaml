@@ -1,5 +1,49 @@
 "200":
   description: 댓글 수정 성공
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          isMy:
+            type: boolean
+            example: true
+          isPostWriter:
+            type: boolean
+            example: true
+          isActive:
+            type: boolean
+            example: true
+          isSecret:
+            type: boolean
+            example: false
+          id:
+            type: integer
+            example: 23
+          userId:
+            type: integer
+            example: 32
+          userNickname:
+            type: string
+            example: 지나가는 나그네
+          userMbti:
+            type: string
+            example: ENFP
+          content:
+            type: string
+            example: 나는 뭐 먹지..?
+          replyCount:
+            type: integer
+            example: 6
+          likesCount:
+            type: integer
+            example: 6
+          createdAt:
+            type: string
+            example: 2022-07-21T17:32:28Z
+          updatedAt:
+            type: string
+            example: 2022-07-21T17:32:28Z
 
 "401":
   description: access token 유효하지 않음
@@ -24,7 +68,7 @@
             example: authorization error
 
 "404":
-  description: 존재하지 않는 (삭제된) 게시글
+  description: 존재하지 않는 (삭제된) 게시글 || 댓글
   content:
     application/json:
       schema:
@@ -32,4 +76,4 @@
         properties:
           message:
             type: string
-            example: not exists post
+            example: not exists post || not exists comment

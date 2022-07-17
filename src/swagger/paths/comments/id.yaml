@@ -2,6 +2,15 @@ patch:
   tags:
     - comments
   description: 댓글 수정
+  requestBody:
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            content:
+              type: stirng
+              example: 나는 뭐 먹지..?
   responses:
     $ref: "../../responses/comments/id.patch.yaml"
 
