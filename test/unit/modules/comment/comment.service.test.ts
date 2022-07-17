@@ -1,10 +1,12 @@
 import container from "../../../../src/core/container.core";
 import { TYPES } from "../../../../src/core/type.core";
-import { CommentResponseDto } from "../../../../src/modules/comment/dto/";
 import { Comment } from "../../../../src/modules/comment/entity/comment.entity";
 import { ICommentService } from "../../../../src/modules/comment/interfaces/IComment.service";
 import { User } from "../../../../src/modules/user/entity/user.entity";
 import { NotFoundException } from "../../../../src/shared/errors/all.exception";
+
+import { CommentResponseDto } from "../../../../src/modules/comment/dto";
+jest.mock("../../../../src/modules/comment/dto");
 
 describe("CommentService ", () => {
   beforeEach(() => {
