@@ -56,6 +56,13 @@ export class CommentRepository implements ICommentRepository {
       .getManyAndCount();
   }
 
+  async update(id: number, payload: Partial<Comment>) {
+    const repository = await this._database.getRepository(Comment);
+    return await repository
+      .update(id, payload as QueryDeepPartialEntity<Comment>)
+      .then(async () => await repository.findOne({ where: { id } }));
+  }
+
   async remove(id: number): Promise<void> {
     const repository = await this._database.getRepository(Comment);
     await repository.update(id, {

@@ -4,6 +4,7 @@ import {
   controller,
   httpDelete,
   httpGet,
+  httpPatch,
   httpPost,
   queryParam,
   requestBody,
@@ -16,8 +17,13 @@ import {
   queryValidator,
 } from "../../middlewares/validator.middleware";
 import { User } from "../user/entity/user.entity";
-import { CreateCommentDto, DeleteCommentDto } from "./dto";
-import { GetAllCommentDto } from "./dto/get-all-comment.dto";
+import {
+  CreateCommentDto,
+  GetAllCommentDto,
+  UpdateCommentDto,
+  DeleteCommentDto,
+  IdDto,
+} from "./dto";
 import { ICommentService } from "./interfaces/IComment.service";
 
 @controller("/comments")
@@ -48,6 +54,15 @@ export class CommentController {
     return res.status(201).json(data);
   }
 
+  // @httpPost(
+  //   "/",
+  //   TYPES.ValidateAccessTokenMiddleware,
+  //   bodyValidator(CreateCommentDto)
+  // )
+  // async createReply(){
+
+  // }
+
   @httpGet(
     "/",
     queryValidator(GetAllCommentDto),
@@ -60,6 +75,25 @@ export class CommentController {
   ) {
     const user = req.user as User;
     const data = await this._commentService.findAllComments(query, user);
+    return res.status(200).json(data);
+  }
+
+  @httpPatch(
+    "/:id",
+    TYPES.ValidateAccessTokenMiddleware,
+    paramsValidator(IdDto),
+    bodyValidator(UpdateCommentDto)
+  )
+  async update(
+    @requestParam() param: IdDto,
+    @requestBody() body: UpdateCommentDto,
+    req: Request,
+    res: Response
+  ) {
+    const user = req.user as User;
+    const { id } = param;
+    const { content } = body;
+    const data = await this._commentService.update(user, id, content);
     return res.status(200).json(data);
   }
 

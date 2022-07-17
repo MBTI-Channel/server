@@ -14,7 +14,7 @@ export class CommentResponseDto {
   isMy: boolean = false;
   isPostWriter: boolean = false;
   createdAt: Date;
-  updatedAt: Date;
+  updatedAt: Date | null;
 
   constructor(entity: Comment, user: User) {
     this.isSecret = entity.isSecret;
@@ -30,6 +30,9 @@ export class CommentResponseDto {
     this.replyCount = entity.replyCount;
     this.likesCount = entity.likesCount;
     this.createdAt = entity.createdAt;
-    this.updatedAt = entity.updatedAt;
+    this.updatedAt =
+      entity.createdAt.getTime() === entity.updatedAt.getTime()
+        ? null
+        : entity.updatedAt;
   }
 }

@@ -92,6 +92,27 @@ export class CommentService implements ICommentService {
     );
   }
 
+  async update(user: User, id: number, content: string) {
+    const comment = await this._commentRepository.findById(id);
+
+    //err: 존재하지 않거나 삭제된 댓글
+    if (!comment || !comment.isActive)
+      throw new NotFoundException("not exists comment");
+
+    //err: 존재하지 않거나 삭제된 게시글
+    const isValidPost = await this._postService.isValid(comment.postId);
+    if (!isValidPost) throw new NotFoundException("not exists post");
+
+    // err: 권한 없음
+    if (comment.userId !== user.id)
+      throw new ForbiddenException("authorization error");
+
+    const updatedComment = await this._commentRepository.update(id, {
+      content,
+    });
+    return new CommentResponseDto(updatedComment, user);
+  }
+
   async delete(user: User, id: number): Promise<void> {
     this._logger.trace(`[CommentService] delete start`);
     const comment = await this._commentRepository.findById(id);
