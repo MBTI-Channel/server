@@ -1,0 +1,54 @@
+"200":
+  description: 알림 하나 읽음처리 성공
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          isRead:
+            type: boolean
+            example: true
+
+"400":
+  description: 이미 읽은 알림
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          message:
+            type: string
+            example: already read notification
+
+"401":
+  description: access token 유효하지 않음
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          message:
+            type: string
+            example: authentication error
+
+"403":
+  description: 접근 권한이 없음
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          message:
+            type: string
+            example: authorization error
+
+"404":
+  description: 존재하지않는 알림 id
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          message:
+            type: string
+            example: not exists notification
