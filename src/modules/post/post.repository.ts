@@ -3,7 +3,6 @@ import { Like } from "typeorm";
 import { QueryDeepPartialEntity } from "typeorm/query-builder/QueryPartialEntity";
 import { TYPES } from "../../core/type.core";
 import { IDatabaseService } from "../../shared/database/interfaces/IDatabase.service";
-import { PostOrder } from "../../shared/enum.shared";
 import { GetAllPostDto } from "./dto/get-all-post.dto";
 import { SearchPostDto } from "./dto/search-post.dto";
 import { Post } from "./entity/post.entity";
@@ -115,8 +114,7 @@ export class PostRepository implements IPostRepository {
 
   async searchAllPosts(
     pageOptionsDto: SearchPostDto,
-    categoryId: number,
-    searchWord: string
+    categoryId: number
   ): Promise<[Post[], number]> {
     const repository = await this._database.getRepository(Post);
     const [result, totalCount] = await repository.findAndCount({
@@ -138,7 +136,7 @@ export class PostRepository implements IPostRepository {
         "createdAt",
         "updatedAt",
       ],
-      where: { categoryId, title: Like(`%${searchWord}%`) },
+      where: { categoryId, title: Like(`%${pageOptionsDto.searchWord}%`) },
       take: pageOptionsDto.maxResults + 1,
       skip: pageOptionsDto.skip,
       order: { [pageOptionsDto.order]: "DESC" },
@@ -149,8 +147,7 @@ export class PostRepository implements IPostRepository {
   async searchAllPostsWithMbti(
     pageOptionsDto: SearchPostDto,
     categoryId: number,
-    mbti: string,
-    searchWord: string
+    mbti: string
   ): Promise<[Post[], number]> {
     const repository = await this._database.getRepository(Post);
     const [result, totalCount] = await repository.findAndCount({
@@ -172,7 +169,11 @@ export class PostRepository implements IPostRepository {
         "createdAt",
         "updatedAt",
       ],
-      where: { categoryId, userMbti: mbti, title: Like(`%${searchWord}%`) },
+      where: {
+        categoryId,
+        userMbti: mbti,
+        title: Like(`%${pageOptionsDto.searchWord}%`),
+      },
       take: pageOptionsDto.maxResults + 1,
       skip: pageOptionsDto.skip,
       order: { [pageOptionsDto.order]: "DESC" },

@@ -19,13 +19,11 @@ export interface IPostRepository {
   update(id: number, payload: Partial<Post>): Promise<Post>;
   searchAllPosts(
     pageOptionsDto: SearchPostDto,
-    categoryId: number,
-    searchWord: string
+    categoryId: number
   ): Promise<[Post[], number]>;
   searchAllPostsWithMbti(
     pageOptionsDto: SearchPostDto,
     categoryId: number,
-    mbti: string,
-    searchWord: string
+    mbti: string
   ): Promise<[Post[], number]>;
 }

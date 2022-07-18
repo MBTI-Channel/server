@@ -1,5 +1,5 @@
 import { Type } from "class-transformer";
-import { IsEnum, IsInt, IsOptional, Max, Min } from "class-validator";
+import { IsEnum, IsInt, IsOptional, IsString, Max, Min } from "class-validator";
 import { CategoryName, PostOrder } from "../../../shared/enum.shared";
 
 export class SearchPostDto {
@@ -23,6 +23,10 @@ export class SearchPostDto {
   @IsEnum(PostOrder)
   @IsOptional()
   order: PostOrder = PostOrder.CREATED_AT;
+
+  @IsString()
+  @IsOptional()
+  searchWord: string = "";
 
   get skip(): number {
     return this.startId;

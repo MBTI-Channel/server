@@ -32,7 +32,6 @@ export interface IPostService {
   ): Promise<PostResponseDto>;
   search(
     user: User,
-    pageOptionsDto: SearchPostDto,
-    searchWord: string
+    pageOptionsDto: SearchPostDto
   ): Promise<PageResponseDto<PageInfiniteScrollInfoDto, PostResponseDto>>;
 }

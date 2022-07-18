@@ -18,9 +18,7 @@ import {
   queryValidator,
 } from "../../middlewares/validator.middleware";
 import { User } from "../user/entity/user.entity";
-import { IdDto, CreatePostDto, GetAllPostDto } from "./dto";
-import { SearchPostDto } from "./dto/search-post.dto";
-import { SearchWordDto } from "./dto/search-word.dto";
+import { IdDto, CreatePostDto, GetAllPostDto, SearchPostDto } from "./dto";
 import { UpdatePostDto } from "./dto/update-post.dto";
 import { IPostService } from "./interfaces/IPost.service";
 
@@ -72,19 +70,16 @@ export class PostController extends BaseHttpController {
   @httpGet(
     "/search",
     TYPES.CheckLoginStatusMiddleware,
-    queryValidator(SearchPostDto),
-    bodyValidator(SearchWordDto)
+    queryValidator(SearchPostDto)
   )
   async searchPost(
     @queryParam() query: SearchPostDto,
-    @requestBody() body: SearchWordDto,
     req: Request,
     res: Response
   ) {
     const user = req.user as User;
-    const { searchWord } = body;
 
-    const data = await this._postService.search(user, query, searchWord);
+    const data = await this._postService.search(user, query);
     return res.status(200).json(data);
   }
 

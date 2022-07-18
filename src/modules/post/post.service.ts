@@ -182,8 +182,7 @@ export class PostService implements IPostService {
 
   public async search(
     user: User,
-    pageOptionsDto: SearchPostDto,
-    searchWord: string
+    pageOptionsDto: SearchPostDto
   ): Promise<PageResponseDto<PageInfiniteScrollInfoDto, PostResponseDto>> {
     this._logger.trace(`[PostService] search start`);
 
@@ -213,14 +212,12 @@ export class PostService implements IPostService {
         await this._postRepository.searchAllPostsWithMbti(
           pageOptionsDto,
           category.id,
-          user.mbti,
-          searchWord
+          user.mbti
         );
     } else {
       [postArray, totalCount] = await this._postRepository.searchAllPosts(
         pageOptionsDto,
-        category.id,
-        searchWord
+        category.id
       );
     }
 
