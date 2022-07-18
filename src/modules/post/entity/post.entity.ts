@@ -82,7 +82,8 @@ export class Post extends BaseEntity {
     category: Category,
     isSecret: boolean,
     title: string,
-    content: string
+    content: string,
+    postType: number
   ) {
     const post = new Post();
     post.user = user;
@@ -90,6 +91,7 @@ export class Post extends BaseEntity {
     post.isSecret = isSecret;
     post.title = title;
     post.content = content;
+    post.type = postType;
     post.userNickname = isSecret ? undefined : user.nickname;
     post.userMbti = user.mbti;
 
@@ -106,6 +108,8 @@ export class Post extends BaseEntity {
         return 3;
       case "notice":
         return 4;
+      default: // typeTo undefined 막기 위해 추가
+        return 0;
     }
   }
 
