@@ -9,6 +9,7 @@ import { IPostRepository } from "../post/interfaces/IPost.repository";
 import { Comment } from "./entity/comment.entity";
 import { User } from "../user/entity/user.entity";
 import {
+  BadReqeustException,
   ForbiddenException,
   NotFoundException,
 } from "../../shared/errors/all.exception";
@@ -81,6 +82,10 @@ export class CommentService implements ICommentService {
     if (!post || !post.isActive) throw new NotFoundException(`not exists post`);
     const comment = await this._commentRepository.findById(parentId);
     if (!comment) throw new NotFoundException(`not exists comment`);
+    if (comment.parentId)
+      throw new BadReqeustException(
+        `replies cannot be written to a reply with a parent id`
+      );
 
     const replyEntity = Comment.of(
       post,
