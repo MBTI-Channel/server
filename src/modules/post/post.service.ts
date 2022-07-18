@@ -10,6 +10,7 @@ import { Logger } from "../../shared/utils/logger.util";
 import { ICategoryRepository } from "../category/interfaces/ICategory.repository";
 import { User } from "../user/entity/user.entity";
 import { GetAllPostDto, PostResponseDto } from "./dto";
+import { SearchPostDto } from "./dto/search-post.dto";
 import { Post } from "./entity/post.entity";
 import { IPostRepository } from "./interfaces/IPost.repository";
 import { IPostService } from "./interfaces/IPost.service";
@@ -177,5 +178,68 @@ export class PostService implements IPostService {
     });
 
     return new PostResponseDto(updatedPost, user);
+  }
+
+  public async search(
+    user: User,
+    pageOptionsDto: SearchPostDto,
+    searchWord: string
+  ): Promise<PageResponseDto<PageInfiniteScrollInfoDto, PostResponseDto>> {
+    this._logger.trace(`[PostService] search start`);
+
+    // category가 없을 경우 전체 검색
+    if (!pageOptionsDto.category) {
+      // 전체 검색 쿼리문을 못짜겠어서... pass
+    }
+
+    this._logger.trace(
+      `[PostService] check category name ${pageOptionsDto.category}`
+    );
+    const category = await this._categoryRepository.findOneByName(
+      pageOptionsDto.category
+    );
+    if (!category || !category.isActive) {
+      throw new NotFoundException("not exists category");
+    }
+
+    if (!user && pageOptionsDto.category === CategoryName.MBTI) {
+      throw new ForbiddenException("not authorizatie");
+    }
+
+    // 카테고리 내에서 검색
+    let postArray, totalCount;
+    if (pageOptionsDto.category === CategoryName.MBTI) {
+      [postArray, totalCount] =
+        await this._postRepository.searchAllPostsWithMbti(
+          pageOptionsDto,
+          category.id,
+          user.mbti,
+          searchWord
+        );
+    } else {
+      [postArray, totalCount] = await this._postRepository.searchAllPosts(
+        pageOptionsDto,
+        category.id,
+        searchWord
+      );
+    }
+
+    let nextId = null;
+    if (postArray.length === pageOptionsDto.maxResults + 1) {
+      nextId = postArray[postArray.length - 1].id;
+      postArray.pop();
+    }
+    let itemsPerPage = postArray.length;
+
+    const pageInfoDto = new PageInfiniteScrollInfoDto(
+      totalCount, // 결과에 맞는 개수
+      itemsPerPage,
+      nextId
+    );
+
+    return new PageResponseDto(
+      pageInfoDto,
+      postArray.map((e) => new PostResponseDto(e, user))
+    );
   }
 }
