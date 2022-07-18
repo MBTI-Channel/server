@@ -8,5 +8,6 @@ export interface ICommentRepository {
     pageOptionsDto: GetAllCommentDto
   ): Promise<[Comment[], number]>;
   update(id: number, content: Partial<Comment>): Promise<Comment>;
+  increaseReplyCount(id: number): Promise<boolean>;
   remove(id: number): Promise<void>;
 }
