@@ -16,7 +16,7 @@ export class GetAllPostDto {
 
   @IsInt()
   @Type(() => Number)
-  @Min(10)
+  @Min(0)
   @IsOptional()
   startId: number = 0;
 
