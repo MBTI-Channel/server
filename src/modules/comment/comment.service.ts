@@ -12,7 +12,7 @@ import {
   ForbiddenException,
   NotFoundException,
 } from "../../shared/errors/all.exception";
-import { GetAllCommentDto, CommentResponseDto } from "./dto";
+import { GetAllCommentDto, CommentResponseDto, ReplyResponseDto } from "./dto";
 import { Logger } from "../../shared/utils/logger.util";
 import { HttpException } from "../../shared/errors/http.exception";
 import { PageResponseDto, PageInfoDto } from "../../shared/page";
@@ -61,6 +61,45 @@ export class CommentService implements ICommentService {
       );
       await t.commitTransaction();
       return new CommentResponseDto(comment, user);
+    } catch (err: any) {
+      await t.rollbackTransaction();
+      throw new HttpException(err.name, err.message, err.status);
+    } finally {
+      await t.release();
+    }
+  }
+
+  async createReply(
+    user: User,
+    postId: number,
+    parentId: number,
+    taggedId: number,
+    content: string,
+    isSecret: boolean
+  ): Promise<ReplyResponseDto> {
+    const post = await this._postRepository.findOneById(postId);
+    if (!post || !post.isActive) throw new NotFoundException(`not exists post`);
+    const comment = await this._commentRepository.findById(parentId);
+    if (!comment) throw new NotFoundException(`not exists comment`);
+
+    const replyEntity = Comment.of(
+      post,
+      user,
+      content,
+      isSecret,
+      parentId,
+      taggedId
+    );
+
+    const t = await this._dbService.getTransaction();
+    await t.startTransaction();
+    try {
+      // TODO: 알림
+      const reply = await this._commentRepository.createComment(replyEntity);
+      await this._commentRepository.increaseReplyCount(parentId);
+      await this._postService.increaseCommentCount(post.id);
+      await t.commitTransaction();
+      return new ReplyResponseDto(reply, user);
     } catch (err: any) {
       await t.rollbackTransaction();
       throw new HttpException(err.name, err.message, err.status);
