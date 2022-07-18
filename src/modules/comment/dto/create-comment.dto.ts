@@ -4,10 +4,12 @@ import {
   IsNotEmpty,
   IsString,
   Length,
+  Min,
 } from "class-validator";
 
 export class CreateCommentDto {
   @IsInt()
+  @Min(1)
   @IsNotEmpty()
   postId: number;
 
