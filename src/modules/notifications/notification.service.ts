@@ -7,6 +7,11 @@ import { Notification } from "./entity/notification.entity";
 import { User } from "../user/entity/user.entity";
 import { Logger } from "../../shared/utils/logger.util";
 import { NotificationType } from "../../shared/type.shared";
+import {
+  BadReqeustException,
+  ForbiddenException,
+  NotFoundException,
+} from "../../shared/errors/all.exception";
 
 @injectable()
 export class NotificationService implements INotificationService {
@@ -47,5 +52,25 @@ export class NotificationService implements INotificationService {
 
     this._logger.trace(`[NotificationService] create notification`);
     await this._notificationRepository.create(notification);
+  }
+
+  async readOne(user: User, id: number): Promise<void> {
+    this._logger.trace(`[NotificationService] readOne start`);
+
+    this._logger.trace(`[NotificationService] exsits notification ? ${id}`);
+    const notification = await this._notificationRepository.findOneById(id);
+
+    if (!notification) throw new NotFoundException("not exists notification");
+
+    this._logger.trace(`[NotificationService] check authorization`);
+    if (notification.userId !== user.id)
+      throw new ForbiddenException("authorization error");
+
+    // 이미 읽은 알림
+    this._logger.trace(`[NotificationService] check already read`);
+    if (notification.readAt)
+      throw new BadReqeustException("already read notification");
+
+    await this._notificationRepository.update(id, { readAt: new Date() });
   }
 }

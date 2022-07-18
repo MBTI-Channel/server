@@ -8,8 +8,8 @@ export interface INotificationService {
     targetId: number,
     type: NotificationType
   ): Promise<void>;
-  // findAllByUserId(id:number):Promise<any>
-  // readOne:Promise<void>
+  // findAll(id:number):Promise<any>
+  readOne(user: User, id: number): Promise<void>;
   // readAll()():Promise<void>
   // countUnread():Promise<number>
 }
