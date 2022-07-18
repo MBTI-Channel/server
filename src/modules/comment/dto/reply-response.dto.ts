@@ -4,10 +4,10 @@ import { CommentResponseDto } from "./comment-response.dto";
 
 export class ReplyResponseDto extends CommentResponseDto {
   parentId: number;
-  taggedI: number;
+  taggedId: number;
   constructor(entity: Comment, user: User) {
     super(entity, user);
     this.parentId = entity.parentId!;
-    this.taggedI = entity.taggedId!;
+    this.taggedId = entity.taggedId!;
   }
 }
