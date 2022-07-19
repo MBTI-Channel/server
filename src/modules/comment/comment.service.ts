@@ -126,7 +126,7 @@ export class CommentService implements ICommentService {
     // 페이지 정보
     const pageInfoDto = new PageInfoDto(
       totalCount,
-      pageOptionsDto.maxResults,
+      commentArray.length,
       pageOptionsDto.page
     );
 
