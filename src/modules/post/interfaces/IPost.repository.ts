@@ -17,13 +17,17 @@ export interface IPostRepository {
     mbti: string
   ): Promise<[Post[], number]>;
   update(id: number, payload: Partial<Post>): Promise<Post>;
-  searchAllPosts(
+  searchCategoryPosts(
     pageOptionsDto: SearchPostDto,
     categoryId: number
   ): Promise<[Post[], number]>;
-  searchAllPostsWithMbti(
+  searchCategoryPostsWithMbti(
     pageOptionsDto: SearchPostDto,
     categoryId: number,
     mbti: string
+  ): Promise<[Post[], number]>;
+  searchAllPostsWithLoggedIn(): Promise<[Post[], number]>;
+  searchAllPostsWithGuest(
+    pageOptionsDto: SearchPostDto
   ): Promise<[Post[], number]>;
 }

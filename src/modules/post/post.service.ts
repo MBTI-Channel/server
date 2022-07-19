@@ -193,39 +193,51 @@ export class PostService implements IPostService {
   ): Promise<PageResponseDto<PageInfiniteScrollInfoDto, PostResponseDto>> {
     this._logger.trace(`[PostService] search start`);
 
-    // category가 없을 경우 전체 검색
+    let postArray: Post[] = [];
+    let totalCount = 0;
+
     if (!pageOptionsDto.category) {
-      // 전체 검색 쿼리문을 못짜겠어서... pass
-    }
-
-    this._logger.trace(
-      `[PostService] check category name ${pageOptionsDto.category}`
-    );
-    const category = await this._categoryRepository.findOneByName(
-      pageOptionsDto.category
-    );
-    if (!category || !category.isActive) {
-      throw new NotFoundException("not exists category");
-    }
-
-    if (!user && pageOptionsDto.category === CategoryName.MBTI) {
-      throw new ForbiddenException("not authorizatie");
-    }
-
-    // 카테고리 내에서 검색
-    let postArray, totalCount;
-    if (pageOptionsDto.category === CategoryName.MBTI) {
-      [postArray, totalCount] =
-        await this._postRepository.searchAllPostsWithMbti(
-          pageOptionsDto,
-          category.id,
-          user.mbti
-        );
+      // category가 없을 경우 게시글 전체 검색
+      this._logger.trace(`[PostService] search all posts`);
+      if (!user) {
+        // user가 없으므로 mbti 카테고리는 제외
+        [postArray, totalCount] =
+          await this._postRepository.searchAllPostsWithGuest(pageOptionsDto);
+      } else {
+        // user가 있으므로 user에 맞는 mbti 게시글 포함
+      }
     } else {
-      [postArray, totalCount] = await this._postRepository.searchAllPosts(
-        pageOptionsDto,
-        category.id
+      // 카테고리가 있을 경우 유효성 검사 후 카테고리에 따라 검색
+      this._logger.trace(
+        `[PostService] check category name ${pageOptionsDto.category}`
       );
+      const category = await this._categoryRepository.findOneByName(
+        pageOptionsDto.category
+      );
+      if (!category || !category.isActive) {
+        throw new NotFoundException("not exists category");
+      }
+
+      if (!user && pageOptionsDto.category === CategoryName.MBTI) {
+        throw new ForbiddenException("not authorizatie");
+      }
+      this._logger.trace(
+        `[PostService] search posts in category: ${pageOptionsDto.category}`
+      );
+      if (pageOptionsDto.category === CategoryName.MBTI) {
+        [postArray, totalCount] =
+          await this._postRepository.searchCategoryPostsWithMbti(
+            pageOptionsDto,
+            category.id,
+            user.mbti
+          );
+      } else {
+        [postArray, totalCount] =
+          await this._postRepository.searchCategoryPosts(
+            pageOptionsDto,
+            category.id
+          );
+      }
     }
 
     let nextId = null;
