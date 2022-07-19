@@ -1,6 +1,7 @@
 import { User } from "../../user/entity/user.entity";
 import { GetAllCommentDto, CommentResponseDto } from "../dto";
 import { PageInfoDto, PageResponseDto } from "../../../shared/page";
+import { GetAllRepliesDto } from "../dto/get-all-replies.dto";
 
 export interface ICommentService {
   createComment(
@@ -25,6 +26,7 @@ export interface ICommentService {
     pageOptionsDto: GetAllCommentDto,
     user: User
   ): Promise<PageResponseDto<PageInfoDto, CommentResponseDto>>;
+  findAllReplies(pageOptionsDto: GetAllRepliesDto, user: User): Promise<any>;
   update(user: User, id: number, content: string): Promise<CommentResponseDto>;
   delete(user: User, id: number): Promise<void>;
   // createReply(

@@ -12,10 +12,19 @@ import {
   ForbiddenException,
   NotFoundException,
 } from "../../shared/errors/all.exception";
-import { GetAllCommentDto, CommentResponseDto } from "./dto";
+import {
+  GetAllCommentDto,
+  GetAllRepliesDto,
+  CommentResponseDto,
+  ReplyResponseDto,
+} from "./dto";
 import { Logger } from "../../shared/utils/logger.util";
 import { HttpException } from "../../shared/errors/http.exception";
-import { PageResponseDto, PageInfoDto } from "../../shared/page";
+import {
+  PageResponseDto,
+  PageInfoDto,
+  PageInfiniteScrollInfoDto,
+} from "../../shared/page";
 
 @injectable()
 export class CommentService implements ICommentService {
@@ -89,6 +98,45 @@ export class CommentService implements ICommentService {
     return new PageResponseDto(
       pageInfoDto,
       commentArray.map((e) => new CommentResponseDto(e, user))
+    );
+  }
+
+  async findAllReplies(
+    pageOptionsDto: GetAllRepliesDto,
+    user: User
+  ): Promise<any> {
+    this._logger.trace(`[CommentService] findAllReplies start`);
+
+    // 부모댓글, 게시글 검증
+    const comment = await this._commentRepository.findById(
+      pageOptionsDto.parentId
+    );
+    if (!comment) throw new NotFoundException("not exists comment");
+
+    const isValidPost = this._postService.isValid(comment.postId);
+    if (!isValidPost) throw new NotFoundException("not exists post");
+
+    // 대댓글 조회
+    const [replyArray, totalCount] =
+      await this._commentRepository.findAllReplies(pageOptionsDto);
+
+    // 다음 대댓글 페이지 있는지 확인
+    let nextId = null;
+    if (replyArray.length === pageOptionsDto.maxResults + 1) {
+      nextId = replyArray[replyArray.length - 1].id;
+      replyArray.pop();
+    }
+
+    // 응답 DTO로 변환후 리턴
+    const pageInfoDto = new PageInfiniteScrollInfoDto(
+      totalCount,
+      replyArray.length,
+      nextId
+    );
+
+    return new PageResponseDto(
+      pageInfoDto,
+      replyArray.map((e) => new ReplyResponseDto(e, user))
     );
   }
 
