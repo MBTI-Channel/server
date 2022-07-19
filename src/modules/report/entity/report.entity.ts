@@ -5,11 +5,12 @@ import { User } from "../../user/entity/user.entity";
 
 @Entity()
 export class Report extends BaseEntity {
-  @Column()
+  @Column({ unsigned: true })
   userId: number;
 
   @Column({
     comment: "신고받은 게시글/댓글 아이디",
+    unsigned: true,
   })
   targetId: number;
 

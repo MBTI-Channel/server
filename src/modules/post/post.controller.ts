@@ -18,7 +18,7 @@ import {
   queryValidator,
 } from "../../middlewares/validator.middleware";
 import { User } from "../user/entity/user.entity";
-import { IdDto, CreatePostDto, GetAllPostDto } from "./dto";
+import { IdDto, CreatePostDto, GetAllPostDto, SearchPostDto } from "./dto";
 import { UpdatePostDto } from "./dto/update-post.dto";
 import { IPostService } from "./interfaces/IPost.service";
 
@@ -66,6 +66,23 @@ export class PostController extends BaseHttpController {
     return res.status(200).json({ id });
   }
 
+  // 게시글 검색
+  @httpGet(
+    "/search",
+    TYPES.CheckLoginStatusMiddleware,
+    queryValidator(SearchPostDto)
+  )
+  async searchPost(
+    @queryParam() query: SearchPostDto,
+    req: Request,
+    res: Response
+  ) {
+    const user = req.user as User;
+
+    const data = await this._postService.search(user, query);
+    return res.status(200).json(data);
+  }
+
   // 게시글 상세 조회
   @httpGet("/:id", TYPES.CheckLoginStatusMiddleware, paramsValidator(IdDto))
   async getDetailPost(
@@ -88,7 +105,6 @@ export class PostController extends BaseHttpController {
     res: Response
   ) {
     const user = req.user as User;
-    console.log(typeof query.startId);
     const data = await this._postService.getAll(user, query);
     return res.status(200).json(data);
   }

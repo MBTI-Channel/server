@@ -1,4 +1,5 @@
 import { GetAllPostDto } from "../dto/get-all-post.dto";
+import { SearchPostDto } from "../dto/search-post.dto";
 import { Post } from "../entity/post.entity";
 
 export interface IPostRepository {
@@ -16,4 +17,17 @@ export interface IPostRepository {
     mbti: string
   ): Promise<[Post[], number]>;
   update(id: number, payload: Partial<Post>): Promise<Post>;
+  searchInCategory(
+    pageOptionsDto: SearchPostDto,
+    categoryId: number
+  ): Promise<[Post[], number]>;
+  searchInMbtiCategory(
+    pageOptionsDto: SearchPostDto,
+    categoryId: number,
+    mbti: string
+  ): Promise<[Post[], number]>;
+  searchAll(): Promise<[Post[], number]>;
+  searchWithoutMbtiCategory(
+    pageOptionsDto: SearchPostDto
+  ): Promise<[Post[], number]>;
 }

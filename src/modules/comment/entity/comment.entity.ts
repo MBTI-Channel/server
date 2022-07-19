@@ -10,14 +10,14 @@ export class Comment extends BaseEntity {
   @ManyToOne((type) => Post, (post) => post.id)
   post: Post;
 
-  @Column()
+  @Column({ unsigned: true })
   postId: number;
 
   // Comment (*) <-> User (1)
   @ManyToOne((type) => User, (user) => user.id)
   user: User;
 
-  @Column()
+  @Column({ unsigned: true })
   userId: number;
 
   @Column({ nullable: true, comment: "태그한 댓글 아이디" })
