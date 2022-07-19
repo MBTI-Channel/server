@@ -113,7 +113,7 @@ export class PostRepository implements IPostRepository {
       .then(async () => await repository.findOne({ where: { id } }));
   }
 
-  async searchCategoryPosts(
+  async searchInCategory(
     pageOptionsDto: SearchPostDto,
     categoryId: number
   ): Promise<[Post[], number]> {
@@ -145,7 +145,7 @@ export class PostRepository implements IPostRepository {
     return [result, totalCount];
   }
 
-  async searchCategoryPostsWithMbti(
+  async searchInMbtiCategory(
     pageOptionsDto: SearchPostDto,
     categoryId: number,
     mbti: string
@@ -182,7 +182,7 @@ export class PostRepository implements IPostRepository {
     return [result, totalCount];
   }
 
-  async searchAllPostsWithGuest(
+  async searchWithoutMbtiCategory(
     pageOptionsDto: SearchPostDto
   ): Promise<[Post[], number]> {
     const repository = await this._database.getRepository(Post);
@@ -220,7 +220,7 @@ export class PostRepository implements IPostRepository {
     return [result, totalCount];
   }
 
-  async searchAllPostsWithLoggedIn(): Promise<[Post[], number]> {
+  async searchAll(): Promise<[Post[], number]> {
     const repository = await this._database.getRepository(Post);
     // 수정 필요
     return [[], 0];

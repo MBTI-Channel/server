@@ -202,7 +202,7 @@ export class PostService implements IPostService {
       if (!user) {
         // user가 없으므로 mbti 카테고리는 제외
         [postArray, totalCount] =
-          await this._postRepository.searchAllPostsWithGuest(pageOptionsDto);
+          await this._postRepository.searchWithoutMbtiCategory(pageOptionsDto);
       } else {
         // user가 있으므로 user에 맞는 mbti 게시글 포함
       }
@@ -226,17 +226,16 @@ export class PostService implements IPostService {
       );
       if (pageOptionsDto.category === CategoryName.MBTI) {
         [postArray, totalCount] =
-          await this._postRepository.searchCategoryPostsWithMbti(
+          await this._postRepository.searchInMbtiCategory(
             pageOptionsDto,
             category.id,
             user.mbti
           );
       } else {
-        [postArray, totalCount] =
-          await this._postRepository.searchCategoryPosts(
-            pageOptionsDto,
-            category.id
-          );
+        [postArray, totalCount] = await this._postRepository.searchInCategory(
+          pageOptionsDto,
+          category.id
+        );
       }
     }
 
