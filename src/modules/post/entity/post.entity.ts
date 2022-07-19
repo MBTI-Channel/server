@@ -16,10 +16,10 @@ export class Post extends BaseEntity {
   @ManyToOne((type) => User, (user) => user.id)
   user!: User;
 
-  @Column()
+  @Column({ unsigned: true })
   userId: number;
 
-  @Column({ comment: "카테고리 id" })
+  @Column({ comment: "카테고리 id", unsigned: true })
   categoryId: number;
 
   @Column({

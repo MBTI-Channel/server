@@ -6,10 +6,20 @@ import { User } from "../../user/entity/user.entity";
 
 @Entity()
 export class Notification extends BaseEntity {
-  @Column({ nullable: false, type: "int", comment: "알림을 준 유저 id" })
+  @Column({
+    nullable: false,
+    type: "int",
+    comment: "알림을 준 유저 id",
+    unsigned: true,
+  })
   targetUserId: number;
 
-  @Column({ nullable: false, type: "int", comment: "게시글, 댓글 id" })
+  @Column({
+    nullable: false,
+    type: "int",
+    comment: "게시글, 댓글 id",
+    unsigned: true,
+  })
   targetId: number;
 
   @Column({
@@ -38,7 +48,7 @@ export class Notification extends BaseEntity {
   })
   user: User;
 
-  @Column()
+  @Column({ unsigned: true })
   userId: number;
 
   static of(

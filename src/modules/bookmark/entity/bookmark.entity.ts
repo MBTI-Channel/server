@@ -12,13 +12,13 @@ export class Bookmark extends BaseEntity {
   })
   user: User;
 
-  @Column()
+  @Column({ unsigned: true })
   userId: number;
 
   // Post (1) <-> Bookmark (*)
   @ManyToOne(() => Post, (post) => post.bookmark)
   post: Post;
 
-  @Column()
+  @Column({ unsigned: true })
   postId: number;
 }

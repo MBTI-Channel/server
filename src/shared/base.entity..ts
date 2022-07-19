@@ -5,7 +5,7 @@ import {
 } from "typeorm";
 
 export abstract class BaseEntity {
-  @PrimaryGeneratedColumn({ type: "bigint" })
+  @PrimaryGeneratedColumn({ unsigned: true })
   id: number;
 
   @CreateDateColumn()

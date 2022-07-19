@@ -19,6 +19,7 @@ export class LoginLog extends BaseEntity {
 
   @Column({
     comment: "유저 id",
+    unsigned: true,
   })
   userId: number;
 
