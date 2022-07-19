@@ -87,7 +87,7 @@ export class CommentService implements ICommentService {
         `replies cannot be written to a reply with a parent id`
       );
 
-    const replyEntity = Comment.of(
+    const replyEntity = Comment.replyOf(
       post,
       user,
       content,

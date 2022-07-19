@@ -53,14 +53,7 @@ export class Comment extends BaseEntity {
   @Column({ default: false, comment: "게시글 작성자 여부" })
   isPostWriter: boolean;
 
-  static of(
-    post: Post,
-    user: User,
-    content: string,
-    isSecret: boolean,
-    parentId?: number,
-    taggedId?: number
-  ) {
+  static of(post: Post, user: User, content: string, isSecret: boolean) {
     const comment = new Comment();
     comment.post = post;
     comment.user = user;
@@ -69,9 +62,20 @@ export class Comment extends BaseEntity {
     comment.content = content;
     comment.isSecret = isSecret;
     comment.isPostWriter = post.userId === user.id ? true : false;
-    // 대댓글 필드
-    comment.parentId = parentId ?? undefined;
-    comment.taggedId = taggedId ?? undefined;
     return comment;
+  }
+
+  static replyOf(
+    post: Post,
+    user: User,
+    content: string,
+    isSecret: boolean,
+    parentId: number,
+    taggedId: number
+  ) {
+    const reply = Comment.of(post, user, content, isSecret);
+    reply.parentId = parentId ?? undefined;
+    reply.taggedId = taggedId ?? undefined;
+    return reply;
   }
 }
