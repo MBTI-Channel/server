@@ -89,6 +89,18 @@ export class CommentService implements ICommentService {
         `replies cannot be written to a reply with a parent id`
       );
 
+    //태그된 댓글 검증
+    if (taggedId) {
+      const taggedReply = await this._commentRepository.findById(taggedId);
+      if (!taggedReply || !taggedReply.isActive)
+        throw new NotFoundException(`not exists comment`);
+      //태그된 댓글이 같은 댓글군에 포함되는지 확인
+      if (taggedReply.parentId !== parentId)
+        throw new BadReqeustException(
+          `tagged comments must be in the same comment group`
+        );
+    }
+
     const replyEntity = Comment.replyOf(
       post,
       user,
