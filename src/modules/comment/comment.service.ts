@@ -40,9 +40,8 @@ export class CommentService implements ICommentService {
     content: string,
     isSecret: boolean
   ): Promise<CommentResponseDto> {
+    // 게시글 검증
     const post = await this._postRepository.findOneById(postId);
-
-    // err: 존재하지않는 || 삭제된 post
     if (!post || !post.isActive) throw new NotFoundException(`not exists post`);
 
     const commentEntity = Comment.of(post, user, content, isSecret);
@@ -81,10 +80,11 @@ export class CommentService implements ICommentService {
     // 게시글 댓글이 존재하는지, 삭제 되지 않았는지 확인
     const post = await this._postRepository.findOneById(postId);
     if (!post || !post.isActive) throw new NotFoundException(`not exists post`);
-    const comment = await this._commentRepository.findById(parentId);
-    if (!comment || !comment.isActive)
+    const parentComment = await this._commentRepository.findById(parentId);
+    if (!parentComment || !parentComment.isActive)
       throw new NotFoundException(`not exists comment`);
-    if (comment.parentId)
+    // 부모댓글이 부모댓글이 맞는지 확인
+    if (parentComment.parentId)
       throw new BadReqeustException(
         `replies cannot be written to a reply with a parent id`
       );
@@ -130,8 +130,8 @@ export class CommentService implements ICommentService {
   async findAllComments(pageOptionsDto: GetAllCommentDto, user: User) {
     this._logger.trace(`[CommentService] findAllComments start`);
 
+    // 게시글 검증
     const isValidPost = this._postService.isValid(pageOptionsDto.postId);
-    //err: 존재하지 않거나 삭제된 게시글
     if (!isValidPost) throw new NotFoundException("not exists post");
 
     const [commentArray, totalCount] =
@@ -151,17 +151,16 @@ export class CommentService implements ICommentService {
   }
 
   async update(user: User, id: number, content: string) {
+    // 댓글 검증
     const comment = await this._commentRepository.findById(id);
-
-    //err: 존재하지 않거나 삭제된 댓글
     if (!comment || !comment.isActive)
       throw new NotFoundException("not exists comment");
 
-    //err: 존재하지 않거나 삭제된 게시글
+    // 게시글 검증
     const isValidPost = await this._postService.isValid(comment.postId);
     if (!isValidPost) throw new NotFoundException("not exists post");
 
-    // err: 권한 없음
+    // 권한 확인 
     if (comment.userId !== user.id)
       throw new ForbiddenException("authorization error");
 
@@ -173,17 +172,16 @@ export class CommentService implements ICommentService {
 
   async delete(user: User, id: number): Promise<void> {
     this._logger.trace(`[CommentService] delete start`);
+    // 댓글 검증
     const comment = await this._commentRepository.findById(id);
-
     this._logger.trace(`[CommentService] check exists comment id ${id}`);
-    //err: 존재하지 않는 댓글 || 비활성화된 댓글
     if (!comment || !comment.isActive)
       throw new NotFoundException("not exists comment");
 
+    // 권한 확인
     this._logger.trace(
       `[CommentService] check user authorization u: ${id} c: ${comment.id}`
     );
-    //err: 권한 없음
     if (comment.userId !== user.id)
       throw new ForbiddenException("authorization error");
 
