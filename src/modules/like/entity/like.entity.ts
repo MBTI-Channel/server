@@ -7,6 +7,7 @@ import { User } from "../../user/entity/user.entity";
 export class Like extends BaseEntity {
   @Column({
     comment: "추천한 게시글/댓글 id",
+    unsigned: true,
   })
   targetId: number;
 

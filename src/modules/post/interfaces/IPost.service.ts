@@ -5,6 +5,7 @@ import {
 import { User } from "../../user/entity/user.entity";
 import { GetAllPostDto } from "../dto/get-all-post.dto";
 import { PostResponseDto } from "../dto/post-response.dto";
+import { SearchPostDto } from "../dto/search-post.dto";
 
 export interface IPostService {
   create(
@@ -29,4 +30,8 @@ export interface IPostService {
     content: string,
     isSecret: boolean
   ): Promise<PostResponseDto>;
+  search(
+    user: User,
+    pageOptionsDto: SearchPostDto
+  ): Promise<PageResponseDto<PageInfiniteScrollInfoDto, PostResponseDto>>;
 }

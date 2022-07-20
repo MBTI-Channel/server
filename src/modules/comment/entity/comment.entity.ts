@@ -10,21 +10,21 @@ export class Comment extends BaseEntity {
   @ManyToOne((type) => Post, (post) => post.id)
   post: Post;
 
-  @Column()
+  @Column({ unsigned: true })
   postId: number;
 
   // Comment (*) <-> User (1)
   @ManyToOne((type) => User, (user) => user.id)
   user: User;
 
-  @Column()
+  @Column({ unsigned: true })
   userId: number;
 
   @Column({ nullable: true, comment: "태그한 댓글 아이디" })
-  taggedId: number;
+  taggedId?: number;
 
   @Column({ nullable: true, comment: "부모 댓글 아이디" })
-  parentId: number;
+  parentId?: number;
 
   @Column({ nullable: true, length: 10, comment: "작성자 닉네임" })
   userNickname?: string;
@@ -63,5 +63,19 @@ export class Comment extends BaseEntity {
     comment.isSecret = isSecret;
     comment.isPostWriter = post.userId === user.id ? true : false;
     return comment;
+  }
+
+  static replyOf(
+    post: Post,
+    user: User,
+    content: string,
+    isSecret: boolean,
+    parentId: number,
+    taggedId: number
+  ) {
+    const reply = Comment.of(post, user, content, isSecret);
+    reply.parentId = parentId ?? undefined;
+    reply.taggedId = taggedId ?? undefined;
+    return reply;
   }
 }

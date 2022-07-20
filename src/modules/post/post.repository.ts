@@ -1,9 +1,11 @@
 import { inject, injectable } from "inversify";
+import { In, Like } from "typeorm";
 import { QueryDeepPartialEntity } from "typeorm/query-builder/QueryPartialEntity";
 import { TYPES } from "../../core/type.core";
 import { IDatabaseService } from "../../shared/database/interfaces/IDatabase.service";
-import { PostOrder } from "../../shared/enum.shared";
+import { Category } from "../category/entity/category.entity";
 import { GetAllPostDto } from "./dto/get-all-post.dto";
+import { SearchPostDto } from "./dto/search-post.dto";
 import { Post } from "./entity/post.entity";
 import { IPostRepository } from "./interfaces/IPost.repository";
 
@@ -109,5 +111,118 @@ export class PostRepository implements IPostRepository {
     return await repository
       .update(id, payload as QueryDeepPartialEntity<Post>)
       .then(async () => await repository.findOne({ where: { id } }));
+  }
+
+  async searchInCategory(
+    pageOptionsDto: SearchPostDto,
+    categoryId: number
+  ): Promise<[Post[], number]> {
+    const repository = await this._database.getRepository(Post);
+    const [result, totalCount] = await repository.findAndCount({
+      select: [
+        "id",
+        "categoryId",
+        "type",
+        "isActive",
+        "userId",
+        "userNickname",
+        "userMbti",
+        "isSecret",
+        "title",
+        "content",
+        "viewCount",
+        "commentCount",
+        "likesCount",
+        "reportCount",
+        "createdAt",
+        "updatedAt",
+      ],
+      where: { categoryId, title: Like(`%${pageOptionsDto.searchWord}%`) },
+      take: pageOptionsDto.maxResults + 1,
+      skip: pageOptionsDto.skip,
+      order: { [pageOptionsDto.order]: "DESC" },
+    });
+    return [result, totalCount];
+  }
+
+  async searchInMbtiCategory(
+    pageOptionsDto: SearchPostDto,
+    categoryId: number,
+    mbti: string
+  ): Promise<[Post[], number]> {
+    const repository = await this._database.getRepository(Post);
+    const [result, totalCount] = await repository.findAndCount({
+      select: [
+        "id",
+        "categoryId",
+        "type",
+        "isActive",
+        "userId",
+        "userNickname",
+        "userMbti",
+        "isSecret",
+        "title",
+        "content",
+        "viewCount",
+        "commentCount",
+        "likesCount",
+        "reportCount",
+        "createdAt",
+        "updatedAt",
+      ],
+      where: {
+        categoryId,
+        userMbti: mbti,
+        title: Like(`%${pageOptionsDto.searchWord}%`),
+      },
+      take: pageOptionsDto.maxResults + 1,
+      skip: pageOptionsDto.skip,
+      order: { [pageOptionsDto.order]: "DESC" },
+    });
+    return [result, totalCount];
+  }
+
+  async searchWithoutMbtiCategory(
+    pageOptionsDto: SearchPostDto
+  ): Promise<[Post[], number]> {
+    const repository = await this._database.getRepository(Post);
+    const [result, totalCount] = await repository.findAndCount({
+      select: [
+        "id",
+        "categoryId",
+        "type",
+        "isActive",
+        "userId",
+        "userNickname",
+        "userMbti",
+        "isSecret",
+        "title",
+        "content",
+        "viewCount",
+        "commentCount",
+        "likesCount",
+        "reportCount",
+        "createdAt",
+        "updatedAt",
+      ],
+      where: {
+        categoryId: In([
+          Category.typeTo("game"),
+          Category.typeTo("trip"),
+          Category.typeTo("love"),
+        ]),
+        title: Like(`%${pageOptionsDto.searchWord}%`),
+      },
+      take: pageOptionsDto.maxResults + 1,
+      skip: pageOptionsDto.skip,
+      order: { [pageOptionsDto.order]: "DESC" },
+    });
+    return [result, totalCount];
+  }
+
+  async searchAll(): Promise<[Post[], number]> {
+    const repository = await this._database.getRepository(Post);
+    // 수정 필요
+    return [[], 0];
   }
 }

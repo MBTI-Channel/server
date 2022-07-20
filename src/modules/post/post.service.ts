@@ -10,6 +10,7 @@ import { Logger } from "../../shared/utils/logger.util";
 import { ICategoryRepository } from "../category/interfaces/ICategory.repository";
 import { User } from "../user/entity/user.entity";
 import { GetAllPostDto, PostResponseDto } from "./dto";
+import { SearchPostDto } from "./dto/search-post.dto";
 import { Post } from "./entity/post.entity";
 import { IPostRepository } from "./interfaces/IPost.repository";
 import { IPostService } from "./interfaces/IPost.service";
@@ -43,7 +44,14 @@ export class PostService implements IPostService {
       postType = Post.typeTo(PostType.MBTI);
     }
 
-    const postEntity = Post.of(user, category, isSecret, title, content);
+    const postEntity = Post.of(
+      user,
+      category,
+      isSecret,
+      title,
+      content,
+      postType
+    );
     const createdPost = await this._postRepository.create(postEntity);
     return new PostResponseDto(createdPost, user);
   }
@@ -177,5 +185,76 @@ export class PostService implements IPostService {
     });
 
     return new PostResponseDto(updatedPost, user);
+  }
+
+  public async search(
+    user: User,
+    pageOptionsDto: SearchPostDto
+  ): Promise<PageResponseDto<PageInfiniteScrollInfoDto, PostResponseDto>> {
+    this._logger.trace(`[PostService] search start`);
+
+    let postArray: Post[] = [];
+    let totalCount = 0;
+
+    if (!pageOptionsDto.category) {
+      // category가 없을 경우 게시글 전체 검색
+      this._logger.trace(`[PostService] search all posts`);
+      if (!user) {
+        // user가 없으므로 mbti 카테고리는 제외
+        [postArray, totalCount] =
+          await this._postRepository.searchWithoutMbtiCategory(pageOptionsDto);
+      } else {
+        // user가 있으므로 user에 맞는 mbti 게시글 포함
+      }
+    } else {
+      // 카테고리가 있을 경우 유효성 검사 후 카테고리에 따라 검색
+      this._logger.trace(
+        `[PostService] check category name ${pageOptionsDto.category}`
+      );
+      const category = await this._categoryRepository.findOneByName(
+        pageOptionsDto.category
+      );
+      if (!category || !category.isActive) {
+        throw new NotFoundException("not exists category");
+      }
+
+      if (!user && pageOptionsDto.category === CategoryName.MBTI) {
+        throw new ForbiddenException("not authorizatie");
+      }
+      this._logger.trace(
+        `[PostService] search posts in category: ${pageOptionsDto.category}`
+      );
+      if (pageOptionsDto.category === CategoryName.MBTI) {
+        [postArray, totalCount] =
+          await this._postRepository.searchInMbtiCategory(
+            pageOptionsDto,
+            category.id,
+            user.mbti
+          );
+      } else {
+        [postArray, totalCount] = await this._postRepository.searchInCategory(
+          pageOptionsDto,
+          category.id
+        );
+      }
+    }
+
+    let nextId = null;
+    if (postArray.length === pageOptionsDto.maxResults + 1) {
+      nextId = postArray[postArray.length - 1].id;
+      postArray.pop();
+    }
+    let itemsPerPage = postArray.length;
+
+    const pageInfoDto = new PageInfiniteScrollInfoDto(
+      totalCount, // 결과에 맞는 개수
+      itemsPerPage,
+      nextId
+    );
+
+    return new PageResponseDto(
+      pageInfoDto,
+      postArray.map((e) => new PostResponseDto(e, user))
+    );
   }
 }

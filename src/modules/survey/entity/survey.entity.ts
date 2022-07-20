@@ -9,14 +9,14 @@ export class Survey extends BaseEntity {
   @ManyToOne((type) => Post, (post) => post.id)
   post: Post;
 
-  @Column()
+  @Column({ unsigned: true })
   postId: number;
 
   // Survey (*) <-> User(1)
   @ManyToOne((type) => User, (user) => user.id)
   user: User;
 
-  @Column()
+  @Column({ unsigned: true })
   userId: number;
 
   @Column({ length: 4, comment: "참여한 유저 MBTI" })

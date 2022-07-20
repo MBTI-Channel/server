@@ -9,6 +9,6 @@ export class Trend extends BaseEntity {
   @JoinColumn()
   post: Post;
 
-  @Column()
+  @Column({ unsigned: true })
   postId: number;
 }

@@ -19,6 +19,7 @@ import {
 import { User } from "../user/entity/user.entity";
 import {
   CreateCommentDto,
+  CreateReplyDto,
   GetAllCommentDto,
   GetAllRepliesDto,
   UpdateCommentDto,
@@ -32,6 +33,7 @@ export class CommentController {
   @inject(TYPES.ICommentService)
   private readonly _commentService: ICommentService;
 
+  // 댓글 등록
   @httpPost(
     "/",
     TYPES.ValidateAccessTokenMiddleware,
@@ -55,15 +57,33 @@ export class CommentController {
     return res.status(201).json(data);
   }
 
-  // @httpPost(
-  //   "/",
-  //   TYPES.ValidateAccessTokenMiddleware,
-  //   bodyValidator(CreateCommentDto)
-  // )
-  // async createReply(){
+  // 대댓글 등록
+  @httpPost(
+    "/replies",
+    TYPES.ValidateAccessTokenMiddleware,
+    bodyValidator(CreateReplyDto)
+  )
+  async createReply(
+    @requestBody() body: CreateReplyDto,
+    req: Request,
+    res: Response
+  ) {
+    const user = req.user as User;
+    const { postId, content, isSecret, parentId, taggedId } = body;
 
-  // }
+    const data = await this._commentService.createReply(
+      user,
+      postId,
+      parentId,
+      taggedId,
+      content,
+      isSecret
+    );
 
+    return res.status(201).json(data);
+  }
+
+  // 댓글 리스트 조회
   @httpGet(
     "/",
     queryValidator(GetAllCommentDto),
@@ -95,6 +115,7 @@ export class CommentController {
     return res.status(200).json(data);
   }
 
+  // 수정
   @httpPatch(
     "/:id",
     TYPES.ValidateAccessTokenMiddleware,
@@ -114,6 +135,7 @@ export class CommentController {
     return res.status(200).json(data);
   }
 
+  // 삭제
   @httpDelete(
     "/:id",
     TYPES.ValidateAccessTokenMiddleware,

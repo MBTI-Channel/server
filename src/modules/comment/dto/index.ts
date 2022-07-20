@@ -1,4 +1,5 @@
-export { CreateCommentDto } from "./create-comment-dto";
+export { CreateCommentDto } from "./create-comment.dto";
+export { CreateReplyDto } from "./create-reply.dto";
 export { DeleteCommentDto } from "./delete-comment.dto";
 export { GetAllCommentDto } from "./get-all-comment.dto";
 export { GetAllRepliesDto } from "./get-all-replies.dto";
