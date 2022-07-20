@@ -78,10 +78,12 @@ export class CommentService implements ICommentService {
     content: string,
     isSecret: boolean
   ): Promise<ReplyResponseDto> {
+    // 게시글 댓글이 존재하는지, 삭제 되지 않았는지 확인
     const post = await this._postRepository.findOneById(postId);
     if (!post || !post.isActive) throw new NotFoundException(`not exists post`);
     const comment = await this._commentRepository.findById(parentId);
-    if (!comment) throw new NotFoundException(`not exists comment`);
+    if (!comment || !comment.isActive)
+      throw new NotFoundException(`not exists comment`);
     if (comment.parentId)
       throw new BadReqeustException(
         `replies cannot be written to a reply with a parent id`
