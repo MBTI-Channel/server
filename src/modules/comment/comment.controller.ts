@@ -21,6 +21,7 @@ import {
   CreateCommentDto,
   CreateReplyDto,
   GetAllCommentDto,
+  GetAllRepliesDto,
   UpdateCommentDto,
   DeleteCommentDto,
   IdDto,
@@ -95,6 +96,22 @@ export class CommentController {
   ) {
     const user = req.user as User;
     const data = await this._commentService.findAllComments(query, user);
+    return res.status(200).json(data);
+  }
+
+  // 대댓글 조회
+  @httpGet(
+    "/replies",
+    queryValidator(GetAllRepliesDto),
+    TYPES.CheckLoginStatusMiddleware
+  )
+  async findAllReplies(
+    @queryParam() query: GetAllRepliesDto,
+    req: Request,
+    res: Response
+  ) {
+    const user = req.user as User;
+    const data = await this._commentService.findAllReplies(query, user);
     return res.status(200).json(data);
   }
 

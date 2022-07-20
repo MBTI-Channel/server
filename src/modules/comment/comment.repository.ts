@@ -5,7 +5,7 @@ import { IDatabaseService } from "../../shared/database/interfaces/IDatabase.ser
 import { Comment } from "./entity/comment.entity";
 import { ICommentRepository } from "./interfaces/IComment.repository";
 import { Logger } from "../../shared/utils/logger.util";
-import { GetAllCommentDto } from "./dto/get-all-comment.dto";
+import { GetAllCommentDto, GetAllRepliesDto } from "./dto";
 
 @injectable()
 export class CommentRepository implements ICommentRepository {
@@ -53,6 +53,36 @@ export class CommentRepository implements ICommentRepository {
       .take(pageOptionsDto.maxResults)
       .skip(pageOptionsDto.skip)
       .orderBy(`comment.${pageOptionsDto.order}`, pageOptionsDto.orderOption)
+      .getManyAndCount();
+  }
+
+  async findAllReplies(
+    pageOptionsDto: GetAllRepliesDto
+  ): Promise<[Comment[], number]> {
+    const { parentId, startId, maxResults } = pageOptionsDto;
+    const repository = await this._database.getRepository(Comment);
+    return await repository
+      .createQueryBuilder("comment")
+      .select([
+        "comment.id",
+        "comment.userId",
+        "comment.taggedId",
+        "comment.userNickname",
+        "comment.userMbti",
+        "comment.isSecret",
+        "comment.content",
+        "comment.likesCount",
+        "comment.isPostWriter",
+        "comment.isActive",
+        "comment.createdAt",
+        "comment.updatedAt",
+        "post.userId",
+      ])
+      .where("comment.id >= :startId", { startId })
+      .andWhere("comment.parent_id = :parentId", { parentId })
+      .innerJoin("comment.post", "post", "post.id = comment.postId")
+      .take(maxResults + 1) // nextId를 위한 +1
+      .orderBy(`comment.createdAt`, "ASC")
       .getManyAndCount();
   }
 
