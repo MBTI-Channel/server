@@ -1,5 +1,63 @@
 "201":
-  description: 대댓글 등록 완료
+  description: 대댓글 등록 성공. isSecret이 true라면 userNickname = ""
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          isMy:
+            type: boolean
+            example: true
+          isPostWriter:
+            type: boolean
+            example: false
+          id:
+            type: string
+            example: 100
+          userMbti:
+            type: string
+            example: INFP
+          userNickname:
+            type: string
+            example: 에어컨대전
+          isSecret:
+            type: boolean
+            example: false
+          content:
+            type: string
+            example: 저는 김치찌개요!!
+          isActive:
+            type: boolean
+            example: true
+          replyCount:
+            type: number
+            example: 0
+          likesCount:
+            type: number
+            example: 0
+          createdAt:
+            type: string
+            example: "2022-07-14T04:16:42.150Z"
+          updatedAt:
+            type: string
+            example: "2022-07-14T04:16:42.150Z"
+          parentId:
+            type: integer
+            example: 23
+          taggedId:
+            type: integer
+            example: 12
+
+"400":
+  description: 대댓글에 대댓글 작성 시도함 or 태그된 댓글이 같은 댓글그룹이 아님
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          message:
+            type: string
+            example: replies cannot be written to a reply with a parent id || tagged comments must be in the same comment group
 
 "401":
   description: access token 유효하지 않음

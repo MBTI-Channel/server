@@ -7,6 +7,7 @@ export interface ICommentRepository {
   findAllComments(
     pageOptionsDto: GetAllCommentDto
   ): Promise<[Comment[], number]>;
-  update(id: number, playload: Partial<Comment>): Promise<Comment>;
+  update(id: number, content: Partial<Comment>): Promise<Comment>;
+  increaseReplyCount(id: number): Promise<boolean>;
   remove(id: number): Promise<void>;
 }

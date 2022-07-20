@@ -53,8 +53,8 @@ export class UserController extends BaseHttpController {
     TYPES.SocialSignUpMiddleware
   )
   async oauthLogin(req: Request, res: Response) {
-    const { id, providerId } = req.user as User;
-    const data = await this._userService.login(id, providerId);
+    const user = req.user as User;
+    const data = await this._userService.login(user.id, user.providerId);
 
     res.cookie("Refresh", data.refreshToken, {
       httpOnly: true,
@@ -64,8 +64,7 @@ export class UserController extends BaseHttpController {
 
     const userAgent = req.headers["user-agent"] ?? "abnormal";
     const ip = req.ip;
-    const user = req.user as User;
-    this._loginLogService.record(user, userAgent, ip);
+    await this._loginLogService.record(user, userAgent, ip);
     return res.status(201).json(data);
   }
 
