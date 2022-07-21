@@ -12,5 +12,5 @@ export interface IApiAccountService {
   /**
    * `accessToken`을 만료시켜 api 서비스 로그아웃
    */
-  expiresToken?(accessToken: string): Promise<void>;
+  expiresToken(accessToken: string): Promise<void>;
 }
