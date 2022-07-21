@@ -1,6 +1,6 @@
 import { IAccountDto } from "./IAccount.dto";
 
-export interface IApiService {
+export interface IApiAccountService {
   /**
    * `authCode`로 api 인증 서비스에서 `accessToken`을 받아온다
    */
@@ -12,5 +12,5 @@ export interface IApiService {
   /**
    * `accessToken`을 만료시켜 api 서비스 로그아웃
    */
-  expiresToken(accessToken: string): Promise<void>;
+  expiresToken?(accessToken: string): Promise<void>;
 }
