@@ -52,4 +52,8 @@ export default {
     redisHost: isValidEnvVar("REDIS_HOST"),
     redisPort: isValidEnvVar("REDIS_PORT"),
   },
+  discord: {
+    askWebhookUrl: isValidEnvVar("DISCORD_ASK_WEBHOOK_URL"),
+    errorWebhookUrl: isValidEnvVar("DISCORD_ERROR_WEBHOOK_URL"),
+  },
 };
