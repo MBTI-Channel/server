@@ -34,6 +34,7 @@ export const TYPES = {
   ValidateReissueTokenMiddleware: Symbol.for("ValidateReissueTokenMiddleware"),
   CheckLoginStatusMiddleware: Symbol.for("CheckLoginStatusMiddleware"),
   /* shared */
+  IApiWebhookService: Symbol.for("IApiWebhookService"),
   NaverApiService: Symbol.for("NaverOauthService"),
   KakaoApiService: Symbol.for("KakaoOauthService"),
   IOauthService: Symbol.for("IOauthService"),

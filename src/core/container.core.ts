@@ -53,6 +53,7 @@ import { JwtUtil } from "../shared/utils/jwt.util";
 import { OauthService } from "../shared/oauth/oauth.service";
 import { KakaoApiService } from "../shared/api/kakao-api.service";
 import { NaverApiService } from "../shared/api/naver-api.service";
+import { DiscordApiService } from "../shared/api/discord-api.service";
 
 const container = new Container();
 
@@ -112,6 +113,7 @@ container.bind(TYPES.Logger).to(Logger);
 container.bind(TYPES.JwtUtil).to(JwtUtil);
 
 /* shared */
+container.bind(TYPES.IApiWebhookService).to(DiscordApiService);
 container.bind(TYPES.NaverApiService).to(NaverApiService);
 container.bind(TYPES.KakaoApiService).to(KakaoApiService);
 container.bind(TYPES.IOauthService).to(OauthService);
