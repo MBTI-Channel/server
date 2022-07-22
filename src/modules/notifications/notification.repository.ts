@@ -28,7 +28,6 @@ export class NotificationtRepository implements INotificationRepository {
     pageOptionsDto: GetAllNotificationsDto
   ): Promise<[Notification[], number]> {
     const repository = await this._database.getRepository(Notification);
-    console.log(pageOptionsDto);
     const queryBuilder = repository
       .createQueryBuilder("notification")
       .where("notification.userId = :userId", { userId })
