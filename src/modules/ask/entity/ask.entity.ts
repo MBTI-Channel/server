@@ -22,9 +22,27 @@ export class Ask extends BaseEntity {
   @Column({ type: "text", comment: "문의 내용" })
   content: string;
 
-  @Column({ type: "text", comment: "문의 사진" })
+  @Column({ type: "text", nullable: true, comment: "문의 사진" })
   imageUrl: string;
 
-  @Column({ type: "text", comment: "답변 내용" })
+  @Column({ type: "text", nullable: true, comment: "답변 내용" })
   answer: string;
+
+  static of(
+    user: User,
+    title: string,
+    content: string,
+    email: string,
+    imageUrl: string
+  ) {
+    const ask = new Ask();
+    ask.user = user;
+    ask.userId = user.id;
+    ask.title = title;
+    ask.content = content;
+    ask.email = email ?? undefined;
+    ask.imageUrl = imageUrl ?? undefined;
+
+    return ask;
+  }
 }

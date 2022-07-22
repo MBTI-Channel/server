@@ -25,6 +25,9 @@ export const TYPES = {
   /* login-log */
   ILoginLogService: Symbol.for("ILoginLogService"),
   ILoginLogRepository: Symbol.for("ILoginLogRepository"),
+  /* ask */
+  IAskService: Symbol.for("IAskService"),
+  IAskRepository: Symbol.for("IAskRepository"),
   /* middleware */
   GetProviderUserByOauthMiddleware: Symbol.for(
     "GetProviderUserByOauthMiddleware"

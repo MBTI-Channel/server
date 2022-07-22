@@ -36,7 +36,7 @@ export class DiscordApiService implements IApiWebhookService {
             fields: [
               {
                 name: "Email",
-                value: email,
+                value: email ?? "no email",
                 inline: true,
               },
               {
