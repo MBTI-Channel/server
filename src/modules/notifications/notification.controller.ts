@@ -10,7 +10,7 @@ import { TYPES } from "../../core/type.core";
 import { INotificationService } from "./interfaces/INotification.service";
 import { User } from "../user/entity/user.entity";
 import { paramsValidator } from "../../middlewares/validator.middleware";
-import { ReadOneDto } from "./dto/read-one.dto";
+import { ReadOneDto } from "./dto";
 
 @controller("/notifications")
 export class NotificationController {
