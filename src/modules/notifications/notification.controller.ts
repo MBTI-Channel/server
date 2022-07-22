@@ -4,13 +4,17 @@ import {
   controller,
   httpGet,
   httpPatch,
+  queryParam,
   requestParam,
 } from "inversify-express-utils";
 import { TYPES } from "../../core/type.core";
 import { INotificationService } from "./interfaces/INotification.service";
 import { User } from "../user/entity/user.entity";
-import { paramsValidator } from "../../middlewares/validator.middleware";
-import { ReadOneDto } from "./dto";
+import {
+  paramsValidator,
+  queryValidator,
+} from "../../middlewares/validator.middleware";
+import { ReadOneDto, GetAllNotificationsDto } from "./dto";
 
 @controller("/notifications")
 export class NotificationController {
@@ -44,9 +48,18 @@ export class NotificationController {
   }
 
   // 알림 전체 보기
-  @httpGet("/", TYPES.ValidateAccessTokenMiddleware)
-  async getAll(req: Request, res: Response) {
+  @httpGet(
+    "/",
+    TYPES.ValidateAccessTokenMiddleware,
+    queryValidator(GetAllNotificationsDto)
+  )
+  async getAll(
+    @queryParam() query: GetAllNotificationsDto,
+    req: Request,
+    res: Response
+  ) {
     const user = req.user as User;
-    return res.status(200).json();
+    const data = await this._notificationService.findAll(user, query);
+    return res.status(200).json(data);
   }
 }
