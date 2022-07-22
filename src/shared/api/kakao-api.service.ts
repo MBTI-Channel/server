@@ -2,7 +2,7 @@ import axios from "axios";
 import { plainToInstance } from "class-transformer";
 import { inject, injectable } from "inversify";
 import { TYPES } from "../../core/type.core";
-import { IApiService } from "./interfaces/IApi.service";
+import { IApiAccountService } from "./interfaces/IApi-account.service";
 import { Logger } from "../../shared/utils/logger.util";
 import { KaKaoAccountDto } from "./dto/kakao-account.dto";
 import config from "../../config";
@@ -10,7 +10,7 @@ import config from "../../config";
 const { kakao } = config;
 
 @injectable()
-export class KakaoApiService implements IApiService {
+export class KakaoApiService implements IApiAccountService {
   constructor(@inject(TYPES.Logger) private readonly _logger: Logger) {}
 
   async getAccessToken(authCode: string): Promise<string | null> {

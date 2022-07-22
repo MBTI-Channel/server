@@ -7,6 +7,7 @@ import { Notification } from "../../notifications/entity/notification.entity";
 import { Post } from "../../post/entity/post.entity";
 import { Report } from "../../report/entity/report.entity";
 import { Survey } from "../../survey/entity/survey.entity";
+import { Ask } from "../../ask/entity/ask.entity";
 import { UserBase } from "./userbase";
 import { Provider } from "../../../shared/type.shared";
 import config from "../../../config";
@@ -70,7 +71,7 @@ export class User extends UserBase {
   loginLogId: LoginLog[];
 
   // User (1) <-> Notification(*)
-  @OneToMany(() => Notification, (notification: any) => notification.user, {
+  @OneToMany(() => Notification, (notification) => notification.user, {
     cascade: true,
   })
   notificationId: Notification[];
@@ -86,8 +87,12 @@ export class User extends UserBase {
   postId!: Post[];
 
   // User (1) <-> Comment(*)
-  @OneToMany(() => Comment, (comment: any) => comment.user, { cascade: true })
+  @OneToMany(() => Comment, (comment) => comment.user, { cascade: true })
   commentId: Comment[];
+
+  // User (1) <-> Ask(*)
+  @OneToMany(() => Ask, (ask) => ask.user, { cascade: true })
+  askId: Ask[];
 
   static of(
     provider: Provider,
