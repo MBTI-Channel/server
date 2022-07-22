@@ -46,6 +46,11 @@ import { ILoginLogService } from "../modules/login-log/interfaces/ILogin-log.ser
 import { LoginLogService } from "../modules/login-log/login-log.service";
 import { ILoginLogRepository } from "../modules/login-log/interfaces/ILogin-log.repository";
 import { LoginLogRepository } from "../modules/login-log/login-log.repository";
+/* ask import */
+import { IAskService } from "../modules/ask/interfaces/IAsk.service";
+import { AskService } from "../modules/ask/ask.service";
+import { IAskRepository } from "../modules/ask/interfaces/IAsk.repository";
+import { AskRepository } from "../modules/ask/ask.repository";
 /* util import */
 import { Logger } from "../shared/utils/logger.util";
 import { JwtUtil } from "../shared/utils/jwt.util";
@@ -107,6 +112,10 @@ container.bind<ILoginLogService>(TYPES.ILoginLogService).to(LoginLogService);
 container
   .bind<ILoginLogRepository>(TYPES.ILoginLogRepository)
   .to(LoginLogRepository);
+
+/* ask */
+container.bind<IAskService>(TYPES.IAskService).to(AskService);
+container.bind<IAskRepository>(TYPES.IAskRepository).to(AskRepository);
 
 /* utils */
 container.bind(TYPES.Logger).to(Logger);
