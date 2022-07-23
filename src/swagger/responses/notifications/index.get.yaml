@@ -1,0 +1,48 @@
+"200":
+  description: 알림 리스트 조회 성공
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          pageInfo:
+            type: object
+            properties:
+              totalCounts:
+                type: integer
+                example: 20
+              itemsPerPage:
+                type: integer
+                example: 30
+              nextId:
+                type: integer
+                example: 235
+          items:
+            type: array
+            items:
+              type: object
+              properties:
+                id:
+                  type: integer
+                  example: 1
+                targetUserId:
+                  type: integer
+                  example: 5
+                targetId:
+                  type: integer
+                  example: 124
+                type:
+                  type: string
+                  example: comment || reply || likes || trend || notice
+                title:
+                  type: string
+                  example: 냥맨님이 내 글에 댓글을 남겼어요.
+                url:
+                  type: string
+                  example: 수정 필요
+                createdAt:
+                  type: string
+                  example: 2022-07-22T12:30:55.590Z
+                readAt:
+                  type: string
+                  example: null

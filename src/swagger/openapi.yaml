@@ -101,6 +101,8 @@ paths:
     $ref: "./paths/comments/replies.yaml"
 
   # notification
+  /notifications:
+    $ref: "./paths/notifications/index.yaml"
   /notifications/{id}:
     parameters:
       - in: path
