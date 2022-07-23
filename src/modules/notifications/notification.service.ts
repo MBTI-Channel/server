@@ -12,6 +12,8 @@ import {
   ForbiddenException,
   NotFoundException,
 } from "../../shared/errors/all.exception";
+import { GetAllNotificationsDto, NotificationResponseDto } from "./dto";
+import { PageInfiniteScrollInfoDto, PageResponseDto } from "../../shared/page";
 
 @injectable()
 export class NotificationService implements INotificationService {
@@ -52,6 +54,36 @@ export class NotificationService implements INotificationService {
 
     this._logger.trace(`[NotificationService] create notification`);
     await this._notificationRepository.create(notification);
+  }
+
+  // user의 알림 리스트를 조회한다.
+  async findAll(user: User, pageOptionsDto: GetAllNotificationsDto) {
+    this._logger.trace(`[NotificationService] findAll start`);
+
+    const [notificationArray, totalCount] =
+      await this._notificationRepository.findAllByUserId(
+        user.id,
+        pageOptionsDto
+      );
+
+    // 다음 알림 페이지 있는지 확인
+    let nextId = null;
+    if (notificationArray.length === pageOptionsDto.maxResults + 1) {
+      nextId = notificationArray[notificationArray.length - 1].id;
+      notificationArray.pop();
+    }
+
+    // 응답 DTO로 변환후 리턴
+    const pageInfoDto = new PageInfiniteScrollInfoDto(
+      totalCount,
+      notificationArray.length,
+      nextId
+    );
+
+    return new PageResponseDto(
+      pageInfoDto,
+      notificationArray.map((e) => new NotificationResponseDto(e))
+    );
   }
 
   async readOne(user: User, id: number): Promise<void> {
