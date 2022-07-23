@@ -23,5 +23,5 @@ export class GetAllNotificationsDto {
     if (value === "false") return false;
     return value;
   })
-  read: boolean = false;
+  all: boolean = false;
 }

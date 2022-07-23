@@ -37,7 +37,7 @@ export class NotificationtRepository implements INotificationRepository {
       .take(pageOptionsDto.maxResults + 1) // nextId를 위한 +1
       .orderBy(`notification.createdAt`, "ASC");
 
-    if (pageOptionsDto.read)
+    if (pageOptionsDto.all)
       queryBuilder.andWhere("notification.readAt IS NULL");
 
     return queryBuilder.getManyAndCount();
