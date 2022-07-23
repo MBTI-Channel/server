@@ -25,7 +25,7 @@ export class NotificationController {
 
   // 알림 한 개 읽음 처리
   @httpPatch(
-    "/:id",
+    "/:id/readAt",
     TYPES.ValidateAccessTokenMiddleware,
     paramsValidator(ReadOneDto)
   )

@@ -103,7 +103,7 @@ paths:
   # notification
   /notifications:
     $ref: "./paths/notifications/index.yaml"
-  /notifications/{id}:
+  /notifications/{id}/readAt:
     parameters:
       - in: path
         name: id
