@@ -51,6 +51,11 @@ import { IAskService } from "../modules/ask/interfaces/IAsk.service";
 import { AskService } from "../modules/ask/ask.service";
 import { IAskRepository } from "../modules/ask/interfaces/IAsk.repository";
 import { AskRepository } from "../modules/ask/ask.repository";
+/* bookmark import */
+import { IBookmarkService } from "../modules/bookmark/interfaces/IBookmark.service";
+import { BookmarkService } from "../modules/bookmark/bookmark.service";
+import { IBookmarkRepository } from "../modules/bookmark/interfaces/IBookmark.repository";
+import { BookmarkRepository } from "../modules/bookmark/bookmark.repository";
 /* util import */
 import { Logger } from "../shared/utils/logger.util";
 import { JwtUtil } from "../shared/utils/jwt.util";
@@ -116,6 +121,12 @@ container
 /* ask */
 container.bind<IAskService>(TYPES.IAskService).to(AskService);
 container.bind<IAskRepository>(TYPES.IAskRepository).to(AskRepository);
+
+/* bookmark */
+container.bind<IBookmarkService>(TYPES.IBookmarkService).to(BookmarkService);
+container
+  .bind<IBookmarkRepository>(TYPES.IBookmarkRepository)
+  .to(BookmarkRepository);
 
 /* utils */
 container.bind(TYPES.Logger).to(Logger);
