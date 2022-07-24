@@ -8,4 +8,5 @@ export interface IAuthService {
     nickname: string,
     mbti: string
   ): Promise<void>;
+  hasRefreshAuth(key: string, refreshToken: string): Promise<boolean>;
 }
