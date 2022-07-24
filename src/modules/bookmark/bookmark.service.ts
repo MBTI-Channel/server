@@ -53,7 +53,7 @@ export class BookmarkService implements IBookmarkService {
       bookmarkEntity
     );
 
-    return new BookmarkResponseDto(bookmark);
+    return new BookmarkResponseDto(bookmark, post);
   }
 
   async delete(user: User, id: number): Promise<void> {
