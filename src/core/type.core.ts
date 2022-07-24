@@ -28,6 +28,9 @@ export const TYPES = {
   /* ask */
   IAskService: Symbol.for("IAskService"),
   IAskRepository: Symbol.for("IAskRepository"),
+  /* bookmark */
+  IBookmarkService: Symbol.for("IBookmarkService"),
+  IBookmarkRepository: Symbol.for("IBookmarkRepository"),
   /* middleware */
   GetProviderUserByOauthMiddleware: Symbol.for(
     "GetProviderUserByOauthMiddleware"

@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
 import { inject } from "inversify";
 import {
-  BaseHttpController,
   controller,
   httpDelete,
   httpGet,
@@ -23,7 +22,7 @@ import { UpdatePostDto } from "./dto/update-post.dto";
 import { IPostService } from "./interfaces/IPost.service";
 
 @controller("/posts")
-export class PostController extends BaseHttpController {
+export class PostController {
   @inject(TYPES.IPostService) private readonly _postService: IPostService;
 
   // 게시글 등록

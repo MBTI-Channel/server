@@ -21,4 +21,14 @@ export class Bookmark extends BaseEntity {
 
   @Column({ unsigned: true })
   postId: number;
+
+  @Column({ default: true, comment: "북마크 활성 여부" })
+  isActive: boolean;
+
+  static of(post: Post, user: User) {
+    const bookmark = new Bookmark();
+    bookmark.user = user;
+    bookmark.post = post;
+    return bookmark;
+  }
 }

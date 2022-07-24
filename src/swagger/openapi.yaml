@@ -16,6 +16,10 @@ tags:
     description: 게시글
   - name: "comments"
     description: 댓글 | 대댓글
+  - name: "notifications"
+    description: 알림
+  - name: "bookmarks"
+    description: 북마크
 
 paths:
   # users
@@ -110,3 +114,14 @@ paths:
         type: integer
         description: Notification ID
     $ref: "./paths/notifications/id.yaml"
+
+  # bookmark
+  /bookmarks:
+    $ref: "./paths/bookmarks/index.yaml"
+  /bookmarks/{id}:
+    parameters:
+      - in: path
+        name: id
+        type: integer
+        description: Post ID
+    $ref: "./paths/bookmarks/id.yaml"

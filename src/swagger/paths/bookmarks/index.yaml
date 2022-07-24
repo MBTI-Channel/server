@@ -1,0 +1,21 @@
+post:
+  tags:
+    - bookmarks
+  description: 북마크 등록
+  parameters:
+    - name: Bearer 토큰
+      in: header
+      required: true
+      type: string
+      example: asduehfinnncudI1NiIsInR5csdwd665s88db
+  requestBody:
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            targetId:
+              type: integer
+              example: 45
+  responses:
+    $ref: "../../responses/bookmarks/index.post.yaml"
