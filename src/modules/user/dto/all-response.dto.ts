@@ -15,13 +15,6 @@ export class UserResponseDto {
   }
 }
 
-export class TokenResponseDto {
-  constructor(public accessToken: string, public refreshToken: string) {
-    this.accessToken = accessToken;
-    this.refreshToken = refreshToken;
-  }
-}
-
 export class UserTokenResponseDto extends UserResponseDto {
   constructor(
     user: User,
