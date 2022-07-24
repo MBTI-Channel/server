@@ -45,7 +45,7 @@ export class BookmarkService implements IBookmarkService {
 
     // post type이 mbti일 경우 mbti확인
     if (post.type === Post.typeTo("mbti") && user.mbti !== post.userMbti) {
-      throw new ForbiddenException(`authorization error`);
+      throw new ForbiddenException(`user mbti does not match`);
     }
 
     const bookmarkEntity = Bookmark.of(post, user);
