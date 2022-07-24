@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
 import { inject } from "inversify";
 import {
-  BaseHttpController,
   controller,
   httpDelete,
   httpPost,
@@ -19,7 +18,7 @@ import { IdDto } from "./dto/id.dto";
 import { IBookmarkService } from "./interfaces/IBookmark.service";
 
 @controller("/bookmarks")
-export class BookmarkController extends BaseHttpController {
+export class BookmarkController {
   @inject(TYPES.IBookmarkService)
   private readonly _bookmarkService: IBookmarkService;
   // 북마크 등록

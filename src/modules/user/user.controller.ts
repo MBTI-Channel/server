@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
 import { inject } from "inversify";
 import {
-  BaseHttpController,
   controller,
   httpGet,
   httpPost,
@@ -21,7 +20,7 @@ import config from "../../config";
 import { ILoginLogService } from "../login-log/interfaces/ILogin-log.service";
 
 @controller("/users")
-export class UserController extends BaseHttpController {
+export class UserController {
   @inject(TYPES.IUserService) private readonly _userService: IUserService;
   @inject(TYPES.ILoginLogService)
   private readonly _loginLogService: ILoginLogService;
