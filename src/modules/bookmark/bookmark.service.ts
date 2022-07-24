@@ -55,4 +55,19 @@ export class BookmarkService implements IBookmarkService {
 
     return new BookmarkResponseDto(bookmark);
   }
+
+  async delete(user: User, id: number): Promise<void> {
+    this._logger.trace(`[BookmarkService] delete start`);
+    // 북마크 검증
+    const bookmark = await this._bookmarkRepository.findOneById(id);
+    if (!bookmark || !bookmark.isActive)
+      throw new NotFoundException("not exists bookmark");
+
+    // 권한 확인
+    if (bookmark.userId !== user.id)
+      throw new ForbiddenException("authorization error");
+
+    this._logger.trace(`[BookmarkService] remove bookmark ${id}`);
+    await this._bookmarkRepository.remove(id);
+  }
 }
