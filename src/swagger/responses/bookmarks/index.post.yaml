@@ -1,0 +1,76 @@
+"201":
+  description: 댓글 등록 성공. isSecret이 true라면 userNickname = ""
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          isMy:
+            type: boolean
+            example: true
+          isPostWriter:
+            type: boolean
+            example: false
+          id:
+            type: string
+            example: 24
+          userMbti:
+            type: string
+            example: INFP
+          userNickname:
+            type: string
+            example: 에어컨대전
+          isSecret:
+            type: boolean
+            example: false
+          content:
+            type: string
+            example: 그래도 꺳잎은 맛 없지
+          isActive:
+            type: boolean
+            example: true
+          replyCount:
+            type: number
+            example: 0
+          likesCount:
+            type: number
+            example: 0
+          createdAt:
+            type: string
+            example: "2022-07-14T04:16:42.150Z"
+          updatedAt:
+            type: string
+            example: "2022-07-14T04:16:42.150Z"
+
+"400":
+  description: bookmark 이미 존재
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          message:
+            type: string
+            example: bookmark already existed
+
+"401":
+  description: access token 유효하지 않음
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          message:
+            type: string
+            example: authentication error
+
+"404":
+  description: 존재하지 않는 (삭제된) 게시글
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          message:
+            type: string
+            example: not exists post
