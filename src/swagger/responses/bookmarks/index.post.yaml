@@ -64,6 +64,17 @@
             type: string
             example: authentication error
 
+"403":
+  description: mbti가 다름
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          message:
+            type: string
+            example: authorization error
+
 "404":
   description: 존재하지 않는 (삭제된) 게시글
   content:

@@ -1,0 +1,12 @@
+delete:
+  tags:
+    - bookmarks
+  description: 북마크 삭제
+  parameters:
+    - name: Bearer 토큰
+      in: header
+      required: true
+      type: string
+      example: asduehfinnncudI1NiIsInR5csdwd665s88db
+  responses:
+    $ref: "../../responses/bookmarks/id.delete.yaml"

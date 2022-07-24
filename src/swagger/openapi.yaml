@@ -118,3 +118,10 @@ paths:
   # bookmark
   /bookmarks:
     $ref: "./paths/bookmarks/index.yaml"
+  /bookmarks/{id}:
+    parameters:
+      - in: path
+        name: id
+        type: integer
+        description: Post ID
+    $ref: "./paths/bookmarks/id.yaml"
