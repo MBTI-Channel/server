@@ -45,7 +45,7 @@ export class LikeService implements ILikeService {
     let target;
     if (type === LikeTargetType.POST) {
       target = await this._postRepository.findOneById(targetId);
-    } else {
+    } else if (type === LikeTargetType.COMMENT){
       target = await this._commentRepository.findById(targetId);
     }
     if (!target || !target.isActive)
@@ -71,7 +71,7 @@ export class LikeService implements ILikeService {
       const like = await this._likeRepository.createLike(likeEntity);
       if (type === LikeTargetType.POST) {
         await this._postService.increaseLikeCount(targetId);
-      } else {
+      } else if (type === LikeTargetType.COMMENT){
         await this._commentService.increaseLikeCount(targetId);
       }
       await t.commitTransaction();
