@@ -30,6 +30,7 @@ export interface ICommentService {
     pageOptionsDto: GetAllRepliesDto,
     user: User
   ): Promise<PageResponseDto<PageInfiniteScrollInfoDto, ReplyResponseDto>>;
+  increaseLikeCount(id: number): Promise<void>;
   update(user: User, id: number, content: string): Promise<CommentResponseDto>;
   delete(user: User, id: number): Promise<void>;
 }

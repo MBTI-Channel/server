@@ -13,5 +13,6 @@ export interface ICommentRepository {
   ): Promise<[Comment[], number]>;
   update(id: number, content: Partial<Comment>): Promise<Comment>;
   increaseReplyCount(id: number): Promise<boolean>;
+  increaseLikeCount(id: number): Promise<boolean>;
   remove(id: number): Promise<void>;
 }

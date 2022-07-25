@@ -71,6 +71,17 @@ export class PostService implements IPostService {
     this._logger.trace(`[PostService] clear`);
   }
 
+  public async increaseLikeCount(id: number): Promise<void> {
+    this._logger.trace(`[PostService] increaseLikeCount start`);
+    const post = await this._postRepository.findOneById(id);
+    // err: 존재하지 않는 || 삭제된 게시글 id
+    if (!post || !post.isActive) throw new NotFoundException(`not exists post`);
+
+    const hasIncreased = await this._postRepository.increaseLikeCount(id);
+    // err: 업데이트 도중 삭제된 게시글 id
+    if (!hasIncreased) throw new NotFoundException(`not exists post`);
+  }
+
   public async delete(user: User, id: number): Promise<void> {
     this._logger.trace(`[PostService] delete start`);
     const post = await this._postRepository.findOneById(id);

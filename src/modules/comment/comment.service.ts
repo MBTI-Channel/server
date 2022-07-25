@@ -198,6 +198,18 @@ export class CommentService implements ICommentService {
     );
   }
 
+  async increaseLikeCount(id: number): Promise<void> {
+    this._logger.trace(`[CommentService] increaseLikeCount start`);
+    const comment = await this._commentRepository.findById(id);
+    // err: 존재하지 않는 || 삭제된 댓글 id
+    if (!comment || !comment.isActive)
+      throw new NotFoundException(`not exists comment`);
+
+    const hasIncreased = await this._commentRepository.increaseLikeCount(id);
+    // err: 업데이트 도중 삭제된 댓글 id
+    if (!hasIncreased) throw new NotFoundException(`not exists comment`);
+  }
+
   async update(user: User, id: number, content: string) {
     // 댓글 검증
     const comment = await this._commentRepository.findById(id);
