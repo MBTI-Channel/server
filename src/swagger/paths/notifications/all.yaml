@@ -1,0 +1,6 @@
+patch:
+  tags:
+    - notifications
+  description: 알림 전체 읽음 처리
+  responses:
+    $ref: "../../responses/notifications/all.patch.yaml"
