@@ -34,6 +34,13 @@ export class PostRepository implements IPostRepository {
     return false;
   }
 
+  public async increaseLikeCount(id: number): Promise<boolean> {
+    const repository = await this._database.getRepository(Post);
+    const result = await repository.increment({ id }, "likesCount", 1);
+    if (result.affected === 1) return true;
+    return false;
+  }
+
   public async remove(id: number): Promise<void> {
     const repository = await this._database.getRepository(Post);
     await repository.update(id, {
