@@ -27,3 +27,8 @@ export enum CategoryName {
   GAME = "game",
   LOVE = "love",
 }
+
+export enum LikeTargetType {
+  POST = "post",
+  COMMENT = "comment",
+}
