@@ -31,6 +31,9 @@ export const TYPES = {
   /* bookmark */
   IBookmarkService: Symbol.for("IBookmarkService"),
   IBookmarkRepository: Symbol.for("IBookmarkRepository"),
+  /* like */
+  ILikeService: Symbol.for("ILikeService"),
+  ILikeRepository: Symbol.for("ILikeRepository"),
   /* middleware */
   GetProviderUserByOauthMiddleware: Symbol.for(
     "GetProviderUserByOauthMiddleware"

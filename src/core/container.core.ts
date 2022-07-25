@@ -64,6 +64,10 @@ import { OauthService } from "../shared/oauth/oauth.service";
 import { KakaoApiService } from "../shared/api/kakao-api.service";
 import { NaverApiService } from "../shared/api/naver-api.service";
 import { DiscordApiService } from "../shared/api/discord-api.service";
+import { ILikeService } from "../modules/like/interfaces/ILike.service";
+import { LikeService } from "../modules/like/like.service";
+import { ILikeRepository } from "../modules/like/interfaces/ILike.repository";
+import { LikeRepository } from "../modules/like/like.repository";
 
 const container = new Container();
 
@@ -127,6 +131,10 @@ container.bind<IBookmarkService>(TYPES.IBookmarkService).to(BookmarkService);
 container
   .bind<IBookmarkRepository>(TYPES.IBookmarkRepository)
   .to(BookmarkRepository);
+
+/* like */
+container.bind<ILikeService>(TYPES.ILikeService).to(LikeService);
+container.bind<ILikeRepository>(TYPES.ILikeRepository).to(LikeRepository);
 
 /* utils */
 container.bind(TYPES.Logger).to(Logger);
