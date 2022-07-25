@@ -1,5 +1,7 @@
 import { Entity, Column, ManyToOne } from "typeorm";
 import { BaseEntity } from "../../../shared/base.entity.";
+import { Comment } from "../../comment/entity/comment.entity";
+import { Post } from "../../post/entity/post.entity";
 
 import { User } from "../../user/entity/user.entity";
 
@@ -21,4 +23,18 @@ export class Like extends BaseEntity {
     onDelete: "CASCADE",
   })
   user: User;
+
+  @Column({ unsigned: true })
+  userId: number;
+
+  @Column({ default: true, comment: "좋아요 활성 여부" })
+  isActive: boolean;
+
+  static of(target: Post | Comment, user: User, type: number) {
+    const like = new Like();
+    like.user = user;
+    like.targetId = target.id;
+    like.targetType = type;
+    return like;
+  }
 }
