@@ -1,0 +1,21 @@
+"200":
+  description: 읽음 처리한 알림 수 응답
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          readCount:
+            type: number
+            example: 21
+
+"401":
+  description: access token 유효하지 않음
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          message:
+            type: string
+            example: authentication error
