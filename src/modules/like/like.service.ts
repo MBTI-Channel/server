@@ -55,11 +55,11 @@ export class LikeService implements ILikeService {
     const targetType = type === LikeTargetType.POST ? 1 : 2;
 
     // 이미 좋아요 되어 있는지 확인
-    const existedLike = await this._likeRepository.findOneByTarget(
+    const foundLike = await this._likeRepository.findOneByTarget(
       targetId,
       targetType
     );
-    if (existedLike && existedLike.isActive) {
+    if (foundLike && foundLike.isActive) {
       throw new BadReqeustException(`like already existed`);
     }
 
