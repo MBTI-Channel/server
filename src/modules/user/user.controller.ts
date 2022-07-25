@@ -17,7 +17,7 @@ import { ILoginLogService } from "../login-log/interfaces/ILogin-log.service";
 import { User } from "./entity/user.entity";
 import { OauthLoginDto } from "../auth/dto/oauth-login.dto";
 import { SignUpDto, NicknameDuplicateCheckDto } from "./dto";
-import { converUserAgent } from "../../shared/utils/user-agent.util";
+import { convertUserAgent } from "../../shared/utils/user-agent.util";
 import config from "../../config";
 
 @controller("/users")
@@ -73,7 +73,7 @@ export class UserController {
   async reissueAccessToken(req: Request, res: Response) {
     const user = req.user as User;
     const refreshToken = req.cookies.Refresh;
-    const userAgent = converUserAgent(req.headers["user-agent"]!);
+    const userAgent = convertUserAgent(req.headers["user-agent"]!);
 
     const accessToken = await this._userService.reissueAccessToken(
       user,
