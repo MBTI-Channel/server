@@ -100,6 +100,13 @@ export class CommentRepository implements ICommentRepository {
     return false;
   }
 
+  public async increaseLikeCount(id: number): Promise<boolean> {
+    const repository = await this._database.getRepository(Comment);
+    const result = await repository.increment({ id }, "likesCount", 1);
+    if (result.affected === 1) return true;
+    return false;
+  }
+
   async remove(id: number): Promise<void> {
     const repository = await this._database.getRepository(Comment);
     await repository.update(id, {
