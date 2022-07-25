@@ -15,9 +15,10 @@ const spaceReplace = (value: string[]) => {
 
 /**
  * axios, postman 같은 경우 user-agent 길이가 짧아 그대로 반환
- * @returns `"사용자에이전트"` || `"브라우저이름-OS이름"`
+ * @returns `"사용자에이전트"` || `"브라우저이름-OS이름" || "unknown-bot"`
  */
-export const convertUserAgent = (userAgent: string) => {
+export const convertUserAgent = (userAgent?: string) => {
+  if (!userAgent) return `unknown-bot`;
   const result = new parser(userAgent).getResult();
   if (!result.browser.name || !result.os.name) return result.ua;
 

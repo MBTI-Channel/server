@@ -73,7 +73,7 @@ export class UserController {
   async reissueAccessToken(req: Request, res: Response) {
     const user = req.user as User;
     const refreshToken = req.cookies.Refresh;
-    const userAgent = convertUserAgent(req.headers["user-agent"]!);
+    const userAgent = convertUserAgent(req.headers["user-agent"]);
 
     const accessToken = await this._userService.reissueAccessToken(
       user,
