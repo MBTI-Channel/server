@@ -62,6 +62,16 @@ export class LikeService implements ILikeService {
     if (foundLike && foundLike.isActive) {
       throw new BadReqeustException(`like already existed`);
     }
+    
+    // TODO: MBTI check
+    // if (type === LikeTargetType.POST) {
+    //   if (target.type === Post.typeTo("mbti") && user.mbti !== target.userMbti)
+    //     throw new ForbiddenException("authorization error");
+    // } else if (type === LikeTargetType.COMMENT){
+    //   const post = await this._postRepository.findOneById(target.postId);
+    //   if (post.type === Post.typeTo("mbti") && user.mbti !== post.userMbti)
+    //     throw new ForbiddenException("authorization error")
+    // }
 
     const likeEntity = Like.of(target, user, targetType);
 
@@ -74,6 +84,7 @@ export class LikeService implements ILikeService {
       } else if (type === LikeTargetType.COMMENT){
         await this._commentService.increaseLikeCount(targetId);
       }
+      // TODO: notification check
       await t.commitTransaction();
       return new LikeResponseDto(target, like);
     } catch (err: any) {
