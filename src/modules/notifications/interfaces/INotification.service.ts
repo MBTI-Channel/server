@@ -20,6 +20,6 @@ export interface INotificationService {
     PageResponseDto<PageInfiniteScrollInfoDto, NotificationResponseDto>
   >;
   readOne(user: User, id: number): Promise<void>;
-  // readAll()():Promise<void>
+  readAll(user: User): Promise<number>;
   // countUnread():Promise<number>
 }

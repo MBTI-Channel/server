@@ -105,4 +105,10 @@ export class NotificationService implements INotificationService {
 
     await this._notificationRepository.update(id, { readAt: new Date() });
   }
+
+  // readAt 업데이트 후 읽은 알림 수를 리턴한다.
+  async readAll(user: User) {
+    this._logger.trace(`[NotificationService] readAll start`);
+    return await this._notificationRepository.updateAllUnread(user.id);
+  }
 }

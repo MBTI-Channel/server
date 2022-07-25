@@ -1,4 +1,5 @@
 import { inject, injectable } from "inversify";
+import { IsNull } from "typeorm";
 import { TYPES } from "../../core/type.core";
 import { IDatabaseService } from "../../shared/database/interfaces/IDatabase.service";
 import { INotificationRepository } from "./interfaces/INotification.repository";
@@ -48,5 +49,13 @@ export class NotificationtRepository implements INotificationRepository {
     return await repository
       .update(id, payload as QueryDeepPartialEntity<Notification>)
       .then(async () => await repository.findOne({ where: { id } }));
+  }
+
+  async updateAllUnread(userId: number) {
+    const repository = await this._database.getRepository(Notification);
+    const { affected } = await repository.update({ userId, readAt: IsNull() }, {
+      readAt: new Date(),
+    } as QueryDeepPartialEntity<Notification>);
+    return affected!; // update된 컬럼수
   }
 }

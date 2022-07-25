@@ -9,6 +9,6 @@ export interface INotificationRepository {
   ): Promise<[Notification[], number]>;
   findOneById(id: number): Promise<Notification>;
   update(id: number, payload: Partial<Notification>): Promise<Notification>;
-  //readAll(userId:number): Promise<any>;
+  updateAllUnread(userId: number): Promise<number>;
   //countUnreadByUserId(userId:number): Promise<number>;
 }

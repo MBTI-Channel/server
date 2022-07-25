@@ -23,6 +23,14 @@ export class NotificationController {
     private readonly _notificationService: INotificationService
   ) {}
 
+  // 알림 전체 읽음 처리
+  @httpPatch("/all/readAt", TYPES.ValidateAccessTokenMiddleware)
+  async readAll(req: Request, res: Response) {
+    const user = req.user as User;
+    const data = await this._notificationService.readAll(user);
+    return res.status(200).json({ readCount: data });
+  }
+
   // 알림 한 개 읽음 처리
   @httpPatch(
     "/:id/readAt",
@@ -38,13 +46,6 @@ export class NotificationController {
     const { id } = param;
     await this._notificationService.readOne(user, id);
     return res.status(200).json({ isRead: true });
-  }
-
-  // 알림 전체 읽음 처리
-  @httpPatch("/", TYPES.ValidateAccessTokenMiddleware)
-  async readAll(req: Request, res: Response) {
-    const user = req.user as User;
-    return res.status(200).json();
   }
 
   // 알림 전체 보기
