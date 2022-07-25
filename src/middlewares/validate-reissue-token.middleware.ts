@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { inject, injectable } from "inversify";
 import { BaseMiddleware } from "inversify-express-utils";
+import { plainToInstance } from "class-transformer";
 import { TYPES } from "../core/type.core";
 import { AuthService } from "../modules/auth/auth.service";
 import { JwtUtil } from "../shared/utils/jwt.util";
@@ -9,6 +10,7 @@ import {
   BadReqeustException,
   UnauthorizedException,
 } from "../shared/errors/all.exception";
+import { User } from "../modules/user/entity/user.entity";
 
 @injectable()
 export class ValidateReissueToken extends BaseMiddleware {
@@ -82,6 +84,13 @@ export class ValidateReissueToken extends BaseMiddleware {
         res.clearCookie("Refresh");
         throw new UnauthorizedException("authentication error");
       }
+
+      req.user = plainToInstance(User, {
+        id: accessTokenDecoded.id,
+        nickname: accessTokenDecoded.nickname,
+        mbti: accessTokenDecoded.mbti,
+        isAdmin: accessTokenDecoded.isAdmin,
+      });
 
       this._logger.trace(`[ValidateReissueToken] call next`);
       return next();

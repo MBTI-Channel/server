@@ -1,7 +1,6 @@
 import { Provider } from "../../../shared/type.shared";
 import {
   UserTokenResponseDto,
-  TokenResponseDto,
   UserResponseDto,
   NeedSignUpResponseDto,
 } from "../dto";
@@ -23,7 +22,11 @@ export interface IUserService {
     nickname: string,
     mbti: string
   ): Promise<UserTokenResponseDto>;
-  reissueAccessToken(accessToken: string): Promise<TokenResponseDto>;
+  reissueAccessToken(
+    user: User,
+    refreshToken: string,
+    userAgent: string
+  ): Promise<string>;
   isExistsNickname(nickname: string): Promise<boolean>;
   isValid(id: number): Promise<boolean>;
 }

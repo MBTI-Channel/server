@@ -11,6 +11,7 @@ import {
 } from "./dto";
 import { Logger } from "../../shared/utils/logger.util";
 import { JwtUtil } from "../../shared/utils/jwt.util";
+import { IApiWebhookService } from "../../shared/api/interfaces/IApi-webhook.service";
 import {
   BadReqeustException,
   ConflictException,
@@ -28,7 +29,9 @@ export class UserService implements IUserService {
     private readonly _userRepository: IUserRepository,
     @inject(TYPES.IAuthService)
     private readonly _authService: IAuthService,
-    @inject(TYPES.JwtUtil) private readonly _jwtUtil: JwtUtil
+    @inject(TYPES.JwtUtil) private readonly _jwtUtil: JwtUtil,
+    @inject(TYPES.IApiWebhookService)
+    private readonly _apiWebhookService: IApiWebhookService
   ) {}
 
   public async create(
@@ -117,28 +120,25 @@ export class UserService implements IUserService {
     return new UserTokenResponseDto(updatedUser, accessToken, refreshToken);
   }
 
-  public async reissueAccessToken(oldAccessToken: string) {
-    // TODO: 수정필요
-    const decodedToken = this._jwtUtil.decode(oldAccessToken);
-    return {
-      accessToken: "1",
-      refreshToken: "1",
-    };
-    // return this._toTokenResponseDto(accessToken, refreshToken)
+  public async reissueAccessToken(
+    user: User,
+    refreshToken: string,
+    userAgent: string
+  ) {
+    this._logger.trace(`[UserService] reissueAccessToken start`);
 
-    // if (decodedToken.status !== "success") {
-    //   throw new UnauthorizedException("token is not validate");
-    // }
+    // redis의 정보와 일치하는지 확인
+    const key = `${user.id}-${userAgent}`;
+    const hasAuth = await this._authService.hasRefreshAuth(key, refreshToken);
+    if (!hasAuth) {
+      //TODO: 디스코드 알림
+      this._logger.warn(
+        `[UserService] warning! suspected token theft user: ${user.id}`
+      );
+      throw new UnauthorizedException("authentication error");
+    }
 
-    // let userId = decodedToken.id;
-
-    // const user = await this._userRepository.findOneById(userId);
-    // if (!user) {
-    //   throw new NotFoundException("not exists user");
-    // }
-
-    // const newAccessToken = await this._authService.generateAccessToken(user);
-    // return { newAccessToken };
+    return await this._authService.generateAccessToken(user);
   }
 
   // 중복 닉네임이 있는지 확인한다.
