@@ -1,6 +1,6 @@
 import { inject, injectable } from "inversify";
 import { TYPES } from "../../core/types.core";
-import { IDatabaseService } from "../../shared/database/interfaces/IDatabase.service";
+import { IDatabaseService } from "../../core/database/interfaces/IDatabase.service";
 import { LikeTargetType } from "../../shared/enum.shared";
 import {
   BadReqeustException,

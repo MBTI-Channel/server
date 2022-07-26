@@ -2,8 +2,8 @@ import { inject, injectable } from "inversify";
 import { RedisClientType } from "@redis/client";
 import { IRedisService } from "./interfaces/IRedis.service";
 import { createClient } from "redis";
-import { TYPES } from "../../core/types.core";
-import { Logger } from "../utils/logger.util";
+import { TYPES } from "../types.core";
+import { Logger } from "../../shared/utils/logger.util";
 import config from "../../config/index";
 
 const { redis } = config;

@@ -9,7 +9,7 @@ import { JwtUtil } from "../../shared/utils/jwt.util";
 import { UnauthorizedException } from "../../shared/errors/all.exception";
 import { UserRepository } from "../user/user.repository";
 import config from "../../config";
-import { IRedisService } from "../../shared/redis/interfaces/IRedis.service";
+import { IRedisService } from "../../core/database/interfaces/IRedis.service";
 
 @injectable()
 export class AuthService implements IAuthService {

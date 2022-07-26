@@ -3,7 +3,7 @@ import { TYPES } from "../../core/types.core";
 import { ICommentService } from "./interfaces/IComment.service";
 import { IPostService } from "../post/interfaces/IPost.service";
 import { INotificationService } from "../notifications/interfaces/INotification.service";
-import { IDatabaseService } from "../../shared/database/interfaces/IDatabase.service";
+import { IDatabaseService } from "../../core/database/interfaces/IDatabase.service";
 import { ICommentRepository } from "./interfaces/IComment.repository";
 import { IPostRepository } from "../post/interfaces/IPost.repository";
 import { Comment } from "./entity/comment.entity";

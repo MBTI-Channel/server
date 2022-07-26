@@ -16,8 +16,7 @@ import { authModule } from "../modules/auth/auth.module";
 import { askModule } from "../modules/ask/ask.module";
 /* shared import */
 import { utilModule } from "../shared/utils/util.module";
-import { databaseModule } from "../shared/database/database.module";
-import { redisModule } from "../shared/redis/redis.module";
+import { databaseModule } from "./database/database.module";
 import { apiModule } from "../shared/api/api.module";
 import { oauthModule } from "../shared/oauth/oauth.module";
 
@@ -25,6 +24,7 @@ const container = new Container();
 
 container.load(
   /* core */
+  databaseModule,
   /* app */
   middlewareModule,
   askModule,
@@ -41,9 +41,6 @@ container.load(
   utilModule,
   /* shared */
   apiModule,
-  oauthModule,
-  databaseModule,
-  redisModule
+  oauthModule
 );
-
 export default container;

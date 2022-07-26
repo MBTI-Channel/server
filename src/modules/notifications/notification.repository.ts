@@ -1,7 +1,7 @@
 import { inject, injectable } from "inversify";
 import { IsNull } from "typeorm";
 import { TYPES } from "../../core/types.core";
-import { IDatabaseService } from "../../shared/database/interfaces/IDatabase.service";
+import { IDatabaseService } from "../../core/database/interfaces/IDatabase.service";
 import { INotificationRepository } from "./interfaces/INotification.repository";
 import { Notification } from "./entity/notification.entity";
 import { QueryDeepPartialEntity } from "typeorm/query-builder/QueryPartialEntity";
