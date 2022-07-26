@@ -1,5 +1,5 @@
 import { ContainerModule } from "inversify";
-import { TYPES } from "../../core/type.core";
+import { TYPES } from "../../core/types.core";
 import { DiscordApiService } from "./discord-api.service";
 import { IApiAccountService } from "./interfaces/IApi-account.service";
 import { IApiWebhookService } from "./interfaces/IApi-webhook.service";

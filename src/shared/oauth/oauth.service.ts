@@ -1,5 +1,5 @@
 import { inject, injectable } from "inversify";
-import { TYPES } from "../../core/type.core";
+import { TYPES } from "../../core/types.core";
 import { KakaoApiService } from "../api/kakao-api.service";
 import { NaverApiService } from "../api/naver-api.service";
 import { IOauthService } from "./interfaces/IOauth.service";

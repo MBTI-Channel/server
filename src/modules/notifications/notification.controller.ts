@@ -7,7 +7,7 @@ import {
   queryParam,
   requestParam,
 } from "inversify-express-utils";
-import { TYPES } from "../../core/type.core";
+import { TYPES } from "../../core/types.core";
 import { INotificationService } from "./interfaces/INotification.service";
 import { User } from "../user/entity/user.entity";
 import {

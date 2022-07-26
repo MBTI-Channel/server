@@ -1,6 +1,6 @@
 import axios from "axios";
 import { inject, injectable } from "inversify";
-import { TYPES } from "../../core/type.core";
+import { TYPES } from "../../core/types.core";
 import { Ask } from "../../modules/ask/entity/ask.entity";
 import { Logger } from "../utils/logger.util";
 import { IApiWebhookService } from "./interfaces/IApi-webhook.service";

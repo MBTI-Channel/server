@@ -1,5 +1,5 @@
 import { inject, injectable } from "inversify";
-import { TYPES } from "../../core/type.core";
+import { TYPES } from "../../core/types.core";
 import { IApiWebhookService } from "../../shared/api/interfaces/IApi-webhook.service";
 import { Logger } from "../../shared/utils/logger.util";
 import { User } from "../user/entity/user.entity";

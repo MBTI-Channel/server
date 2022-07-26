@@ -1,5 +1,5 @@
 import { ContainerModule } from "inversify";
-import { TYPES } from "../../core/type.core";
+import { TYPES } from "../../core/types.core";
 import { IPostRepository } from "./interfaces/IPost.repository";
 import { IPostService } from "./interfaces/IPost.service";
 import { PostRepository } from "./post.repository";

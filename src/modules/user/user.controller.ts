@@ -7,7 +7,7 @@ import {
   queryParam,
   requestBody,
 } from "inversify-express-utils";
-import { TYPES } from "../../core/type.core";
+import { TYPES } from "../../core/types.core";
 import {
   bodyValidator,
   queryValidator,

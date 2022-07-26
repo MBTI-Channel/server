@@ -1,5 +1,5 @@
 import { ContainerModule } from "inversify";
-import { TYPES } from "../../core/type.core";
+import { TYPES } from "../../core/types.core";
 import { BookmarkRepository } from "./bookmark.repository";
 import { BookmarkService } from "./bookmark.service";
 import { IBookmarkRepository } from "./interfaces/IBookmark.repository";

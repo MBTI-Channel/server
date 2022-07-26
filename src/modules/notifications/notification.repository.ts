@@ -1,6 +1,6 @@
 import { inject, injectable } from "inversify";
 import { IsNull } from "typeorm";
-import { TYPES } from "../../core/type.core";
+import { TYPES } from "../../core/types.core";
 import { IDatabaseService } from "../../shared/database/interfaces/IDatabase.service";
 import { INotificationRepository } from "./interfaces/INotification.repository";
 import { Notification } from "./entity/notification.entity";

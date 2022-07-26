@@ -1,5 +1,5 @@
 import { ContainerModule } from "inversify";
-import { TYPES } from "../../core/type.core";
+import { TYPES } from "../../core/types.core";
 import { AskRepository } from "./ask.repository";
 import { AskService } from "./ask.service";
 import { IAskRepository } from "./interfaces/IAsk.repository";

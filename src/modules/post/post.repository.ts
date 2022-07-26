@@ -1,7 +1,7 @@
 import { inject, injectable } from "inversify";
 import { In, Like } from "typeorm";
 import { QueryDeepPartialEntity } from "typeorm/query-builder/QueryPartialEntity";
-import { TYPES } from "../../core/type.core";
+import { TYPES } from "../../core/types.core";
 import { IDatabaseService } from "../../shared/database/interfaces/IDatabase.service";
 import { Category } from "../category/entity/category.entity";
 import { GetAllPostDto } from "./dto/get-all-post.dto";

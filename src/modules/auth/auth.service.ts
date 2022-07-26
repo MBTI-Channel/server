@@ -3,7 +3,7 @@ import { User } from "../user/entity/user.entity";
 import { Logger } from "../../shared/utils/logger.util";
 import { IAuthService } from "./interfaces/IAuth.service";
 import { ITokenPayload } from "./interfaces/ITokenPayload";
-import { TYPES } from "../../core/type.core";
+import { TYPES } from "../../core/types.core";
 import { SignOptions } from "jsonwebtoken";
 import { JwtUtil } from "../../shared/utils/jwt.util";
 import { UnauthorizedException } from "../../shared/errors/all.exception";

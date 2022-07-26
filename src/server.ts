@@ -5,7 +5,7 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import { InversifyExpressServer } from "inversify-express-utils";
 import container from "./core/container.core";
-import { TYPES } from "./core/type.core";
+import { TYPES } from "./core/types.core";
 import { DatabaseService } from "./shared/database/database.service";
 import { IApiWebhookService } from "./shared/api/interfaces/IApi-webhook.service";
 import { Logger } from "./shared/utils/logger.util";

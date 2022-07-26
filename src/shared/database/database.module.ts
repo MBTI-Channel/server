@@ -1,5 +1,5 @@
 import { ContainerModule } from "inversify";
-import { TYPES } from "../../core/type.core";
+import { TYPES } from "../../core/types.core";
 import { DatabaseService } from "./database.service";
 import { IDatabaseService } from "./interfaces/IDatabase.service";
 

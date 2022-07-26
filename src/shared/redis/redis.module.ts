@@ -1,5 +1,5 @@
 import { ContainerModule } from "inversify";
-import { TYPES } from "../../core/type.core";
+import { TYPES } from "../../core/types.core";
 import { IRedisService } from "./interfaces/IRedis.service";
 import { RedisService } from "./redis.service";
 

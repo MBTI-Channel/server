@@ -1,5 +1,5 @@
 import { inject, injectable } from "inversify";
-import { TYPES } from "../../core/type.core";
+import { TYPES } from "../../core/types.core";
 import { IDatabaseService } from "../../shared/database/interfaces/IDatabase.service";
 import { Ask } from "./entity/ask.entity";
 import { IAskRepository } from "./interfaces/IAsk.repository";

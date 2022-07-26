@@ -1,5 +1,5 @@
 import { ContainerModule } from "inversify";
-import { TYPES } from "../../core/type.core";
+import { TYPES } from "../../core/types.core";
 import { JwtUtil } from "./jwt.util";
 import { Logger } from "./logger.util";
 

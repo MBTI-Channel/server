@@ -1,5 +1,5 @@
 import { inject, injectable } from "inversify";
-import { TYPES } from "../../core/type.core";
+import { TYPES } from "../../core/types.core";
 import { ICommentService } from "./interfaces/IComment.service";
 import { IPostService } from "../post/interfaces/IPost.service";
 import { INotificationService } from "../notifications/interfaces/INotification.service";

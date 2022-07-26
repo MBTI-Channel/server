@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { inject, injectable } from "inversify";
 import { BaseMiddleware } from "inversify-express-utils";
 import { plainToInstance } from "class-transformer";
-import { TYPES } from "../core/type.core";
+import { TYPES } from "../core/types.core";
 import { AuthService } from "../modules/auth/auth.service";
 import { JwtUtil } from "../shared/utils/jwt.util";
 import { Logger } from "../shared/utils/logger.util";

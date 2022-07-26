@@ -1,5 +1,5 @@
 import { ContainerModule } from "inversify";
-import { TYPES } from "../../core/type.core";
+import { TYPES } from "../../core/types.core";
 import { INotificationRepository } from "./interfaces/INotification.repository";
 import { INotificationService } from "./interfaces/INotification.service";
 import { NotificationtRepository } from "./notification.repository";

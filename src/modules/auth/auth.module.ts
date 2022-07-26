@@ -1,5 +1,5 @@
 import { ContainerModule } from "inversify";
-import { TYPES } from "../../core/type.core";
+import { TYPES } from "../../core/types.core";
 import { AuthService } from "./auth.service";
 import { IAuthService } from "./interfaces/IAuth.service";
 

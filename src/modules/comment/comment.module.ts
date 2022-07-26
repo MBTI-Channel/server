@@ -1,5 +1,5 @@
 import { ContainerModule } from "inversify";
-import { TYPES } from "../../core/type.core";
+import { TYPES } from "../../core/types.core";
 import { CommentRepository } from "./comment.repository";
 import { CommentService } from "./comment.service";
 import { ICommentRepository } from "./interfaces/IComment.repository";

@@ -1,5 +1,5 @@
 import { ContainerModule } from "inversify";
-import { TYPES } from "../../core/type.core";
+import { TYPES } from "../../core/types.core";
 import { IUserRepository } from "./interfaces/IUser.repository";
 import { IUserService } from "./interfaces/IUser.service";
 import { UserRepository } from "./user.repository";

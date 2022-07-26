@@ -1,6 +1,6 @@
 import { inject, injectable } from "inversify";
 import { QueryDeepPartialEntity } from "typeorm/query-builder/QueryPartialEntity";
-import { TYPES } from "../../core/type.core";
+import { TYPES } from "../../core/types.core";
 import { IDatabaseService } from "../../shared/database/interfaces/IDatabase.service";
 import { Bookmark } from "./entity/bookmark.entity";
 import { IBookmarkRepository } from "./interfaces/IBookmark.repository";
