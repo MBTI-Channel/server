@@ -1,10 +1,10 @@
 import { inject, injectable } from "inversify";
 import { TYPES } from "../../core/types.core";
-import { KakaoApiService } from "../api/kakao-api.service";
-import { NaverApiService } from "../api/naver-api.service";
 import { IOauthService } from "./interfaces/IOauth.service";
+import { KakaoApiService } from "../../shared/api/kakao-api.service";
+import { NaverApiService } from "../../shared/api/naver-api.service";
 import { Logger } from "../../shared/utils/logger.util";
-import { Provider } from "../type.shared";
+import { Provider } from "../../shared/type.shared";
 import { UnauthorizedException } from "../../shared/errors/all.exception";
 
 @injectable()

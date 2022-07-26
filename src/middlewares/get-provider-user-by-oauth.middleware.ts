@@ -4,7 +4,7 @@ import { inject, injectable } from "inversify";
 import { BaseMiddleware } from "inversify-express-utils";
 import { TYPES } from "../core/types.core";
 import { UserBase } from "../modules/user/entity/userbase";
-import { IOauthService } from "../shared/oauth/interfaces/IOauth.service";
+import { IOauthService } from "../modules/auth/interfaces/IOauth.service";
 import { Logger } from "../shared/utils/logger.util";
 
 /**

@@ -18,7 +18,6 @@ import { askModule } from "../modules/ask/ask.module";
 /* shared import */
 import { utilModule } from "../shared/utils/util.module";
 import { apiModule } from "../shared/api/api.module";
-import { oauthModule } from "../shared/oauth/oauth.module";
 
 const container = new Container();
 
@@ -37,10 +36,8 @@ container.load(
   notificationModule,
   postModule,
   userModule,
-  /* util */
-  utilModule,
   /* shared */
-  apiModule,
-  oauthModule
+  utilModule,
+  apiModule
 );
 export default container;
