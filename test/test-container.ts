@@ -37,7 +37,7 @@ export class TestContainer {
     this._container
       .rebind(serviceIdentifier)
       .toConstantValue(mockingInterface as T);
-    return jest.fn(() => mockingInterface)() as T; //mockingInterface as T; //
+    return jest.fn(() => mockingInterface)() as T;
   }
 
   get<T>(serviceIdentifier: interfaces.ServiceIdentifier<T>): T {
