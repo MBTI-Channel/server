@@ -1,6 +1,7 @@
 import { interfaces } from "inversify";
 import container from "../src/core/container.core";
 import { TYPES } from "../src/core/types.core";
+import { mockDataBaseService } from "./mock-database.service";
 import { mockLogger } from "./mock-logger";
 
 export class TestContainer {
@@ -8,11 +9,14 @@ export class TestContainer {
 
   /**
    * 1. 각 단위 테스트가 다른 단위 테스트를 중단하지 않고 수정할 수 있도록 스냅샷 생성
-   * 2. mockLogger 리바인드
+   * 2. mockDataBaseService, mockLogger 리바인드
    */
   init() {
     this._container.snapshot();
     this._container.rebind(TYPES.Logger).toConstantValue(mockLogger);
+    this._container
+      .rebind(TYPES.IDatabaseService)
+      .toConstantValue(mockDataBaseService);
   }
   /**
    * 각 단위 테스트가 애플리케이션 컨테이너의 새 복사본을 가져오도록 마지막 스냅샷으로 복원
@@ -33,6 +37,7 @@ export class TestContainer {
     this._container
       .rebind(serviceIdentifier)
       .toConstantValue(mockingInterface as T);
+    return jest.fn(() => mockingInterface)() as T; //mockingInterface as T; //
   }
 
   get<T>(serviceIdentifier: interfaces.ServiceIdentifier<T>): T {

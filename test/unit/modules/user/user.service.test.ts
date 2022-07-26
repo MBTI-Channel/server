@@ -19,7 +19,7 @@ describe("UserService Test", () => {
       // given
       const nickname = "TEST";
       testContainer.mock<IUserRepository>(TYPES.IUserRepository, {
-        findOneByNickname: () => true,
+        findOneByNickname: jest.fn(() => true),
       });
 
       // when
@@ -35,7 +35,7 @@ describe("UserService Test", () => {
       // given
       const nickname = "TEST";
       testContainer.mock<IUserRepository>(TYPES.IUserRepository, {
-        findOneByNickname: () => null,
+        findOneByNickname: jest.fn(() => null),
       });
 
       // when
@@ -53,10 +53,10 @@ describe("UserService Test", () => {
       // given
       const userId = 1;
       const mockUser = {
-        isActive: () => true,
+        isActive: jest.fn(() => true),
       };
       testContainer.mock<IUserRepository>(TYPES.IUserRepository, {
-        findOneStatus: () => mockUser,
+        findOneStatus: jest.fn(() => mockUser),
       });
 
       // when
@@ -66,13 +66,14 @@ describe("UserService Test", () => {
 
       // then
       expect(result).toEqual(true);
+      expect(mockUser.isActive).toBeCalledTimes(1);
     });
 
     it("Case 2: 존재하지 않는 user id라면 false를 리턴한다.", async () => {
       // given
       const userId = 1;
       testContainer.mock<IUserRepository>(TYPES.IUserRepository, {
-        findOneStatus: () => null,
+        findOneStatus: jest.fn(() => null),
       });
 
       // when
@@ -88,10 +89,10 @@ describe("UserService Test", () => {
       // given
       const userId = 1;
       const mockUser = {
-        isActive: () => false,
+        isActive: jest.fn(() => false),
       };
       testContainer.mock<IUserRepository>(TYPES.IUserRepository, {
-        findOneStatus: () => mockUser,
+        findOneStatus: jest.fn(() => mockUser),
       });
 
       // when
@@ -101,6 +102,7 @@ describe("UserService Test", () => {
 
       // then
       expect(result).toEqual(false);
+      expect(mockUser.isActive).toBeCalledTimes(1);
     });
   });
 });
