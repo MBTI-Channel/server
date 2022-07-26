@@ -1,6 +1,7 @@
 import { interfaces } from "inversify";
 import container from "../src/core/container.core";
 import { TYPES } from "../src/core/types.core";
+import { mockDataBaseService } from "./mock-database.service";
 import { mockLogger } from "./mock-logger";
 
 export class TestContainer {
@@ -13,6 +14,9 @@ export class TestContainer {
   init() {
     this._container.snapshot();
     this._container.rebind(TYPES.Logger).toConstantValue(mockLogger);
+    this._container
+      .rebind(TYPES.IDatabaseService)
+      .toConstantValue(mockDataBaseService);
   }
   /**
    * 각 단위 테스트가 애플리케이션 컨테이너의 새 복사본을 가져오도록 마지막 스냅샷으로 복원
