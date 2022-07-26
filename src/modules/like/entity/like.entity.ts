@@ -1,5 +1,5 @@
 import { Entity, Column, ManyToOne } from "typeorm";
-import { BaseEntity } from "../../../shared/base.entity.";
+import { BaseEntity } from "../../../shared/base.entity";
 import { Comment } from "../../comment/entity/comment.entity";
 import { Post } from "../../post/entity/post.entity";
 

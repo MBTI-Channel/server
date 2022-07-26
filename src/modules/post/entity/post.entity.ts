@@ -1,5 +1,5 @@
 import { Entity, Column, ManyToOne, OneToMany } from "typeorm";
-import { BaseEntity } from "../../../shared/base.entity.";
+import { BaseEntity } from "../../../shared/base.entity";
 import { Bookmark } from "../../bookmark/entity/bookmark.entity";
 import { Category } from "../../category/entity/category.entity";
 import { Comment } from "../../comment/entity/comment.entity";
