@@ -76,14 +76,11 @@ export class UserService implements IUserService {
     if (user.providerId !== providerId)
       throw new UnauthorizedException("user does not match");
 
+    const key = `${user.id}-${userAgent}`;
     const [accessToken, refreshToken] = await Promise.all([
       this._authService.generateAccessToken(user),
-      this._authService.generateRefreshToken(),
+      this._authService.generateRefreshToken(key),
     ]);
-
-    // redis에 refresh token값 저장
-    const key = `${user.id}-${userAgent}`;
-    await this._authService.setTokenInRedis(key, refreshToken);
 
     return new UserTokenResponseDto(user, accessToken, refreshToken);
   }
@@ -118,14 +115,11 @@ export class UserService implements IUserService {
       mbti,
       status: config.user.status.normal,
     });
+    const key = `${user.id}-${userAgent}`;
     const [accessToken, refreshToken] = await Promise.all([
       this._authService.generateAccessToken(updatedUser),
-      this._authService.generateRefreshToken(),
+      this._authService.generateRefreshToken(key),
     ]);
-
-    // redis에 refresh token값 저장
-    const key = `${user.id}-${userAgent}`;
-    await this._authService.setTokenInRedis(key, refreshToken);
 
     return new UserTokenResponseDto(updatedUser, accessToken, refreshToken);
   }
