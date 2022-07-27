@@ -9,4 +9,5 @@ export interface IAuthService {
     mbti: string
   ): Promise<void>;
   hasRefreshAuth(key: string, refreshToken: string): Promise<boolean>;
+  setTokenInRedis(key: string, refreshToken: string): Promise<void>;
 }

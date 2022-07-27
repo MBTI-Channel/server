@@ -20,7 +20,8 @@ export interface IUserService {
     id: number,
     uuid: string,
     nickname: string,
-    mbti: string
+    mbti: string,
+    userAgent: string
   ): Promise<UserTokenResponseDto>;
   reissueAccessToken(
     user: User,

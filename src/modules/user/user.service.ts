@@ -88,7 +88,8 @@ export class UserService implements IUserService {
     id: number,
     uuid: string,
     nickname: string,
-    mbti: string
+    mbti: string,
+    userAgent: string
   ) {
     const user = await this._userRepository.findOneById(id);
     // err: 존재하지 않는 user id
@@ -116,6 +117,10 @@ export class UserService implements IUserService {
       this._authService.generateAccessToken(updatedUser),
       this._authService.generateRefreshToken(),
     ]);
+
+    // redis에 refresh token값 저장
+    const key = `${user.id}-${userAgent}`;
+    await this._authService.setTokenInRedis(key, refreshToken);
 
     return new UserTokenResponseDto(updatedUser, accessToken, refreshToken);
   }

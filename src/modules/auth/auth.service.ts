@@ -94,4 +94,9 @@ export class AuthService implements IAuthService {
     if (redisRefreshToken !== refreshToken) return false;
     return true;
   }
+
+  public async setTokenInRedis(key: string, refreshToken: string) {
+    this._logger.trace(`[setTokenInRedis] start`);
+    await this._redisService.set(key, refreshToken);
+  }
 }

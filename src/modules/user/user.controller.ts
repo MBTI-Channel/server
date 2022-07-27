@@ -29,7 +29,14 @@ export class UserController {
   @httpPost("/", bodyValidator(SignUpDto))
   async signUp(@requestBody() body: SignUpDto, req: Request, res: Response) {
     const { id, uuid, nickname, mbti } = body;
-    const data = await this._userService.signUp(id, uuid, nickname, mbti);
+    const userAgent = convertUserAgent(req.headers["user-agent"]);
+    const data = await this._userService.signUp(
+      id,
+      uuid,
+      nickname,
+      mbti,
+      userAgent
+    );
     return res.status(201).json(data);
   }
 
