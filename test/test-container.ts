@@ -26,18 +26,18 @@ export class TestContainer {
   }
 
   /**
-   * `mockingImplementation`은 `Partial<T> = { [P in keyof T]?: T[P] | undefined; }`를 참고하여 작성함
+   * `mockiImplementation`은 `Partial<T> = { [P in keyof T]?: T[P] | undefined; }`를 참고하여 작성함
    * @param serviceIdentifier 컨테이너 식별자 `string | symbol `
-   * @param mockingInterface 모킹할 인터페이스의 구현체
+   * @param mockiImplementation 모킹할 인터페이스의 구현체
    */
   mock<T>(
     serviceIdentifier: interfaces.ServiceIdentifier<T>,
-    mockingInterface: { [method in keyof T]?: () => any }
+    mockiImplementation: { [method in keyof T]?: () => any }
   ) {
     this._container
       .rebind(serviceIdentifier)
-      .toConstantValue(mockingInterface as T);
-    return jest.fn(() => mockingInterface)() as T;
+      .toConstantValue(mockiImplementation as T);
+    return jest.fn(() => mockiImplementation)() as T;
   }
 
   get<T>(serviceIdentifier: interfaces.ServiceIdentifier<T>): T {
