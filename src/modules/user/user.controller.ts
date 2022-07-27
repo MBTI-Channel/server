@@ -61,7 +61,12 @@ export class UserController {
   )
   async oauthLogin(req: Request, res: Response) {
     const user = req.user as User;
-    const data = await this._userService.login(user.id, user.providerId);
+    const userAgent = convertUserAgent(req.headers["user-agent"]);
+    const data = await this._userService.login(
+      user.id,
+      user.providerId,
+      userAgent
+    );
 
     res.cookie("Refresh", data.refreshToken, {
       httpOnly: true,
@@ -69,7 +74,6 @@ export class UserController {
       maxAge: config.cookie.refreshTokenMaxAge,
     });
 
-    const userAgent = req.headers["user-agent"] ?? "abnormal";
     const ip = req.ip;
     await this._loginLogService.record(user, userAgent, ip);
     return res.status(201).json(data);

@@ -56,7 +56,8 @@ export class UserService implements IUserService {
   // 로그인
   public async login(
     id: number,
-    providerId: string
+    providerId: string,
+    userAgent: string
   ): Promise<UserTokenResponseDto> {
     this._logger.trace(`[UserService] login start`);
 
@@ -79,6 +80,10 @@ export class UserService implements IUserService {
       this._authService.generateAccessToken(user),
       this._authService.generateRefreshToken(),
     ]);
+
+    // redis에 refresh token값 저장
+    const key = `${user.id}-${userAgent}`;
+    await this._authService.setTokenInRedis(key, refreshToken);
 
     return new UserTokenResponseDto(user, accessToken, refreshToken);
   }
