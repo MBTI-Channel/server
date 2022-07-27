@@ -6,7 +6,7 @@ import {
   httpPost,
   requestBody,
 } from "inversify-express-utils";
-import { TYPES } from "../../core/type.core";
+import { TYPES } from "../../core/types.core";
 import { bodyValidator } from "../../middlewares/validator.middleware";
 import { User } from "../user/entity/user.entity";
 import { CreateAskDto } from "./dto/create-ask.dto";

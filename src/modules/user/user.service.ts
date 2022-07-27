@@ -1,5 +1,5 @@
 import { inject, injectable } from "inversify";
-import { TYPES } from "../../core/type.core";
+import { TYPES } from "../../core/types.core";
 import { IUserService } from "./interfaces/IUser.service";
 import { IAuthService } from "../auth/interfaces/IAuth.service";
 import { IUserRepository } from "./interfaces/IUser.repository";

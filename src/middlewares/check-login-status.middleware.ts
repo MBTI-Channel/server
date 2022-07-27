@@ -2,7 +2,7 @@ import { plainToInstance } from "class-transformer";
 import { NextFunction, Request, Response } from "express";
 import { inject, injectable } from "inversify";
 import { BaseMiddleware } from "inversify-express-utils";
-import { TYPES } from "../core/type.core";
+import { TYPES } from "../core/types.core";
 import { AuthService } from "../modules/auth/auth.service";
 import { User } from "../modules/user/entity/user.entity";
 import { UnauthorizedException } from "../shared/errors/all.exception";

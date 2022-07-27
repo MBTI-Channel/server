@@ -1,6 +1,6 @@
 import { inject, injectable } from "inversify";
-import { TYPES } from "../../core/type.core";
-import { IDatabaseService } from "../../shared/database/interfaces/IDatabase.service";
+import { TYPES } from "../../core/types.core";
+import { IDatabaseService } from "../../core/database/interfaces/IDatabase.service";
 import { LikeTargetType } from "../../shared/enum.shared";
 import {
   BadReqeustException,
@@ -45,7 +45,7 @@ export class LikeService implements ILikeService {
     let target;
     if (type === LikeTargetType.POST) {
       target = await this._postRepository.findOneById(targetId);
-    } else if (type === LikeTargetType.COMMENT){
+    } else if (type === LikeTargetType.COMMENT) {
       target = await this._commentRepository.findById(targetId);
     }
     if (!target || !target.isActive)
@@ -62,7 +62,7 @@ export class LikeService implements ILikeService {
     if (foundLike && foundLike.isActive) {
       throw new BadReqeustException(`like already existed`);
     }
-    
+
     // TODO: MBTI check
     // if (type === LikeTargetType.POST) {
     //   if (target.type === Post.typeTo("mbti") && user.mbti !== target.userMbti)
@@ -81,7 +81,7 @@ export class LikeService implements ILikeService {
       const like = await this._likeRepository.createLike(likeEntity);
       if (type === LikeTargetType.POST) {
         await this._postService.increaseLikeCount(targetId);
-      } else if (type === LikeTargetType.COMMENT){
+      } else if (type === LikeTargetType.COMMENT) {
         await this._commentService.increaseLikeCount(targetId);
       }
       // TODO: notification check

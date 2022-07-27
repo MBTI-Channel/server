@@ -1,6 +1,6 @@
 import { inject, injectable } from "inversify";
-import { TYPES } from "../../core/type.core";
-import { IDatabaseService } from "../../shared/database/interfaces/IDatabase.service";
+import { TYPES } from "../../core/types.core";
+import { IDatabaseService } from "../../core/database/interfaces/IDatabase.service";
 import { Like } from "./entity/like.entity";
 import { ILikeRepository } from "./interfaces/ILike.repository";
 

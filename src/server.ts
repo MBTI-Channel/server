@@ -5,12 +5,12 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import { InversifyExpressServer } from "inversify-express-utils";
 import container from "./core/container.core";
-import { TYPES } from "./core/type.core";
-import { DatabaseService } from "./shared/database/database.service";
+import { TYPES } from "./core/types.core";
+import { IDatabaseService } from "./core/database/interfaces/IDatabase.service";
+import { IRedisService } from "./core/database/interfaces/IRedis.service";
 import { IApiWebhookService } from "./shared/api/interfaces/IApi-webhook.service";
 import { Logger } from "./shared/utils/logger.util";
 import { HttpException } from "./shared/errors/http.exception";
-import { RedisService } from "./shared/redis/redis.service";
 /* Swagger */
 import swaggerUi from "swagger-ui-express";
 import YAML from "yamljs";
@@ -32,8 +32,10 @@ const corsOptions = {
 };
 
 const loggerInstance = container.get<Logger>(TYPES.Logger);
-const databaseInstance = container.get<DatabaseService>(TYPES.IDatabaseService);
-const redisInstance = container.get<RedisService>(TYPES.IRedisService);
+const databaseInstance = container.get<IDatabaseService>(
+  TYPES.IDatabaseService
+);
+const redisInstance = container.get<IRedisService>(TYPES.IRedisService);
 const apiWebhookService = container.get<IApiWebhookService>(
   TYPES.IApiWebhookService
 );

@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { inject, injectable } from "inversify";
 import { BaseMiddleware } from "inversify-express-utils";
-import { TYPES } from "../core/type.core";
+import { TYPES } from "../core/types.core";
 import { IUserService } from "../modules/user/interfaces/IUser.service";
 import { IUserRepository } from "../modules/user/interfaces/IUser.repository";
 import { UserBase } from "../modules/user/entity/userbase";

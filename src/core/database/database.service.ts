@@ -1,7 +1,7 @@
 import { inject, injectable } from "inversify";
 import { DataSource, ObjectType, Repository } from "typeorm";
-import { TYPES } from "../../core/type.core";
-import { Logger } from "../utils/logger.util";
+import { TYPES } from "../types.core";
+import { Logger } from "../../shared/utils/logger.util";
 import appDataSource from "../../datasource";
 import { IDatabaseService } from "./interfaces/IDatabase.service";
 

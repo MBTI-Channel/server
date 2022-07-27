@@ -1,139 +1,125 @@
-import container from "../../../../src/core/container.core";
-import { TYPES } from "../../../../src/core/type.core";
-import { Comment } from "../../../../src/modules/comment/entity/comment.entity";
+import { TYPES } from "../../../../src/core/types.core";
+import { ICommentRepository } from "../../../../src/modules/comment/interfaces/IComment.repository";
 import { ICommentService } from "../../../../src/modules/comment/interfaces/IComment.service";
+import { INotificationService } from "../../../../src/modules/notifications/interfaces/INotification.service";
+import { IPostRepository } from "../../../../src/modules/post/interfaces/IPost.repository";
+import { IPostService } from "../../../../src/modules/post/interfaces/IPost.service";
 import { User } from "../../../../src/modules/user/entity/user.entity";
 import { NotFoundException } from "../../../../src/shared/errors/all.exception";
+import { HttpException } from "../../../../src/shared/errors/http.exception";
+import { TestContainer } from "../../../test-container";
+import { IDatabaseService } from "../../../../src/core/database/interfaces/IDatabase.service";
 
 import { CommentResponseDto } from "../../../../src/modules/comment/dto";
 jest.mock("../../../../src/modules/comment/dto");
 
-describe("CommentService ", () => {
+describe("CommentService Test", () => {
+  const testContainer = new TestContainer();
+
   beforeEach(() => {
-    // 각 단위 테스트가 다른 단위 테스트를 중단하지 않고 수정할 수 있도록 스냅샷 생성
-    container.snapshot();
+    testContainer.init();
   });
 
   afterEach(() => {
-    // 각 단위 테스트가 애플리케이션 컨테이너의 새 복사본을 가져오도록 마지막 스냅샷으로 복원
-    container.restore();
+    testContainer.restore();
   });
 
   describe("createComment", () => {
-    const mockDataBaseService = {
-      getTransaction: () => {
-        return {
-          startTransaction: jest.fn(),
-          commitTransaction: jest.fn(),
-          rollbackTransaction: jest.fn(),
-          release: jest.fn(),
-        };
-      },
-    };
-
-    it("Success: 존재하는 post id, post의 댓글수 + 1 및 댓글 생성", async () => {
-      //given
-      const mockUser = {
-        isMy: () => true,
+    const mockUser = new User();
+    const postId = 1;
+    const content = "content";
+    const isSecret = true;
+    it("Success: 댓글 생성 성공", async () => {
+      // given
+      const mockPost = {
+        isActive: jest.fn(() => true),
       };
-      const mockPostId = 1;
-      const mockContent = "나는 댓글이다옹";
-      const mockIsSecret = true;
-      const mockComment = "";
-      const mockPost = { isActive: true };
-      const mockPostRepository = {
-        findOneById: () => {
-          return mockPost;
-        },
-      };
-      const mockEntity = {};
-      Comment.of = jest.fn().mockReturnValue(mockEntity);
-      const mockPostService = {
-        increaseCommentCount: () => true,
-      };
-      const mockNotificationService = {
-        createByTargetUser: () => true,
-      };
-      const mockCommentRepository = {
-        createComment: () => mockComment,
-      };
-
-      container.unbind(TYPES.IDatabaseService);
-      container
-        .bind(TYPES.IDatabaseService)
-        .toConstantValue(mockDataBaseService);
-      container.unbind(TYPES.IPostRepository);
-      container.bind(TYPES.IPostRepository).toConstantValue(mockPostRepository);
-      container.unbind(TYPES.IPostService);
-      container.bind(TYPES.IPostService).toConstantValue(mockPostService);
-      container.unbind(TYPES.INotificationService);
-      container
-        .bind(TYPES.INotificationService)
-        .toConstantValue(mockNotificationService);
-      container.unbind(TYPES.ICommentRepository);
-      container
-        .bind(TYPES.ICommentRepository)
-        .toConstantValue(mockCommentRepository);
-
-      const commentService = container.get<ICommentService>(
-        TYPES.ICommentService
+      testContainer.mock<IPostRepository>(TYPES.IPostRepository, {
+        findOneById: jest.fn(() => mockPost),
+      });
+      const mockUserRepo = testContainer.mock<ICommentRepository>(
+        TYPES.ICommentRepository,
+        {
+          createComment: jest.fn(() => mockPost),
+        }
       );
-
-      const spyIncreaseCommentCount = jest.spyOn(
-        mockPostService,
-        "increaseCommentCount"
+      const mockPostService = testContainer.mock<IPostService>(
+        TYPES.IPostService,
+        {
+          increaseCommentCount: jest.fn(),
+        }
       );
-      const spyCreateByTargetUser = jest.spyOn(
-        mockNotificationService,
-        "createByTargetUser"
+      const mockNotificationService = testContainer.mock<INotificationService>(
+        TYPES.INotificationService,
+        {
+          createByTargetUser: jest.fn(),
+        }
       );
+      const mockTransaction = await testContainer
+        .get<IDatabaseService>(TYPES.IDatabaseService)
+        .getTransaction();
 
-      //when
-      const result = await commentService.createComment(
-        mockUser as unknown as User,
-        mockPostId,
-        mockContent,
-        mockIsSecret
-      );
-
-      //then
-      expect(spyIncreaseCommentCount).toBeCalledTimes(1);
-      expect(spyCreateByTargetUser).toBeCalledTimes(1);
+      // when
+      const result = await testContainer
+        .get<ICommentService>(TYPES.ICommentService)
+        .createComment(mockUser, postId, content, isSecret);
+      // then
+      expect(mockUserRepo.createComment).toBeCalledTimes(1);
+      expect(mockPostService.increaseCommentCount).toBeCalledTimes(1);
+      expect(mockNotificationService.createByTargetUser).toBeCalledTimes(1);
+      expect(mockTransaction.commitTransaction).toBeCalledTimes(1);
       expect(result).toEqual(expect.any(CommentResponseDto));
     });
 
     it("Error: 존재하지 않는 post id, NotFoundError 발생", async () => {
-      //given
-      const mockUser = {
-        isMy: () => true,
-      };
-      const mockPostId = 1;
-      const mockContent = "나는 댓글이다옹";
-      const mockIsSecret = false;
-      const mockPostRepository = {
-        findOneById: () => null,
-      };
+      // given
+      testContainer.mock<IPostRepository>(TYPES.IPostRepository, {
+        findOneById: jest.fn(() => false),
+      });
 
-      container.unbind(TYPES.IDatabaseService);
-      container
-        .bind(TYPES.IDatabaseService)
-        .toConstantValue(mockDataBaseService);
-      container.unbind(TYPES.IPostRepository);
-      container.bind(TYPES.IPostRepository).toConstantValue(mockPostRepository);
-
-      const commentService = container.get<ICommentService>(
-        TYPES.ICommentService
-      );
-
-      //when, then
-      await expect(async () => {
-        await commentService.createComment(
-          mockUser as unknown as User,
-          mockPostId,
-          mockContent,
-          mockIsSecret
-        );
+      // when, then
+      expect(async () => {
+        await testContainer
+          .get<ICommentService>(TYPES.ICommentService)
+          .createComment(mockUser, postId, content, isSecret);
       }).rejects.toThrowError(new NotFoundException("not exists post"));
+    });
+
+    it("Error: comment count update 도중 삭제된 post id, HttpException 발생", async () => {
+      // given
+      const mockPost = {
+        isActive: jest.fn(() => true),
+      };
+      testContainer.mock<IPostRepository>(TYPES.IPostRepository, {
+        findOneById: jest.fn(() => mockPost),
+      });
+      testContainer.mock<ICommentRepository>(TYPES.ICommentRepository, {
+        createComment: jest.fn(() => true),
+      });
+      const mockPostService = testContainer.mock<IPostService>(
+        TYPES.IPostService,
+        {
+          increaseCommentCount: jest.fn().mockImplementation(() => {
+            throw new Error("업데이트 도중 삭제됨");
+          }),
+        }
+      );
+      const mockTransaction = await testContainer
+        .get<IDatabaseService>(TYPES.IDatabaseService)
+        .getTransaction();
+
+      // when, then
+      expect(mockPostService.increaseCommentCount).toThrowError(
+        new Error("업데이트 도중 삭제됨")
+      );
+      await expect(async () => {
+        await testContainer
+          .get<ICommentService>(TYPES.ICommentService)
+          .createComment(mockUser, postId, content, isSecret);
+      }).rejects.toThrowError(
+        new HttpException("1", "업데이트 도중 삭제됨", 1)
+      );
+      expect(mockTransaction.rollbackTransaction).toBeCalledTimes(1);
     });
   });
 });

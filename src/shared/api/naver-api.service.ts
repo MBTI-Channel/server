@@ -1,7 +1,7 @@
 import axios from "axios";
 import { plainToInstance } from "class-transformer";
 import { inject, injectable } from "inversify";
-import { TYPES } from "../../core/type.core";
+import { TYPES } from "../../core/types.core";
 import { IApiAccountService } from "./interfaces/IApi-account.service";
 import { Logger } from "../../shared/utils/logger.util";
 import { NaverAccountDto } from "./dto/naver-account.dto";
