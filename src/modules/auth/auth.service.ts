@@ -99,6 +99,7 @@ export class AuthService implements IAuthService {
 
   private async _setTokenInRedis(key: string, refreshToken: string) {
     this._logger.trace(`[setTokenInRedis] start`);
+
     await this._redisService.set(key, refreshToken);
   }
 }

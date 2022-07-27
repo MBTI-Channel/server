@@ -10,6 +10,14 @@ const isValidEnvVar = (key: string, defaultValue: any = undefined) => {
   return value;
 };
 
+const timeCalculate = (expires: string) => {
+  const time = expires
+    .split("*")
+    .reduce((total: number, value: string) => (total *= parseInt(value)), 1);
+
+  return time;
+};
+
 export default {
   port: isValidEnvVar("PORT", 8000),
   mysql: {
@@ -31,12 +39,12 @@ export default {
   },
   jwt: {
     secret: isValidEnvVar("JWT_SECRET"),
-    accessTokenExpiresIn: isValidEnvVar("JWT_ACCESS_EXPIRES"),
-    refreshTokenExpiresIn: isValidEnvVar("JWT_REFRESH_EXPIRES"),
+    accessTokenExpiresIn: timeCalculate(isValidEnvVar("JWT_ACCESS_EXPIRES")),
+    refreshTokenExpiresIn: timeCalculate(isValidEnvVar("JWT_REFRESH_EXPIRES")),
     issuer: isValidEnvVar("JWT_ISSUER"),
   },
   cookie: {
-    refreshTokenMaxAge: parseInt(isValidEnvVar("COOKIE_REFRESH_MAX_AGE")),
+    refreshTokenMaxAge: timeCalculate(isValidEnvVar("COOKIE_REFRESH_MAX_AGE")),
   },
   user: {
     status: {
