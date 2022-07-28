@@ -1,6 +1,17 @@
-import "dotenv/config";
+import dotenv from "dotenv";
+import path from "path";
 
-process.env.NODE_ENV = process.env.NODE_ENV || "development";
+const ENV_ROOT = "./env/";
+
+dotenv.config({
+  path: path.resolve(
+    process.env.NODE_ENV === "production"
+      ? ENV_ROOT + ".production.env"
+      : process.env.NODE_ENV === "stage"
+      ? ENV_ROOT + ".stage.env"
+      : ENV_ROOT + ".development.env"
+  ),
+});
 
 const isValidEnvVar = (key: string, defaultValue: any = undefined) => {
   const value = process.env[key] || defaultValue;
