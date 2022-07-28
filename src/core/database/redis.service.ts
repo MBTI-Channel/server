@@ -6,7 +6,7 @@ import { TYPES } from "../types.core";
 import { Logger } from "../../shared/utils/logger.util";
 import config from "../../config/index";
 
-const { redis } = config;
+const { redis, jwt } = config;
 
 @injectable()
 export class RedisService implements IRedisService {
@@ -34,6 +34,7 @@ export class RedisService implements IRedisService {
   // test용 임의로 둔 set
   public async set(key: string, value: string) {
     await RedisService._client.set(key, value);
+    await RedisService._client.expire(key, jwt.refreshTokenExpiresIn);
   }
 
   // test용 임의로 둔 get

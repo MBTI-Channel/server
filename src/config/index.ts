@@ -21,6 +21,14 @@ const isValidEnvVar = (key: string, defaultValue: any = undefined) => {
   return value;
 };
 
+// const timeCalculate = (expires: string) => {
+//   const time = expires
+//     .split("*")
+//     .reduce((total: number, value: string) => (total *= parseInt(value)), 1);
+
+//   return time;
+// };
+
 export default {
   port: isValidEnvVar("PORT", 8000),
   mysql: {

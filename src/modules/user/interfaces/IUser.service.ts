@@ -15,12 +15,17 @@ export interface IUserService {
   ): Promise<NeedSignUpResponseDto>;
   //update(id: number, payload: Partial<User>): Promise<UserResponseDto | null>;
   //findOne
-  login(id: number, providerId: string): Promise<UserTokenResponseDto>;
+  login(
+    id: number,
+    providerId: string,
+    userAgent: string
+  ): Promise<UserTokenResponseDto>;
   signUp(
     id: number,
     uuid: string,
     nickname: string,
-    mbti: string
+    mbti: string,
+    userAgent: string
   ): Promise<UserTokenResponseDto>;
   reissueAccessToken(
     user: User,

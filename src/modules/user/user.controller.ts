@@ -29,7 +29,14 @@ export class UserController {
   @httpPost("/", bodyValidator(SignUpDto))
   async signUp(@requestBody() body: SignUpDto, req: Request, res: Response) {
     const { id, uuid, nickname, mbti } = body;
-    const data = await this._userService.signUp(id, uuid, nickname, mbti);
+    const userAgent = convertUserAgent(req.headers["user-agent"]);
+    const data = await this._userService.signUp(
+      id,
+      uuid,
+      nickname,
+      mbti,
+      userAgent
+    );
     return res.status(201).json(data);
   }
 
@@ -54,7 +61,12 @@ export class UserController {
   )
   async oauthLogin(req: Request, res: Response) {
     const user = req.user as User;
-    const data = await this._userService.login(user.id, user.providerId);
+    const userAgent = convertUserAgent(req.headers["user-agent"]);
+    const data = await this._userService.login(
+      user.id,
+      user.providerId,
+      userAgent
+    );
 
     res.cookie("Refresh", data.refreshToken, {
       httpOnly: true,
@@ -62,7 +74,6 @@ export class UserController {
       maxAge: config.cookie.refreshTokenMaxAge,
     });
 
-    const userAgent = req.headers["user-agent"] ?? "abnormal";
     const ip = req.ip;
     await this._loginLogService.record(user, userAgent, ip);
     return res.status(201).json(data);

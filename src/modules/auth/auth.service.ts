@@ -37,14 +37,16 @@ export class AuthService implements IAuthService {
     return accessToken;
   }
 
-  public async generateRefreshToken() {
-    // TODO: redis
+  public async generateRefreshToken(key: string) {
     const payload: ITokenPayload = {};
     const options: SignOptions = {
       expiresIn: config.jwt.refreshTokenExpiresIn,
       issuer: config.jwt.issuer,
     };
     const refreshToken = this._jwtUtil.sign(payload, options);
+
+    // redis에 refresh token 저장
+    await this._setTokenInRedis(key, refreshToken);
     return refreshToken;
   }
 
@@ -93,5 +95,11 @@ export class AuthService implements IAuthService {
     // value가 같지 않음
     if (redisRefreshToken !== refreshToken) return false;
     return true;
+  }
+
+  private async _setTokenInRedis(key: string, refreshToken: string) {
+    this._logger.trace(`[setTokenInRedis] start`);
+
+    await this._redisService.set(key, refreshToken);
   }
 }

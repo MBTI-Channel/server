@@ -56,7 +56,8 @@ export class UserService implements IUserService {
   // 로그인
   public async login(
     id: number,
-    providerId: string
+    providerId: string,
+    userAgent: string
   ): Promise<UserTokenResponseDto> {
     this._logger.trace(`[UserService] login start`);
 
@@ -75,9 +76,10 @@ export class UserService implements IUserService {
     if (user.providerId !== providerId)
       throw new UnauthorizedException("user does not match");
 
+    const key = `${user.id}-${userAgent}`;
     const [accessToken, refreshToken] = await Promise.all([
       this._authService.generateAccessToken(user),
-      this._authService.generateRefreshToken(),
+      this._authService.generateRefreshToken(key),
     ]);
 
     return new UserTokenResponseDto(user, accessToken, refreshToken);
@@ -88,7 +90,8 @@ export class UserService implements IUserService {
     id: number,
     uuid: string,
     nickname: string,
-    mbti: string
+    mbti: string,
+    userAgent: string
   ) {
     const user = await this._userRepository.findOneById(id);
     // err: 존재하지 않는 user id
@@ -112,9 +115,10 @@ export class UserService implements IUserService {
       mbti,
       status: config.user.status.normal,
     });
+    const key = `${user.id}-${userAgent}`;
     const [accessToken, refreshToken] = await Promise.all([
       this._authService.generateAccessToken(updatedUser),
-      this._authService.generateRefreshToken(),
+      this._authService.generateRefreshToken(key),
     ]);
 
     return new UserTokenResponseDto(updatedUser, accessToken, refreshToken);
