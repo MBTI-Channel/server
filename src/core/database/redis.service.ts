@@ -26,9 +26,9 @@ export class RedisService implements IRedisService {
       );
       RedisService._client.QUIT();
     });
-    await RedisService._client.connect();
-
-    this._logger.info(`[RedisService] redis done`);
+    await RedisService._client
+      .connect()
+      .then(() => this._logger.info(`[RedisService] redis done`));
   }
 
   // test용 임의로 둔 set
