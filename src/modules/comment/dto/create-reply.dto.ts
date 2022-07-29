@@ -10,5 +10,5 @@ export class CreateReplyDto extends CreateCommentDto {
   @IsInt()
   @Min(1)
   @IsOptional()
-  taggedId: number;
+  taggedId?: number;
 }

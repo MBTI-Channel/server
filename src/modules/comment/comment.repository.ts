@@ -21,7 +21,7 @@ export class CommentRepository implements ICommentRepository {
     return comment;
   }
 
-  async findById(id: number): Promise<Comment | null> {
+  async findOneById(id: number): Promise<Comment | null> {
     const repository = await this._database.getRepository(Comment);
     return await repository.findOne({ where: { id } });
   }
