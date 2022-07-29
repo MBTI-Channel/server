@@ -49,7 +49,7 @@ export class CommentService implements ICommentService {
     content: string,
     isSecret: boolean
   ): Promise<CommentResponseDto> {
-    // 게시글 검증
+    // 댓글 작성할 게시글 존재하는지 확인
     const post = await this._postRepository.findOneById(postId);
     if (!post || !post.isActive) throw new NotFoundException(`not exists post`);
 
@@ -86,9 +86,10 @@ export class CommentService implements ICommentService {
     content: string,
     isSecret: boolean
   ): Promise<ReplyResponseDto> {
-    // 게시글 댓글이 존재하는지, 삭제 되지 않았는지 확인
+    // 대댓글 작성할 게시글이 존재하는지 확인
     const post = await this._postRepository.findOneById(postId);
     if (!post || !post.isActive) throw new NotFoundException(`not exists post`);
+    // 부모 댓글이 존재하는지 확인
     const parentComment = await this._commentRepository.findOneById(parentId);
     if (!parentComment || !parentComment.isActive)
       throw new NotFoundException(`not exists comment`);
@@ -98,12 +99,12 @@ export class CommentService implements ICommentService {
         `replies cannot be written to a reply with a parent id`
       );
 
-    //태그된 댓글 검증
+    // 태그된 댓글 검증
     if (taggedId) {
       const taggedReply = await this._commentRepository.findOneById(taggedId);
       if (!taggedReply || !taggedReply.isActive)
         throw new NotFoundException(`not exists comment`);
-      //태그된 댓글이 같은 댓글군에 포함되는지 확인
+      // 태그된 댓글이 같은 댓글군에 포함되는지 확인
       if (taggedReply.parentId !== parentId)
         throw new BadReqeustException(
           `tagged comments must be in the same comment group`
@@ -139,7 +140,7 @@ export class CommentService implements ICommentService {
   async findAllComments(pageOptionsDto: GetAllCommentDto, user: User) {
     this._logger.trace(`[CommentService] findAllComments start`);
 
-    // 게시글 검증
+    // 댓글을 조회할 게시글이 존재하는지 확인
     const isValidPost = this._postService.isValid(pageOptionsDto.postId);
     if (!isValidPost) throw new NotFoundException("not exists post");
 
@@ -165,12 +166,13 @@ export class CommentService implements ICommentService {
   ): Promise<any> {
     this._logger.trace(`[CommentService] findAllReplies start`);
 
-    // 부모댓글, 게시글 검증
+    // 부모댓글이 존재하는지 확인
     const comment = await this._commentRepository.findOneById(
       pageOptionsDto.parentId
     );
     if (!comment) throw new NotFoundException("not exists comment");
 
+    // 게시글이 존재하는지 확인
     const isValidPost = this._postService.isValid(comment.postId);
     if (!isValidPost) throw new NotFoundException("not exists post");
 
@@ -200,23 +202,23 @@ export class CommentService implements ICommentService {
 
   async increaseLikeCount(id: number): Promise<void> {
     this._logger.trace(`[CommentService] increaseLikeCount start`);
+    // 댓글이 존재하는지 확인
     const comment = await this._commentRepository.findOneById(id);
-    // err: 존재하지 않는 || 삭제된 댓글 id
     if (!comment || !comment.isActive)
       throw new NotFoundException(`not exists comment`);
 
+    // 댓글 좋아요 수 증가. 만약 도중에 삭제되었다면 false 반환
     const hasIncreased = await this._commentRepository.increaseLikeCount(id);
-    // err: 업데이트 도중 삭제된 댓글 id
     if (!hasIncreased) throw new NotFoundException(`not exists comment`);
   }
 
   async update(user: User, id: number, content: string) {
-    // 댓글 검증
+    // 댓글 존재하는지 확인
     const comment = await this._commentRepository.findOneById(id);
     if (!comment || !comment.isActive)
       throw new NotFoundException("not exists comment");
 
-    // 게시글 검증
+    // 댓글이 속한 게시글 존재하는지 확인
     const isValidPost = await this._postService.isValid(comment.postId);
     if (!isValidPost) throw new NotFoundException("not exists post");
 
@@ -232,7 +234,7 @@ export class CommentService implements ICommentService {
 
   async delete(user: User, id: number): Promise<void> {
     this._logger.trace(`[CommentService] delete start`);
-    // 댓글 검증
+    // 댓글 존재하는지 확인
     const comment = await this._commentRepository.findOneById(id);
     this._logger.trace(`[CommentService] check exists comment id ${id}`);
     if (!comment || !comment.isActive)
