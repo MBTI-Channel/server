@@ -71,7 +71,7 @@ export class Comment extends BaseEntity {
     content: string,
     isSecret: boolean,
     parentId: number,
-    taggedId: number
+    taggedId?: number
   ) {
     const reply = Comment.of(post, user, content, isSecret);
     reply.parentId = parentId ?? undefined;

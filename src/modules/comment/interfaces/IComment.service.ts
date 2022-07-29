@@ -18,7 +18,7 @@ export interface ICommentService {
     user: User,
     postId: number,
     parentId: number,
-    taggedId: number,
+    taggedId: number | undefined,
     content: string,
     isSecret: boolean
   ): Promise<ReplyResponseDto>;
