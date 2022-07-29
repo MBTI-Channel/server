@@ -46,7 +46,7 @@ export class LikeService implements ILikeService {
     if (type === LikeTargetType.POST) {
       target = await this._postRepository.findOneById(targetId);
     } else if (type === LikeTargetType.COMMENT) {
-      target = await this._commentRepository.findById(targetId);
+      target = await this._commentRepository.findOneById(targetId);
     }
     if (!target || !target.isActive)
       throw new NotFoundException(`not exists target`);
