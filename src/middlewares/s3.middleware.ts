@@ -17,7 +17,7 @@ const createFileName = (req: Request, fileType: string) => {
   const userId = user.id;
   const fileFormat = fileType.split("/")[1];
 
-  return `${userId}-${v4()}.${fileFormat}`;
+  return `${userId}-${req.url.split("/")[1]}-${v4()}.${fileFormat}`;
 };
 
 export const upload = multer({
@@ -30,7 +30,7 @@ export const upload = multer({
       region: region,
     }),
     bucket: bucketName,
-    // acl: "public-read-write",
+    acl: "public-read-write",
     key(req: Request, file: Express.Multer.File, callback) {
       const fileType = file.mimetype;
       const fileName = createFileName(req, fileType);
