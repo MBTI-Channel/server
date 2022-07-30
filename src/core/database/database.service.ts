@@ -33,8 +33,12 @@ export class DatabaseService implements IDatabaseService {
 
   public async init() {
     try {
-      DatabaseService.myDataSource = await appDataSource.initialize();
-      this._logger.info("[DatabaseService] database initialize success");
+      DatabaseService.myDataSource = await appDataSource
+        .initialize()
+        .then((dataSource) => {
+          this._logger.info("[DatabaseService] database initialize success");
+          return dataSource;
+        });
     } catch (err) {
       this._logger.error(
         err,
