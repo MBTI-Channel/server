@@ -6,7 +6,7 @@ import { Request } from "express";
 import { User } from "../modules/user/entity/user.entity";
 import { v4 } from "uuid";
 
-const { s3AccessKey, s3SecretKey } = config.aws;
+const { s3AccessKey, s3SecretKey, bucketName, region } = config.aws;
 
 const createFileName = (req: Request, fileType: string) => {
   if (!req.files) {
@@ -27,9 +27,9 @@ export const upload = multer({
         accessKeyId: s3AccessKey,
         secretAccessKey: s3SecretKey,
       },
-      region: "ap-northeast-2", // 수정
+      region: region,
     }),
-    bucket: "mbti-channel", // 수정
+    bucket: bucketName,
     // acl: "public-read-write",
     key(req: Request, file: Express.Multer.File, callback) {
       const fileType = file.mimetype;
@@ -37,5 +37,4 @@ export const upload = multer({
       if (fileName) callback(null, `files/${fileName}`);
     },
   }),
-  dest: "files/",
 });
