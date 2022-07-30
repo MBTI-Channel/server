@@ -50,8 +50,8 @@ export default {
   },
   jwt: {
     secret: isValidEnvVar("JWT_SECRET"),
-    accessTokenExpiresIn: isValidEnvVar("JWT_ACCESS_EXPIRES"),
-    refreshTokenExpiresIn: isValidEnvVar("JWT_REFRESH_EXPIRES"),
+    accessTokenExpiresIn: parseInt(isValidEnvVar("JWT_ACCESS_EXPIRES")),
+    refreshTokenExpiresIn: parseInt(isValidEnvVar("JWT_REFRESH_EXPIRES")),
     issuer: isValidEnvVar("JWT_ISSUER"),
   },
   cookie: {
@@ -74,5 +74,11 @@ export default {
   discord: {
     askWebhookUrl: isValidEnvVar("DISCORD_ASK_WEBHOOK_URL"),
     errorWebhookUrl: isValidEnvVar("DISCORD_ERROR_WEBHOOK_URL"),
+  },
+  aws: {
+    s3AccessKey: isValidEnvVar("S3_ACCESS_KEY"),
+    s3SecretKey: isValidEnvVar("S3_SECRET_KEY"),
+    bucketName: isValidEnvVar("BUCKET_NAME"),
+    region: isValidEnvVar("REGION"),
   },
 };
