@@ -78,4 +78,13 @@ export class Comment extends BaseEntity {
     reply.taggedId = taggedId;
     return reply;
   }
+
+  /**
+   * comment entity가 대댓글인지 확인하는 메서드
+   */
+  isReply() {
+    // parentId 값이 있다면, 대댓글
+    if (!this.parentId) return true;
+    return false;
+  }
 }
