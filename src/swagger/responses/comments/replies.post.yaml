@@ -49,7 +49,7 @@
             example: 12
 
 "400":
-  description: 대댓글에 대댓글 작성 시도함 or 태그된 댓글이 같은 댓글그룹이 아님
+  description: 태그된 댓글이 같은 댓글그룹이 아님 || parent id가 부모 댓글이 아닌 대댓글임
   content:
     application/json:
       schema:
@@ -57,7 +57,7 @@
         properties:
           message:
             type: string
-            example: replies cannot be written to a reply with a parent id || tagged comments must be in the same comment group
+            example: tagged reply must be in the same comment group || invalid parent comment id
 
 "401":
   description: access token 유효하지 않음
@@ -71,7 +71,7 @@
             example: authentication error
 
 "404":
-  description: 존재하지 않는 (삭제된) 게시글 | 댓글
+  description: 존재하지 않는 (삭제된) 게시글 | 댓글 | 대댓글
   content:
     application/json:
       schema:
@@ -79,4 +79,4 @@
         properties:
           message:
             type: string
-            example: not exists post
+            example: not exists post || not exists comment || not exists reply
