@@ -3,7 +3,7 @@
 <br>
 
 <p align="center">
-  <img src="https://mbti-channel.s3.ap-northeast-2.amazonaws.com/files/3-posts-63b761d6-067a-406e-85ec-0603ab96e4ed.png" height="200px" width="200px"/>
+  <img src="https://user-images.githubusercontent.com/37575974/182027708-f493614f-c029-4505-bac6-e019b8587ddf.png" height="200px" width="200px"/>
 </p>
 
 <br>

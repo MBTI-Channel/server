@@ -154,11 +154,22 @@ export class UserService implements IUserService {
   }
 
   // user가 유효한지 확인한다.
-  async isValid(id: number) {
+  public async isValid(id: number) {
     this._logger.trace(`[UserService] is valid user id? : ${id}`);
     const user = await this._userRepository.findOneStatus(id);
     if (!user) return false;
     if (!user.isActive()) return false;
     return true;
+  }
+
+  public async getProfileData(id: number) {
+    this._logger.trace(`[UserService] is valid user id? : ${id}`);
+    const user = await this._userRepository.findOneById(id);
+
+    // 유효하지 않는 유저
+    if (!user || !user.isActive())
+      throw new NotFoundException("not exists user");
+
+    return new UserResponseDto(user);
   }
 }
