@@ -5,7 +5,7 @@ import {
   PageInfoDto,
   PageResponseDto,
 } from "../../../shared/page";
-import { GetAllRepliesDto } from "../dto/get-all-replies.dto";
+import { GetAllRepliesDto } from "../dto";
 
 export interface ICommentService {
   createComment(

@@ -1,5 +1,4 @@
-import { GetAllCommentDto } from "../dto/get-all-comment.dto";
-import { GetAllRepliesDto } from "../dto/get-all-replies.dto";
+import { GetAllCommentDto, GetAllRepliesDto } from "../dto";
 import { Comment } from "../entity/comment.entity";
 
 export interface ICommentRepository {
