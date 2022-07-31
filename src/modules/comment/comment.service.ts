@@ -98,9 +98,7 @@ export class CommentService implements ICommentService {
       if (!replyTarget || !replyTarget.isActive)
         throw new NotFoundException(`not exists comment`);
       if (replyTarget.isReply())
-        throw new BadReqeustException(
-          `replies cannot be written to a reply with a parent id` //TODO: 응답메세지 수정
-        );
+        throw new BadReqeustException(`invalid parent comment id`);
     }
     // parentId !== taggedId라면 대댓글에 대한 대댓글 작성이다.
     else {
