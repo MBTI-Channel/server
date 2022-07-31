@@ -19,6 +19,7 @@ import { OauthLoginDto } from "../auth/dto/oauth-login.dto";
 import { SignUpDto, NicknameDuplicateCheckDto } from "./dto";
 import { convertUserAgent } from "../../shared/utils/user-agent.util";
 import config from "../../config";
+import { IdDto } from "./dto/id.dto";
 
 @controller("/users")
 export class UserController {
@@ -106,6 +107,26 @@ export class UserController {
       nickname,
       mbti,
       isAdmin,
+    });
+  }
+
+  // 프로필에 필요한 데이터
+  @httpGet(
+    "/profile",
+    TYPES.ValidateAccessTokenMiddleware,
+    queryValidator(IdDto)
+  )
+  async getProfileData(@queryParam() dto: IdDto, req: Request, res: Response) {
+    const { id, nickname, mbti } = req.user as User;
+    const { userId } = dto;
+
+    const data = await this._userService.getProfileData(userId);
+
+    return res.status(200).json({
+      nickname,
+      mbti,
+      createdAt: data.createdAt,
+      isMe: id === userId,
     });
   }
 

@@ -34,4 +34,5 @@ export interface IUserService {
   ): Promise<string>;
   isExistsNickname(nickname: string): Promise<boolean>;
   isValid(id: number): Promise<boolean>;
+  getProfileData(id: number): Promise<UserResponseDto>;
 }
