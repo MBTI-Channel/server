@@ -82,7 +82,7 @@ export class CommentService implements ICommentService {
     user: User,
     postId: number,
     parentId: number,
-    taggedId: number | undefined,
+    taggedId: number,
     content: string,
     isSecret: boolean
   ): Promise<ReplyResponseDto> {
