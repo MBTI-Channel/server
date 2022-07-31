@@ -86,28 +86,31 @@ export class CommentService implements ICommentService {
     content: string,
     isSecret: boolean
   ): Promise<ReplyResponseDto> {
+    let replyTarget: Comment | null;
+
     // 대댓글 작성할 게시글이 존재하는지 확인
     const post = await this._postRepository.findOneById(postId);
     if (!post || !post.isActive) throw new NotFoundException(`not exists post`);
-    // 부모 댓글이 존재하는지 확인
-    const parentComment = await this._commentRepository.findOneById(parentId);
-    if (!parentComment || !parentComment.isActive)
-      throw new NotFoundException(`not exists comment`);
-    // 부모댓글이 부모댓글이 맞는지 확인
-    if (parentComment.parentId)
-      throw new BadReqeustException(
-        `replies cannot be written to a reply with a parent id`
-      );
 
-    // 태그된 댓글 검증
-    if (taggedId) {
-      const taggedReply = await this._commentRepository.findOneById(taggedId);
-      if (!taggedReply || !taggedReply.isActive)
+    // parentId === taggedId라면 부모 댓글에 대한 대댓글 작성이다.
+    if (parentId === taggedId) {
+      replyTarget = await this._commentRepository.findOneById(parentId);
+      if (!replyTarget || !replyTarget.isActive)
         throw new NotFoundException(`not exists comment`);
-      // 태그된 댓글이 같은 댓글군에 포함되는지 확인
-      if (taggedReply.parentId !== parentId)
+      if (replyTarget.isReply())
         throw new BadReqeustException(
-          `tagged comments must be in the same comment group`
+          `replies cannot be written to a reply with a parent id` //TODO: 응답메세지 수정
+        );
+    }
+    // parentId !== taggedId라면 대댓글에 대한 대댓글 작성이다.
+    else {
+      replyTarget = await this._commentRepository.findOneById(taggedId);
+      if (!replyTarget || !replyTarget.isActive)
+        throw new NotFoundException(`not exists reply`);
+      // 대댓글이 같은 댓글군에 포함되는지 확인
+      if (replyTarget.parentId !== parentId)
+        throw new BadReqeustException(
+          `tagged reply must be in the same comment group`
         );
     }
 
