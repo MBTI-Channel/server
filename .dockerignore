@@ -1,0 +1,9 @@
+# 의존성 디렉토리
+node_modules
+
+# 로그
+logs
+*.log
+
+# 문서
+docs
