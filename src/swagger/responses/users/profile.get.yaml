@@ -1,0 +1,42 @@
+"200":
+  description: access token 유효함
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          nickname:
+            type: string
+            example: 루피
+          mbti:
+            type: string
+            example: INFP
+          createdAt:
+            type: Date
+            example: 2022-07-21T17:32:28Z
+          isMe:
+            type: boolean
+            example: true
+
+"401":
+  description: access token 유효하지 않음 또는 만료됨
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          message:
+            type: string
+            #example: authentication error || access token expired
+            example: access token expired
+
+"404":
+  description: 존재하지 않는 유저
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          message:
+            type: string
+            example: not exists user
