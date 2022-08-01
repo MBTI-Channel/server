@@ -4,6 +4,7 @@ import { IDatabaseService } from "../../core/database/interfaces/IDatabase.servi
 import { LikeTargetType } from "../../shared/enum.shared";
 import {
   BadReqeustException,
+  ForbiddenException,
   NotFoundException,
 } from "../../shared/errors/all.exception";
 import { HttpException } from "../../shared/errors/http.exception";
@@ -17,6 +18,8 @@ import { LikeResponseDto } from "./dto/like-response.dto";
 import { Like } from "./entity/like.entity";
 import { ILikeRepository } from "./interfaces/ILike.repository";
 import { ILikeService } from "./interfaces/ILike.service";
+import { Post } from "../post/entity/post.entity";
+import { Comment } from "../comment/entity/comment.entity";
 
 @injectable()
 export class LikeService implements ILikeService {
@@ -34,22 +37,51 @@ export class LikeService implements ILikeService {
     @inject(TYPES.IDatabaseService)
     private readonly _dbService: IDatabaseService
   ) {}
-  async createLike(
+
+  private async _checkMbti(target: Post | Comment, user: User, type: string) {
+    let aver_target;
+    if (type === LikeTargetType.POST) {
+      aver_target = target as Post;
+      if (
+        aver_target.type === Post.typeTo("mbti") &&
+        user.mbti !== aver_target.userMbti
+      )
+        throw new ForbiddenException("authorization error");
+    }
+
+    if (type === LikeTargetType.COMMENT) {
+      aver_target = target as Comment;
+      const post = await this._postRepository.findOneById(aver_target.postId);
+      if (!post || !post.isActive)
+        throw new NotFoundException(`not exists target`);
+      if (post.type === Post.typeTo("mbti") && user.mbti !== post?.userMbti)
+        throw new ForbiddenException("authorization error");
+    }
+  }
+
+  private async _checkId(type: string, targetId: number) {
+    let target;
+
+    if (type === LikeTargetType.POST)
+      target = await this._postRepository.findOneById(targetId);
+    if (type === LikeTargetType.COMMENT)
+      target = await this._commentRepository.findOneById(targetId);
+
+    if (!target || !target.isActive)
+      throw new NotFoundException(`not exists target`);
+
+    return target;
+  }
+
+  public async createLike(
     type: string,
     targetId: number,
     user: User
   ): Promise<LikeResponseDto> {
     this._logger.trace(`[LikeService] createLike start`);
 
-    // targetId 존재 여부
-    let target;
-    if (type === LikeTargetType.POST) {
-      target = await this._postRepository.findOneById(targetId);
-    } else if (type === LikeTargetType.COMMENT) {
-      target = await this._commentRepository.findOneById(targetId);
-    }
-    if (!target || !target.isActive)
-      throw new NotFoundException(`not exists target`);
+    // targetId 존재하는지 확인
+    let target = await this._checkId(type, targetId);
 
     // post: 1 , comment: 2
     const targetType = type === LikeTargetType.POST ? 1 : 2;
@@ -63,27 +95,20 @@ export class LikeService implements ILikeService {
       throw new BadReqeustException(`like already existed`);
     }
 
-    // TODO: MBTI check
-    // if (type === LikeTargetType.POST) {
-    //   if (target.type === Post.typeTo("mbti") && user.mbti !== target.userMbti)
-    //     throw new ForbiddenException("authorization error");
-    // } else if (type === LikeTargetType.COMMENT){
-    //   const post = await this._postRepository.findOneById(target.postId);
-    //   if (post.type === Post.typeTo("mbti") && user.mbti !== post.userMbti)
-    //     throw new ForbiddenException("authorization error")
-    // }
+    // mbti 게시글일 경우 mbti 확인
+    await this._checkMbti(target, user, type);
 
     const likeEntity = Like.of(target, user, targetType);
-
     const t = await this._dbService.getTransaction();
     await t.startTransaction();
     try {
       const like = await this._likeRepository.createLike(likeEntity);
-      if (type === LikeTargetType.POST) {
+      if (type === LikeTargetType.POST)
         await this._postService.increaseLikeCount(targetId);
-      } else if (type === LikeTargetType.COMMENT) {
+
+      if (type === LikeTargetType.COMMENT)
         await this._commentService.increaseLikeCount(targetId);
-      }
+
       // TODO: notification check
       await t.commitTransaction();
       return new LikeResponseDto(target, like);
@@ -94,4 +119,6 @@ export class LikeService implements ILikeService {
       await t.release();
     }
   }
+
+  async deleteLike(type: string, targetId: number, user: User): Promise<void> {}
 }
