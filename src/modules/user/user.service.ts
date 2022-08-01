@@ -8,6 +8,7 @@ import {
   UserTokenResponseDto,
   UserResponseDto,
   NeedSignUpResponseDto,
+  AccessTokenResponseDto,
 } from "./dto";
 import { Logger } from "../../shared/utils/logger.util";
 import { JwtUtil } from "../../shared/utils/jwt.util";
@@ -142,7 +143,8 @@ export class UserService implements IUserService {
       throw new UnauthorizedException("authentication error");
     }
 
-    return await this._authService.generateAccessToken(user);
+    const accessToken = await this._authService.generateAccessToken(user);
+    return new AccessTokenResponseDto(accessToken);
   }
 
   // 중복 닉네임이 있는지 확인한다.

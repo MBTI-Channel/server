@@ -87,15 +87,13 @@ export class UserController {
     const refreshToken = req.cookies.Refresh;
     const userAgent = convertUserAgent(req.headers["user-agent"]);
 
-    const accessToken = await this._userService.reissueAccessToken(
+    const data = await this._userService.reissueAccessToken(
       user,
       refreshToken,
       userAgent
     );
 
-    return res.status(200).json({
-      accessToken,
-    });
+    return res.status(200).json(data);
   }
 
   //사용자 유효한지 지속적으로 확인

@@ -1,4 +1,4 @@
-import { User } from "../entity/user.entity";
+import { User } from "../../entity/user.entity";
 import { UserResponseDto } from "./user-response.dto";
 
 export class UserTokenResponseDto extends UserResponseDto {
