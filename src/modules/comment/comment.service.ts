@@ -124,10 +124,25 @@ export class CommentService implements ICommentService {
     const t = await this._dbService.getTransaction();
     await t.startTransaction();
     try {
-      // TODO: 알림
       const reply = await this._commentRepository.createComment(replyEntity);
       await this._commentRepository.increaseReplyCount(parentId);
       await this._postService.increaseCommentCount(post.id);
+      // 대댓글 작성자의 게시글이 아니라면, 게시글 작성자에게 알림을 생성한다.
+      if (!user.isMy(post))
+        await this._notificationService.createByTargetUser(
+          user,
+          post.userId,
+          reply.id,
+          "comment"
+        );
+      // 대댓글 작성자의 (대)댓글이 아니라면, (대)댓글 작성자에게 알림 생성한다.
+      if (!user.isMy(replyTarget))
+        await this._notificationService.createByTargetUser(
+          user,
+          replyTarget.userId,
+          reply.id,
+          "reply"
+        );
       await t.commitTransaction();
       return new ReplyResponseDto(reply, user);
     } catch (err: any) {
