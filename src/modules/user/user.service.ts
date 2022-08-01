@@ -8,6 +8,8 @@ import {
   UserTokenResponseDto,
   UserResponseDto,
   NeedSignUpResponseDto,
+  AccessTokenResponseDto,
+  ProfileDataResponseDto,
 } from "./dto";
 import { Logger } from "../../shared/utils/logger.util";
 import { JwtUtil } from "../../shared/utils/jwt.util";
@@ -142,7 +144,8 @@ export class UserService implements IUserService {
       throw new UnauthorizedException("authentication error");
     }
 
-    return await this._authService.generateAccessToken(user);
+    const accessToken = await this._authService.generateAccessToken(user);
+    return new AccessTokenResponseDto(accessToken);
   }
 
   // 중복 닉네임이 있는지 확인한다.
@@ -162,14 +165,14 @@ export class UserService implements IUserService {
     return true;
   }
 
-  public async getProfileData(id: number) {
+  public async getProfileData(userId: number, id: number) {
     this._logger.trace(`[UserService] is valid user id? : ${id}`);
-    const user = await this._userRepository.findOneById(id);
+    const profileUser = await this._userRepository.findOneById(id);
 
     // 유효하지 않는 유저
-    if (!user || !user.isActive())
+    if (!profileUser || !profileUser.isActive())
       throw new NotFoundException("not exists user");
 
-    return new UserResponseDto(user);
+    return new ProfileDataResponseDto(userId, profileUser);
   }
 }

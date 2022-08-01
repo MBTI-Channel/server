@@ -1,8 +1,9 @@
 import { Provider } from "../../../shared/type.shared";
 import {
   UserTokenResponseDto,
-  UserResponseDto,
   NeedSignUpResponseDto,
+  AccessTokenResponseDto,
+  ProfileDataResponseDto,
 } from "../dto";
 import { User } from "../entity/user.entity";
 
@@ -31,8 +32,8 @@ export interface IUserService {
     user: User,
     refreshToken: string,
     userAgent: string
-  ): Promise<string>;
+  ): Promise<AccessTokenResponseDto>;
   isExistsNickname(nickname: string): Promise<boolean>;
   isValid(id: number): Promise<boolean>;
-  getProfileData(id: number): Promise<UserResponseDto>;
+  getProfileData(userId: number, id: number): Promise<ProfileDataResponseDto>;
 }
