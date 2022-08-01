@@ -84,7 +84,7 @@ export class Comment extends BaseEntity {
    */
   isReply() {
     // parentId 값이 있다면, 대댓글
-    if (!this.parentId) return true;
+    if (this.parentId) return true;
     return false;
   }
 }
