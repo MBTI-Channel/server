@@ -99,13 +99,9 @@ export class UserController {
   //사용자 유효한지 지속적으로 확인
   @httpGet("/me", TYPES.ValidateAccessTokenMiddleware)
   async validateUser(req: Request, res: Response) {
-    const { nickname, mbti, isAdmin } = req.user as User;
+    const data = req.user as User;
 
-    return res.status(200).json({
-      nickname,
-      mbti,
-      isAdmin,
-    });
+    return res.status(200).json(data);
   }
 
   // 프로필에 필요한 데이터
@@ -115,17 +111,12 @@ export class UserController {
     queryValidator(IdDto)
   )
   async getProfileData(@queryParam() dto: IdDto, req: Request, res: Response) {
-    const { id, nickname, mbti } = req.user as User;
+    const { id } = req.user as User;
     const { userId } = dto;
 
-    const data = await this._userService.getProfileData(userId);
+    const data = await this._userService.getProfileData(id, userId);
 
-    return res.status(200).json({
-      nickname,
-      mbti,
-      createdAt: data.createdAt,
-      isMe: id === userId,
-    });
+    return res.status(200).json(data);
   }
 
   // 임시 kakao 라우터
