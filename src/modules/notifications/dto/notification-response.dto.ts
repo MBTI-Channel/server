@@ -1,3 +1,4 @@
+import { NotificationType } from "../../../shared/type.shared";
 import { Notification } from "../entity/notification.entity";
 
 export class NotificationResponseDto {
@@ -14,7 +15,7 @@ export class NotificationResponseDto {
     this.id = entity.id;
     this.targetUserId = entity.targetUserId;
     this.targetId = entity.targetId;
-    this.type = Notification.typeFrom(entity.type);
+    this.type = entity.type as NotificationType;
     this.title = entity.title;
     this.url = entity.url;
     this.createdAt = entity.createdAt;
