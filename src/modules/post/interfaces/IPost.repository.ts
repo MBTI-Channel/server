@@ -7,6 +7,7 @@ export interface IPostRepository {
   findOneById(id: number): Promise<Post | null>;
   increaseCommentCount(id: number): Promise<boolean>;
   increaseLikeCount(id: number): Promise<boolean>;
+  decreaseLikeCount(id: number): Promise<boolean>;
   remove(id: number): Promise<void>;
   findAllPosts(
     pageOptionsDto: GetAllPostDto,
