@@ -20,6 +20,7 @@ import { ILikeRepository } from "./interfaces/ILike.repository";
 import { ILikeService } from "./interfaces/ILike.service";
 import { Post } from "../post/entity/post.entity";
 import { Comment } from "../comment/entity/comment.entity";
+import { INotificationService } from "../notifications/interfaces/INotification.service";
 
 @injectable()
 export class LikeService implements ILikeService {
@@ -30,6 +31,8 @@ export class LikeService implements ILikeService {
     private readonly _postRepository: IPostRepository,
     @inject(TYPES.ICommentService)
     private readonly _commentService: ICommentService,
+    @inject(TYPES.INotificationService)
+    private readonly _notificationService: INotificationService,
     @inject(TYPES.ICommentRepository)
     private readonly _commentRepository: ICommentRepository,
     @inject(TYPES.ILikeRepository)
@@ -110,6 +113,14 @@ export class LikeService implements ILikeService {
         await this._commentService.increaseLikeCount(targetId);
 
       // TODO: notification check
+      if (!user.isMy(target)) {
+        await this._notificationService.createByTargetUser(
+          user,
+          target.userId,
+          target.id,
+          "likes"
+        );
+      }
       await t.commitTransaction();
       return new LikeResponseDto(target, like);
     } catch (err: any) {
