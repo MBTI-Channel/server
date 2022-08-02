@@ -57,14 +57,14 @@ export class LikeService implements ILikeService {
       aver_target = target as Comment;
       const post = await this._postRepository.findOneById(aver_target.postId);
       if (!post || !post.isActive)
-        throw new NotFoundException(`not exists target`);
+        throw new NotFoundException(`not exists post`);
       if (post.type === Post.typeTo("mbti") && user.mbti !== post?.userMbti)
         throw new ForbiddenException("authorization error");
     }
   }
 
   private async _checkId(type: string, targetId: number) {
-    let target;
+    let target: Post | Comment | null = null;
 
     if (type === LikeTargetType.POST)
       target = await this._postRepository.findOneById(targetId);
