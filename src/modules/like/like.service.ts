@@ -91,6 +91,7 @@ export class LikeService implements ILikeService {
 
     // 이미 좋아요 되어 있는지 확인
     const foundLike = await this._likeRepository.findOneByTarget(
+      user.id,
       targetId,
       targetType
     );
@@ -112,7 +113,6 @@ export class LikeService implements ILikeService {
       if (type === LikeTargetType.COMMENT)
         await this._commentService.increaseLikeCount(targetId);
 
-      // TODO: notification check
       if (!user.isMy(target)) {
         await this._notificationService.createByTargetUser(
           user,
