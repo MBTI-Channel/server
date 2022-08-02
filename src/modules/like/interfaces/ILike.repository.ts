@@ -9,4 +9,5 @@ export interface ILikeRepository {
   ): Promise<Like | null>;
   createLike(likeEntity: Like): Promise<Like>;
   remove(id: number): Promise<void>;
+  active(id: number): Promise<Like>;
 }

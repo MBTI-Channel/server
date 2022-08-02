@@ -39,4 +39,14 @@ export class LikeRepository implements ILikeRepository {
       isActive: false,
     } as QueryDeepPartialEntity<Like>);
   }
+
+  async active(id: number): Promise<Like> {
+    const repository = await this._database.getRepository(Like);
+    const like = await repository
+      .update(id, {
+        isActive: true,
+      } as QueryDeepPartialEntity<Like>)
+      .then(async () => await repository.findOne({ where: { id } }));
+    return like;
+  }
 }
