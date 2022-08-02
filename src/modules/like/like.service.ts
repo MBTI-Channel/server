@@ -131,5 +131,41 @@ export class LikeService implements ILikeService {
     }
   }
 
-  async deleteLike(type: string, targetId: number, user: User): Promise<void> {}
+  async deleteLike(type: string, targetId: number, user: User): Promise<void> {
+    this._logger.trace(`[LikeService] deleteLike start`);
+
+    // targetId 존재하는지 확인
+    let target = await this._checkId(type, targetId);
+    // post: 1 , comment: 2
+    const targetType = type === LikeTargetType.POST ? 1 : 2;
+    // 이미 좋아요 취소 되어 있는지 확인
+    const foundLike = await this._likeRepository.findOneByTarget(
+      user.id,
+      targetId,
+      targetType
+    );
+    if (!foundLike || !foundLike.isActive) {
+      throw new BadReqeustException(`like already canceld`);
+    }
+
+    // mbti 게시글일 경우 mbti 확인
+    await this._checkMbti(target, user, type);
+
+    const t = await this._dbService.getTransaction();
+    await t.startTransaction();
+    try {
+      await this._likeRepository.remove(foundLike.id);
+      if (type === LikeTargetType.POST)
+        await this._postService.decreaseLikeCount(targetId);
+
+      if (type === LikeTargetType.COMMENT)
+        await this._commentService.decreaseLikeCount(targetId);
+      await t.commitTransaction();
+    } catch (err: any) {
+      await t.rollbackTransaction();
+      throw new HttpException(err.name, err.message, err.status);
+    } finally {
+      await t.release();
+    }
+  }
 }
