@@ -1,7 +1,7 @@
 import { Entity, Column, ManyToOne } from "typeorm";
+import { NotificationTypeTransformer } from "../helper/notification-type-transformer";
 import { BaseEntity } from "../../../shared/base.entity";
 import { NotificationType } from "../../../shared/type.shared";
-
 import { User } from "../../user/entity/user.entity";
 
 @Entity()
@@ -25,9 +25,10 @@ export class Notification extends BaseEntity {
   @Column({
     nullable: false,
     type: "tinyint",
+    transformer: new NotificationTypeTransformer(),
     comment: "알림 종류[1:comment 2:reply 3:likes 4:trend 5:notice]",
   })
-  type: number;
+  type: number | NotificationType;
 
   @Column({ length: 50, comment: "알림 제목" })
   title: string;
@@ -62,42 +63,10 @@ export class Notification extends BaseEntity {
     notification.userId = type === "notice" ? 1 : userId; // 1:admin
     notification.targetId = targetId;
     notification.url = ""; //TODO: 논의 필요//Notification.setUrlByType(type);
-    notification.type = Notification.typeTo(type);
+    notification.type = type;
     notification.title = Notification.setTitleByType(type, targetUser.nickname);
 
     return notification;
-  }
-
-  // db로 넣을때
-  static typeTo(type: NotificationType) {
-    switch (type) {
-      case "comment":
-        return 1;
-      case "reply":
-        return 2;
-      case "likes":
-        return 3;
-      case "trend":
-        return 4;
-      case "notice":
-        return 5;
-    }
-  }
-
-  // db에서 코드로 바꿀때
-  static typeFrom(type: number) {
-    switch (type) {
-      case 1:
-        return "comment";
-      case 2:
-        return "reply";
-      case 3:
-        return "likes";
-      case 4:
-        return "trend";
-      case 5:
-        return "notice";
-    }
   }
 
   // type에 따른 알림 제목 설정
