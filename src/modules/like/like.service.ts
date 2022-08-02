@@ -63,18 +63,18 @@ export class LikeService implements ILikeService {
     }
   }
 
-  private async _checkId(type: string, targetId: number) {
-    let target: Post | Comment | null = null;
+  private async _getLikeTarget(type: string, targetId: number) {
+    let likeTarget: Post | Comment | null = null;
 
     if (type === LikeTargetType.POST)
-      target = await this._postRepository.findOneById(targetId);
+      likeTarget = await this._postRepository.findOneById(targetId);
     if (type === LikeTargetType.COMMENT)
-      target = await this._commentRepository.findOneById(targetId);
+      likeTarget = await this._commentRepository.findOneById(targetId);
 
-    if (!target || !target.isActive)
+    if (!likeTarget || !likeTarget.isActive)
       throw new NotFoundException(`not exists target`);
 
-    return target;
+    return likeTarget;
   }
 
   public async createLike(
@@ -85,10 +85,10 @@ export class LikeService implements ILikeService {
     this._logger.trace(`[LikeService] createLike start`);
 
     // targetId 존재하는지 확인
-    let target = await this._checkId(type, targetId);
+    const likeTarget = await this._getLikeTarget(type, targetId);
 
     // mbti 게시글일 경우 mbti 확인
-    await this._checkMbti(target, user, type);
+    await this._checkMbti(likeTarget, user, type);
 
     // post: 1 , comment: 2
     const targetType = type === LikeTargetType.POST ? 1 : 2;
@@ -105,7 +105,7 @@ export class LikeService implements ILikeService {
 
     // 좋아요를 처음 누른 경우 좋아요 생성
     if (!like) {
-      const likeEntity = Like.of(target, user, targetType);
+      const likeEntity = Like.of(likeTarget, user, targetType);
       like = await this._likeRepository.createLike(likeEntity);
     } else {
       like = await this._likeRepository.active(like.id);
@@ -120,16 +120,16 @@ export class LikeService implements ILikeService {
       if (type === LikeTargetType.COMMENT)
         await this._commentService.increaseLikeCount(targetId);
 
-      if (!user.isMy(target)) {
+      if (!user.isMy(likeTarget)) {
         await this._notificationService.createByTargetUser(
           user,
-          target.userId,
-          target.id,
+          likeTarget.userId,
+          likeTarget.id,
           "likes"
         );
       }
       await t.commitTransaction();
-      return new LikeResponseDto(target, like);
+      return new LikeResponseDto(likeTarget, like);
     } catch (err: any) {
       await t.rollbackTransaction();
       throw new HttpException(err.name, err.message, err.status);
@@ -142,7 +142,7 @@ export class LikeService implements ILikeService {
     this._logger.trace(`[LikeService] deleteLike start`);
 
     // targetId 존재하는지 확인
-    let target = await this._checkId(type, targetId);
+    const likeTarget = await this._getLikeTarget(type, targetId);
     // post: 1 , comment: 2
     const targetType = type === LikeTargetType.POST ? 1 : 2;
     // 이미 좋아요 취소 되어 있는지 확인
@@ -156,7 +156,7 @@ export class LikeService implements ILikeService {
     }
 
     // mbti 게시글일 경우 mbti 확인
-    await this._checkMbti(target, user, type);
+    await this._checkMbti(likeTarget, user, type);
 
     const t = await this._dbService.getTransaction();
     await t.startTransaction();
