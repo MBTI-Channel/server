@@ -17,6 +17,7 @@ export interface IPostService {
   ): Promise<PostResponseDto>;
   increaseCommentCount(id: number): Promise<void>;
   increaseLikeCount(id: number): Promise<void>;
+  decreaseLikeCount(id: number): Promise<void>;
   delete(user: User, id: number): Promise<void>;
   getDetail(user: User, id: number): Promise<PostResponseDto>;
   isValid(id: number): Promise<boolean>;

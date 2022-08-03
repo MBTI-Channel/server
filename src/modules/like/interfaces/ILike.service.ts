@@ -8,5 +8,5 @@ export interface ILikeService {
     user: User
   ): Promise<LikeResponseDto>;
   //   getStatus(type: number, targetId: number, user: User): Promise<boolean>;
-  //   delete(type: number, targetId: number, user: User): Promise<void>;
+  deleteLike(type: string, targetId: number, user: User): Promise<void>;
 }
