@@ -1,7 +1,7 @@
 import { inject, injectable } from "inversify";
 import { TYPES } from "../../core/types.core";
 import { IDatabaseService } from "../../core/database/interfaces/IDatabase.service";
-import { LikeTargetType } from "../../shared/enum.shared";
+import { LikeTargetType, PostType } from "../../shared/enum.shared";
 import {
   BadReqeustException,
   ForbiddenException,
@@ -47,7 +47,7 @@ export class LikeService implements ILikeService {
     if (type === LikeTargetType.POST) {
       aver_target = target as Post;
       if (
-        aver_target.type === Post.typeTo("mbti") &&
+        aver_target.type === PostType.MBTI &&
         user.mbti !== aver_target.userMbti
       )
         throw new ForbiddenException("authorization error");
@@ -58,7 +58,7 @@ export class LikeService implements ILikeService {
       const post = await this._postRepository.findOneById(aver_target.postId);
       if (!post || !post.isActive)
         throw new NotFoundException(`not exists post`);
-      if (post.type === Post.typeTo("mbti") && user.mbti !== post?.userMbti)
+      if (post.type === PostType.MBTI && user.mbti !== post?.userMbti)
         throw new ForbiddenException("authorization error");
     }
   }
