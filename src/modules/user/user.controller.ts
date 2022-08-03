@@ -42,7 +42,7 @@ export class UserController {
   }
 
   // 닉네임 중복확인
-  @httpGet("/", queryValidator(NicknameDuplicateCheckDto))
+  @httpGet("/check", queryValidator(NicknameDuplicateCheckDto))
   async nicknameDuplicateCheck(
     @queryParam() dto: NicknameDuplicateCheckDto,
     req: Request,
