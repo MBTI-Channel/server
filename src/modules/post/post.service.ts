@@ -39,9 +39,9 @@ export class PostService implements IPostService {
       throw new NotFoundException("category id error");
     }
 
-    let postType = Post.typeTo(PostType.POST);
+    let postType = PostType.POST;
     if (category.name === CategoryName.MBTI) {
-      postType = Post.typeTo(PostType.MBTI);
+      postType = PostType.MBTI;
     }
 
     const postEntity = Post.of(
@@ -104,7 +104,7 @@ export class PostService implements IPostService {
     if (!post || !post.isActive) throw new NotFoundException("not exists post");
 
     // 타입이 mbti 일 경우
-    if (Post.typeFrom(post.type) === PostType.MBTI) {
+    if (post.type === PostType.MBTI) {
       if (user.mbti !== post.userMbti)
         throw new ForbiddenException("authorization error");
     }
