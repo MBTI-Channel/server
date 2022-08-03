@@ -1,5 +1,6 @@
 import { inject, injectable } from "inversify";
 import { TYPES } from "../../core/types.core";
+import { PostType } from "../../shared/enum.shared";
 import {
   BadReqeustException,
   ForbiddenException,
@@ -44,7 +45,7 @@ export class BookmarkService implements IBookmarkService {
     }
 
     // post type이 mbti일 경우 mbti확인
-    if (post.type === Post.typeTo("mbti") && user.mbti !== post.userMbti) {
+    if (post.type === PostType.MBTI && user.mbti !== post.userMbti) {
       throw new ForbiddenException(`user mbti does not match`);
     }
 

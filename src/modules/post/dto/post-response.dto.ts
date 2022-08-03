@@ -1,10 +1,11 @@
+import { PostType } from "../../../shared/enum.shared";
 import { User } from "../../user/entity/user.entity";
 import { Post } from "../entity/post.entity";
 
 export class PostResponseDto {
   id: number;
   categoryId: number;
-  type: number;
+  type: PostType;
   isActive: boolean;
   isActiveUser: boolean = true;
   isMy: boolean = false;
@@ -22,7 +23,7 @@ export class PostResponseDto {
   updatedAt: Date | null;
   constructor(post: Post, user: User) {
     this.id = post.id;
-    this.type = post.type;
+    this.type = post.type as PostType;
     this.categoryId = post.categoryId;
     this.isActive = post.isActive;
     this.isActiveUser = user ? user.isActive() : false;

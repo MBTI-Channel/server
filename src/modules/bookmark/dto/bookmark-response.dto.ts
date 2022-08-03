@@ -1,3 +1,4 @@
+import { PostType } from "../../../shared/enum.shared";
 import { Post } from "../../post/entity/post.entity";
 import { Bookmark } from "../entity/bookmark.entity";
 
@@ -8,7 +9,7 @@ export class BookmarkResponseDto {
   title: string;
   content: string;
   isSecret: boolean;
-  type: string;
+  type: PostType;
   createdAt: Date;
   updatedAt: Date | null;
 
@@ -19,7 +20,7 @@ export class BookmarkResponseDto {
     this.title = post.title;
     this.content = post.content;
     this.isSecret = post.isSecret;
-    this.type = Post.typeFrom(post.type) ?? "";
+    this.type = post.type as PostType;
     this.createdAt = entity.createdAt;
     this.updatedAt =
       entity.createdAt.getTime() === entity.updatedAt.getTime()

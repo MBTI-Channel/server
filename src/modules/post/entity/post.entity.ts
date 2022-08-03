@@ -1,10 +1,12 @@
 import { Entity, Column, ManyToOne, OneToMany } from "typeorm";
 import { BaseEntity } from "../../../shared/base.entity";
+import { PostType } from "../../../shared/enum.shared";
 import { Bookmark } from "../../bookmark/entity/bookmark.entity";
 import { Category } from "../../category/entity/category.entity";
 import { Comment } from "../../comment/entity/comment.entity";
 import { Survey } from "../../survey/entity/survey.entity";
 import { User } from "../../user/entity/user.entity";
+import { PostTypeTransformer } from "../helper/post-type-transformer";
 
 @Entity()
 export class Post extends BaseEntity {
@@ -25,9 +27,10 @@ export class Post extends BaseEntity {
   @Column({
     type: "tinyint",
     default: 1,
+    transformer: new PostTypeTransformer(),
     comment: "게시글 종류 [1: post, 2: mbti, 3: survey, 4: notice]",
   })
-  type: number;
+  type: number | PostType;
 
   @Column({ length: "4", comment: "작성자 MBTI" })
   userMbti: string;
@@ -83,7 +86,7 @@ export class Post extends BaseEntity {
     isSecret: boolean,
     title: string,
     content: string,
-    postType: number
+    postType: PostType
   ) {
     const post = new Post();
     post.user = user;
@@ -96,33 +99,5 @@ export class Post extends BaseEntity {
     post.userMbti = user.mbti;
 
     return post;
-  }
-
-  static typeTo(type: string) {
-    switch (type) {
-      case "post":
-        return 1;
-      case "mbti":
-        return 2;
-      case "survey":
-        return 3;
-      case "notice":
-        return 4;
-      default: // typeTo undefined 막기 위해 추가
-        return 0;
-    }
-  }
-
-  static typeFrom(type: number) {
-    switch (type) {
-      case 1:
-        return "post";
-      case 2:
-        return "mbti";
-      case 3:
-        return "survey";
-      case 4:
-        return "notice";
-    }
   }
 }
