@@ -2,16 +2,8 @@ get:
   tags:
     - users
   description: 리프레쉬 토큰으로 액세스토큰 재발급
-  parameters:
-    - name: Bearer 토큰
-      in: header
-      required: true
-      type: string
-      example: asduehfinnncudI1NiIsInR5csdwd665s88db
-    - name: Refresh 토큰
-      in: cookie
-      required: true
-      type: string
-      example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+  security:
+    - bearerAuth: []
+    - cookieAuth: []
   responses:
     $ref: "../../responses/users/access-token.get.yaml"

@@ -2,12 +2,8 @@ post:
   tags:
     - comments
   description: 댓글 등록
-  parameters:
-    - name: Bearer 토큰
-      in: header
-      required: false
-      type: string
-      example: asduehfinnncudI1NiIsInR5csdwd665s88db
+  security:
+    - bearerAuth: []
   requestBody:
     content:
       application/json:

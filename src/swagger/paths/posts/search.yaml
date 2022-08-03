@@ -3,12 +3,6 @@ get:
     - posts
   description: 게시글 검색
   parameters:
-    - name: Bearer 토큰
-      in: header
-      required: false
-      type: string
-      example: asduehfinnncudI1NiIsInR5csdwd665s88db
-
     - name: category
       in: query
       description: 카테고리 선택

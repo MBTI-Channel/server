@@ -127,3 +127,15 @@ paths:
         type: integer
         description: Post ID
     $ref: "./paths/bookmarks/id.yaml"
+# #1) Define the security scheme type (HTTP bearer)
+components:
+  securitySchemes:
+    bearerAuth: # arbitrary name for the security scheme
+      type: http
+      scheme: bearer
+      bearerFormat: JWT # optional, arbitrary value for documentation purposes
+    cookieAuth: # arbitrary name for the security scheme; will be used in the "security" key later
+      type: apiKey
+      in: cookie
+      name: JSESSIONID # cookie name
+

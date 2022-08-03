@@ -2,6 +2,8 @@ patch:
   tags:
     - notifications
   description: 알림 하나 읽음 처리
+  security:
+    - bearerAuth: []
   # requestBody:
   #   content:
   #     application/json:

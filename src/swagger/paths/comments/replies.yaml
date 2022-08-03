@@ -2,6 +2,8 @@ post:
   tags:
     - comments
   description: 부모 댓글(parentId)에 속하는 댓글(taggedId)에 대해 대댓글을 등록합니다. <br /> parentId와 taggedId가 같은 값이면 댓글에 대한 대댓글을 등록합니다.  <br />두 값이 다르다면 대댓글에 대한 대댓글을 등록합니다.
+  security:
+    - bearerAuth: []
   requestBody:
     content:
       application/json:

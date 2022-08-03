@@ -2,6 +2,8 @@ post:
   tags:
     - posts
   description: 게시글 등록
+  security:
+    - bearerAuth: []
   requestBody:
     content:
       application/json:
