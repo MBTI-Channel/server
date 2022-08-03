@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsNumber, IsString } from "class-validator";
+import { IsDate, IsNotEmpty, IsNumber, IsString } from "class-validator";
 import { JwtPayload } from "jsonwebtoken";
 
 export class DecodedDto implements JwtPayload {
@@ -13,6 +13,9 @@ export class DecodedDto implements JwtPayload {
 
   @IsNumber()
   isAdmin: boolean;
+
+  @IsDate()
+  createdAt: Date;
 
   @IsString()
   @IsNotEmpty()
