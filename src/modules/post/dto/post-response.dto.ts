@@ -30,7 +30,7 @@ export class PostResponseDto {
     this.isMy = user ? user.isMy(post) : false;
     this.userId = post.userId;
     this.userMbti = post.userMbti;
-    this.userNickname = post.userNickname ?? "";
+    this.userNickname = post.userNickname ?? "anonymous";
     this.isSecret = post.isSecret;
     this.title = post.title;
     this.content = post.content;
