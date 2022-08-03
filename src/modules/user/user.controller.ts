@@ -19,7 +19,6 @@ import { OauthLoginDto } from "../auth/dto/oauth-login.dto";
 import { SignUpDto, NicknameDuplicateCheckDto } from "./dto";
 import { convertUserAgent } from "../../shared/utils/user-agent.util";
 import config from "../../config";
-import { IdDto } from "./dto/id.dto";
 
 @controller("/users")
 export class UserController {
@@ -100,21 +99,6 @@ export class UserController {
   @httpGet("/me", TYPES.ValidateAccessTokenMiddleware)
   async validateUser(req: Request, res: Response) {
     const data = req.user as User;
-
-    return res.status(200).json(data);
-  }
-
-  // 프로필에 필요한 데이터
-  @httpGet(
-    "/profile",
-    TYPES.ValidateAccessTokenMiddleware,
-    queryValidator(IdDto)
-  )
-  async getProfileData(@queryParam() dto: IdDto, req: Request, res: Response) {
-    const { id } = req.user as User;
-    const { userId } = dto;
-
-    const data = await this._userService.getProfileData(id, userId);
 
     return res.status(200).json(data);
   }
