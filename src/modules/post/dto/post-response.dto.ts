@@ -11,7 +11,7 @@ export class PostResponseDto {
   isMy: boolean = false;
   userId: number;
   userMbti: string;
-  userNickname: string;
+  userNickname: string | null;
   isSecret: boolean;
   title: string;
   content: string;
@@ -30,7 +30,7 @@ export class PostResponseDto {
     this.isMy = user ? user.isMy(post) : false;
     this.userId = post.userId;
     this.userMbti = post.userMbti;
-    this.userNickname = post.userNickname ?? "anonymous";
+    this.userNickname = post.userNickname ?? null; // null은 익명일 경우
     this.isSecret = post.isSecret;
     this.title = post.title;
     this.content = post.content;
