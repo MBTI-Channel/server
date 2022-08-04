@@ -134,6 +134,7 @@ export class PostRepository implements IPostRepository {
         "post.categoryId",
         "post.userId",
         "post.userNickname",
+        "post.userMbti",
         "post.type",
         "post.isActive",
         "post.isSecret",
