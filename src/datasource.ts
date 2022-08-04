@@ -15,8 +15,8 @@ const appDataSource = new DataSource({
   // migrations: [__dirname + "/migrations/**/*{.ts,.js}"],
   // migrationsTableName: "food_app_migrations",
   logging: process.env.NODE_ENV === "production" ? false : true,
+  synchronize: process.env.NODE_ENV === "production" ? false : true,
   namingStrategy: new SnakeNamingStrategy(),
-  //synchronize: true,
 });
 
 export default appDataSource;
