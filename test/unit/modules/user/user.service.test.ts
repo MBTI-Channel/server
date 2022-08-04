@@ -1,6 +1,7 @@
 import { TYPES } from "../../../../src/core/types.core";
 import { IUserRepository } from "../../../../src/modules/user/interfaces/IUser.repository";
 import { IUserService } from "../../../../src/modules/user/interfaces/IUser.service";
+import { ConflictException } from "../../../../src/shared/errors/all.exception";
 import { TestContainer } from "../../../test-container";
 
 describe("UserService Test", () => {
@@ -14,24 +15,8 @@ describe("UserService Test", () => {
     testContainer.restore();
   });
 
-  describe("isExistsNickname", () => {
-    it("Case 1: 존재하는 닉네임이라면 true를 리턴한다.", async () => {
-      // given
-      const nickname = "TEST";
-      testContainer.mock<IUserRepository>(TYPES.IUserRepository, {
-        findOneByNickname: jest.fn(() => true),
-      });
-
-      // when
-      const result = await testContainer
-        .get<IUserService>(TYPES.IUserService)
-        .isExistsNickname(nickname);
-
-      // then
-      expect(result).toEqual(true);
-    });
-
-    it("Case 2: 존재하지 않는 닉네임이라면 false를 리턴한다.", async () => {
+  describe("checkDuplicateNickname", () => {
+    it("Success: 사용가능한 닉네임이라면, undefined 리턴", async () => {
       // given
       const nickname = "TEST";
       testContainer.mock<IUserRepository>(TYPES.IUserRepository, {
@@ -41,10 +26,25 @@ describe("UserService Test", () => {
       // when
       const result = await testContainer
         .get<IUserService>(TYPES.IUserService)
-        .isExistsNickname(nickname);
+        .checkDuplicateNickname(nickname);
 
       // then
-      expect(result).toEqual(false);
+      expect(result).toBe(undefined);
+    });
+
+    it("Error: 이미 존재하는 닉네임이라면, ConflictException 발생", async () => {
+      // given
+      const nickname = "TEST";
+      testContainer.mock<IUserRepository>(TYPES.IUserRepository, {
+        findOneByNickname: jest.fn(() => true),
+      });
+
+      // when, then
+      expect(async () => {
+        await testContainer
+          .get<IUserService>(TYPES.IUserService)
+          .checkDuplicateNickname(nickname);
+      }).rejects.toThrowError(new ConflictException("already exists nickname"));
     });
   });
 
