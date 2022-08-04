@@ -9,7 +9,6 @@ import {
   UserResponseDto,
   NeedSignUpResponseDto,
   AccessTokenResponseDto,
-  ProfileDataResponseDto,
 } from "./dto";
 import { Logger } from "../../shared/utils/logger.util";
 import { JwtUtil } from "../../shared/utils/jwt.util";
@@ -163,16 +162,5 @@ export class UserService implements IUserService {
     if (!user) return false;
     if (!user.isActive()) return false;
     return true;
-  }
-
-  public async getProfileData(userId: number, id: number) {
-    this._logger.trace(`[UserService] is valid user id? : ${id}`);
-    const profileUser = await this._userRepository.findOneById(id);
-
-    // 유효하지 않는 유저
-    if (!profileUser || !profileUser.isActive())
-      throw new NotFoundException("not exists user");
-
-    return new ProfileDataResponseDto(userId, profileUser);
   }
 }

@@ -2,11 +2,7 @@ delete:
   tags:
     - users
   description: 로그아웃
-  parameters:
-    - name: Refresh 토큰
-      in: cookie
-      required: true
-      type: string
-      example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+  security:
+    - cookieAuth: []
   responses:
     $ref: "../../responses/users/logout.delete.yaml"

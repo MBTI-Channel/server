@@ -57,6 +57,7 @@ export class ValidateAccessToken extends BaseMiddleware {
         nickname: decoded.nickname,
         mbti: decoded.mbti,
         isAdmin: decoded.isAdmin,
+        createdAt: decoded.createdAt,
       });
 
       this._logger.trace(`[ValidateAccessToken] call next`);

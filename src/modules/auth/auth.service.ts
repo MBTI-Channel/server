@@ -22,12 +22,13 @@ export class AuthService implements IAuthService {
   ) {}
 
   public async generateAccessToken(user: User) {
-    const { id, nickname, mbti, isAdmin } = user;
+    const { id, nickname, mbti, isAdmin, createdAt } = user;
     const payload: ITokenPayload = {
       id,
       nickname,
       mbti,
       isAdmin,
+      createdAt,
     };
     const options: SignOptions = {
       expiresIn: config.jwt.accessTokenExpiresIn,

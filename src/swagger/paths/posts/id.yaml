@@ -2,12 +2,8 @@ get:
   tags:
     - posts
   description: 게시글 상세 보기
-  parameters:
-    - name: Bearer 토큰
-      in: header
-      required: false
-      type: string
-      example: asduehfinnncudI1NiIsInR5csdwd665s88db
+  security:
+    - bearerAuth: []
   responses:
     $ref: "../../responses/posts/id.get.yaml"
 
@@ -15,12 +11,8 @@ patch:
   tags:
     - posts
   description: 게시물 수정
-  parameters:
-    - name: Bearer 토큰
-      in: header
-      required: true
-      type: string
-      example: asduehfinnncudI1NiIsInR5csdwd665s88db
+  security:
+    - bearerAuth: []
   responses:
     $ref: "../../responses/posts/id.patch.yaml"
 
@@ -28,11 +20,7 @@ delete:
   tags:
     - posts
   description: 게시물 삭제
-  parameters:
-    - name: Bearer 토큰
-      in: header
-      required: true
-      type: string
-      example: asduehfinnncudI1NiIsInR5csdwd665s88db
+  security:
+    - bearerAuth: []
   responses:
     $ref: "../../responses/posts/id.delete.yaml"

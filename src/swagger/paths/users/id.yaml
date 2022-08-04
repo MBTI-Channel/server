@@ -2,17 +2,9 @@ get:
   tags:
     - users
   description: 유저 정보 조회
-  parameters:
-    - name: Bearer 토큰
-      in: header
-      required: true
-      type: string
-      example: asduehfinnncudI1NiIsInR5csdwd665s88db
-    - name: Refresh 토큰
-      in: cookie
-      required: true
-      type: string
-      example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+  security:
+    - bearerAuth: []
+    - cookieAuth: []
   responses:
     $ref: "../../responses/users/id.get.yaml"
 
@@ -20,12 +12,8 @@ patch:
   tags:
     - users
   description: 유저 수정
-  parameters:
-    - name: Bearer 토큰
-      in: header
-      required: true
-      type: string
-      example: asduehfinnncudI1NiIsInR5csdwd665s88db
+  security:
+    - bearerAuth: []
   requestBody:
     required: true
     content:
@@ -47,16 +35,8 @@ delete:
   tags:
     - users
   description: 회원 탈퇴
-  parameters:
-    - name: Bearer 토큰
-      in: header
-      required: true
-      type: string
-      example: asduehfinnncudI1NiIsInR5csdwd665s88db
-    - name: Refresh 토큰
-      in: cookie
-      required: true
-      type: string
-      example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+  security:
+    - bearerAuth: []
+    - cookieAuth: []
   responses:
     $ref: "../../responses/users/id.delete.yaml"

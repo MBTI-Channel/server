@@ -2,11 +2,7 @@ get:
   tags:
     - users
   description: 엑세스 토큰을 검증하고 유효한 회원인지 확인
-  parameters:
-    - name: Bearer 토큰
-      in: header
-      required: true
-      type: string
-      example: asduehfinnncudI1NiIsInR5csdwd665s88db
+  security:
+    - bearerAuth: []
   responses:
     $ref: "../../responses/users/me.get.yaml"
