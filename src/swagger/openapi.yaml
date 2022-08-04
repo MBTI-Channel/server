@@ -35,6 +35,8 @@ paths:
     $ref: "./paths/users/logout.yaml"
   /users:
     $ref: "./paths/users/index.yaml"
+  /users/posts:
+    $ref: "./paths/users/posts.yaml"
   /users/{id}:
     parameters:
       - in: path
@@ -42,13 +44,6 @@ paths:
         type: integer
         description: User ID
     $ref: "./paths/users/id.yaml"
-  /users/{id}/posts:
-    parameters:
-      - in: path
-        name: id
-        type: integer
-        description: User ID
-    $ref: "./paths/users/id.posts.yaml"
   /users/{id}/comments:
     parameters:
       - in: path
