@@ -4,6 +4,5 @@ get:
   description: 내가 쓴 글 조회
   security:
     - bearerAuth: []
-    - cookieAuth: []
   responses:
-    $ref: "../../responses/users/id.posts.get.yaml"
+    $ref: "../../responses/users/posts.get.yaml"

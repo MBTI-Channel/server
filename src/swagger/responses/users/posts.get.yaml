@@ -1,0 +1,80 @@
+"200":
+  description: 내 게시글 리스트 조회 성공
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          pageInfo:
+            type: object
+            properties:
+              totalCounts:
+                type: integer
+                example: 11
+              itemsPerPage:
+                type: integer
+                example: 10
+              currentPage:
+                type: integer
+                example: 1
+              totalPage:
+                type: integer
+                example: 2
+          items:
+            type: array
+            items:
+              type: object
+              properties:
+                isActiveUser:
+                  type: boolean
+                  example: true
+                isMy:
+                  type: boolean
+                  example: true
+                isActive:
+                  type: boolean
+                  example: true
+                isSecret:
+                  type: boolean
+                  example: false
+                id:
+                  type: integer
+                  example: 23
+                categoryId:
+                  type: integer
+                  example: 2
+                userId:
+                  type: integer
+                  example: 32
+                userNickname:
+                  type: string
+                  example: 지나가는 나그네
+                userMbti:
+                  type: string
+                  example: ENFP
+                commentCount:
+                  type: integer
+                  example: 6
+                viewCount:
+                  type: integer
+                  example: 54142
+                likesCount:
+                  type: integer
+                  example: 6
+                createdAt:
+                  type: string
+                  example: 2022-07-21T17:32:28Z
+                updatedAt:
+                  type: string
+                  example: 2022-07-21T17:32:28Z
+
+"401":
+  description: access token 유효하지 않음
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          message:
+            type: string
+            example: authentication error

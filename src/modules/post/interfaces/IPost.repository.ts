@@ -1,3 +1,4 @@
+import { GetMyPostsDto } from "../../user/dto";
 import { GetAllPostDto } from "../dto/get-all-post.dto";
 import { SearchPostDto } from "../dto/search-post.dto";
 import { Post } from "../entity/post.entity";
@@ -19,6 +20,10 @@ export interface IPostRepository {
     mbti: string
   ): Promise<[Post[], number]>;
   update(id: number, payload: Partial<Post>): Promise<Post>;
+  findAllByUserId(
+    pageOptionsDto: GetMyPostsDto,
+    userId: number
+  ): Promise<[Post[], number]>;
   searchInCategory(
     pageOptionsDto: SearchPostDto,
     categoryId: number
