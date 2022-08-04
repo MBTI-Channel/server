@@ -33,7 +33,7 @@ export interface IUserService {
     refreshToken: string,
     userAgent: string
   ): Promise<AccessTokenResponseDto>;
-  isExistsNickname(nickname: string): Promise<boolean>;
+  checkDuplicateNickname(nickname: string): Promise<boolean>;
   isValid(id: number): Promise<boolean>;
   getProfileData(userId: number, id: number): Promise<ProfileDataResponseDto>;
 }
