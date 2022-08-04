@@ -14,9 +14,10 @@ import {
 } from "../../middlewares/validator.middleware";
 import { IUserService } from "./interfaces/IUser.service";
 import { ILoginLogService } from "../login-log/interfaces/ILogin-log.service";
+import { IPostService } from "../post/interfaces/IPost.service";
 import { User } from "./entity/user.entity";
 import { OauthLoginDto } from "../auth/dto/oauth-login.dto";
-import { SignUpDto, CheckDuplicateNicknameDto } from "./dto";
+import { SignUpDto, CheckDuplicateNicknameDto, GetMyPostsDto } from "./dto";
 import { convertUserAgent } from "../../shared/utils/user-agent.util";
 import config from "../../config";
 
@@ -25,6 +26,8 @@ export class UserController {
   @inject(TYPES.IUserService) private readonly _userService: IUserService;
   @inject(TYPES.ILoginLogService)
   private readonly _loginLogService: ILoginLogService;
+  @inject(TYPES.IPostService)
+  private readonly _postSerivce: IPostService;
   // 회원가입 (nickname, mbti 설정)
   @httpPost("/", bodyValidator(SignUpDto))
   async signUp(@requestBody() body: SignUpDto, req: Request, res: Response) {
@@ -102,6 +105,30 @@ export class UserController {
 
     return res.status(200).json(data);
   }
+
+  // 내가 작성한 게시글 조회
+  @httpGet(
+    "/posts",
+    TYPES.ValidateAccessTokenMiddleware,
+    queryValidator(GetMyPostsDto)
+  )
+  async getMyPosts(
+    @queryParam() query: GetMyPostsDto,
+    req: Request,
+    res: Response
+  ) {
+    const user = req.user as User;
+    const data = await this._userService.getMyPosts(user, query);
+    return res.status(200).json(data);
+  }
+
+  // 내가 댓글단 글 조회
+  // @httpGet("/comments", TYPES.ValidateAccessTokenMiddleware)
+  // async getMyComments(req: Request, res: Response) {
+  //   const user = req.user as User;
+
+  //   return res.status(200).json();
+  // }
 
   // 임시 kakao 라우터
   @httpGet("/kakao")
