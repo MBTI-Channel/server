@@ -19,7 +19,7 @@ import { askModule } from "../modules/ask/ask.module";
 import { utilModule } from "../shared/utils/util.module";
 import { apiModule } from "../shared/api/api.module";
 
-const container = new Container();
+const container = new Container({ defaultScope: "Singleton" });
 
 container.load(
   /* core */
