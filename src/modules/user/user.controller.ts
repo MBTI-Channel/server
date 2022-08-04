@@ -49,8 +49,8 @@ export class UserController {
     res: Response
   ) {
     const { nickname } = dto;
-    const result = await this._userService.checkDuplicateNickname(nickname);
-    return res.status(200).json({ isExistsNickname: result });
+    await this._userService.checkDuplicateNickname(nickname);
+    return res.status(200).json({ message: "available nickname" });
   }
 
   // 유저 로그인
