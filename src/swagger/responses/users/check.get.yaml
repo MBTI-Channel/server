@@ -1,0 +1,21 @@
+"200":
+  description: 사용할 수 있는 닉네임
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          message:
+            type: string
+            example: available nickname
+
+"409":
+  description: 이미 존재하는 닉네임
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          message:
+            type: string
+            example: already exists nickname
