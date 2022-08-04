@@ -25,6 +25,8 @@ paths:
   # users
   /users/login:
     $ref: "./paths/users/login.yaml"
+  /users/check:
+    $ref: "./paths/users/check.yaml"
   /users/me:
     $ref: "./paths/users/me.yaml"
   /users/accessToken:

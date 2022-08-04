@@ -22,17 +22,3 @@ post:
               example: ENFP
   responses:
     $ref: "../../responses/users/index.post.yaml"
-
-get:
-  tags:
-    - users
-  description: 닉네임 중복 검사
-  parameters:
-    - name: nickname
-      in: query
-      description: 사용자가 원하는 닉네임
-      required: true
-      type: string
-      example: 지나가는 나그네
-  responses:
-    $ref: "../../responses/users/index.get.yaml"

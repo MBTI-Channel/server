@@ -107,8 +107,7 @@ export class UserService implements IUserService {
       throw new BadReqeustException("already sign up user");
 
     // err: 중복 닉네임
-    const foundNickname = await this.isExistsNickname(nickname);
-    if (foundNickname) throw new ConflictException("already exists nickname");
+    await this.checkDuplicateNickname(nickname);
 
     // suc: 업데이트 및 토큰 발급
     const updatedUser = await this._userRepository.update(user.id, {
@@ -148,11 +147,11 @@ export class UserService implements IUserService {
   }
 
   // 중복 닉네임이 있는지 확인한다.
-  public async isExistsNickname(nickname: string) {
+  public async checkDuplicateNickname(nickname: string) {
     const foundNickname = await this._userRepository.findOneByNickname(
       nickname
     );
-    return foundNickname !== null;
+    if (foundNickname) throw new ConflictException("already exists nickname");
   }
 
   // user가 유효한지 확인한다.

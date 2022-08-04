@@ -1,6 +1,6 @@
 import { IsNotEmpty, IsString, Length, Matches } from "class-validator";
 
-export class NicknameDuplicateCheckDto {
+export class CheckDuplicateNicknameDto {
   @IsString()
   @IsNotEmpty()
   @Length(2, 10)

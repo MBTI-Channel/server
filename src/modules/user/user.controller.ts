@@ -16,7 +16,7 @@ import { IUserService } from "./interfaces/IUser.service";
 import { ILoginLogService } from "../login-log/interfaces/ILogin-log.service";
 import { User } from "./entity/user.entity";
 import { OauthLoginDto } from "../auth/dto/oauth-login.dto";
-import { SignUpDto, NicknameDuplicateCheckDto } from "./dto";
+import { SignUpDto, CheckDuplicateNicknameDto } from "./dto";
 import { convertUserAgent } from "../../shared/utils/user-agent.util";
 import config from "../../config";
 
@@ -41,15 +41,15 @@ export class UserController {
   }
 
   // 닉네임 중복확인
-  @httpGet("/", queryValidator(NicknameDuplicateCheckDto))
-  async nicknameDuplicateCheck(
-    @queryParam() dto: NicknameDuplicateCheckDto,
+  @httpGet("/check", queryValidator(CheckDuplicateNicknameDto))
+  async checkDuplicateNickname(
+    @queryParam() dto: CheckDuplicateNicknameDto,
     req: Request,
     res: Response
   ) {
     const { nickname } = dto;
-    const result = await this._userService.isExistsNickname(nickname);
-    return res.status(200).json({ isExistsNickname: result });
+    await this._userService.checkDuplicateNickname(nickname);
+    return res.status(200).json({ message: "available nickname" });
   }
 
   // 유저 로그인
