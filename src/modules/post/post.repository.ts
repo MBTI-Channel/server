@@ -8,6 +8,7 @@ import { GetAllPostDto } from "./dto/get-all-post.dto";
 import { SearchPostDto } from "./dto/search-post.dto";
 import { Post } from "./entity/post.entity";
 import { IPostRepository } from "./interfaces/IPost.repository";
+import { GetMyPostsDto } from "../user/dto";
 
 @injectable()
 export class PostRepository implements IPostRepository {
@@ -118,6 +119,37 @@ export class PostRepository implements IPostRepository {
       order: { [pageOptionsDto.order]: "DESC" },
     });
     return [result, totalCount];
+  }
+
+  // 일반 페이지네이션
+  public async findAllByUserId(
+    pageOptionsDto: GetMyPostsDto,
+    userId: number
+  ): Promise<[Post[], number]> {
+    const repository = await this._database.getRepository(Post);
+    return await repository
+      .createQueryBuilder("post")
+      .select([
+        "post.id",
+        "post.categoryId",
+        "post.userId",
+        "post.userNickname",
+        "post.type",
+        "post.isActive",
+        "post.isSecret",
+        "post.title",
+        "post.content",
+        "post.viewCount",
+        "post.commentCount",
+        "post.likesCount",
+        "post.createdAt",
+        "post.updatedAt",
+      ])
+      .where("post.user_id = :userId", { userId })
+      .take(pageOptionsDto.maxResults)
+      .skip(pageOptionsDto.skip)
+      .orderBy(`post.createdAt`, "DESC")
+      .getManyAndCount();
   }
 
   public async update(id: number, payload: Partial<Post>): Promise<Post> {
