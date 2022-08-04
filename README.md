@@ -34,8 +34,8 @@
 
 | 이름 | 개발분야  | 소개페이지                                        |
 | ---- | --------- | ------------------------------------------------- |
-| 대경 | Front-end | [개인 리포로 이동](https://github.com/)           |
-| 영준 | Front-end | [개인 리포로 이동](https://github.com/)           |
-| 해성 | Design    | [개인 리포로 이동](https://github.com/)           |
-| 찬우 | Back-end  | [개인 리포로 이동](https://github.com/)           |
+| 대경 | Front-end | [개인 리포로 이동](https://github.com/FaberJoo)   |
+| 영준 | Front-end | [개인 리포로 이동](https://github.com/yjoonjang)  |
+| 찬우 | Back-end  | [개인 리포로 이동](https://github.com/a-ryang)    |
 | 상우 | Back-end  | [개인 리포로 이동](https://github.com/sktkddn777) |
+| 해성 | Design    |                                                   |
