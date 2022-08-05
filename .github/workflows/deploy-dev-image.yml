@@ -1,0 +1,64 @@
+name: Build and Push Dev Docker Image
+on:
+  #test
+  pull_request:
+    branches: ["main"]
+  #test
+  push:
+    branches:
+      - main
+jobs:
+  build-and-push-dev-image:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Create development env file
+        run: |
+          touch .env
+          echo PORT=${{ secrets.PORT }} >> .env
+          echo KAKAO_REST_API_KEY=${{ secrets.DEV_KAKAO_REST_API_KEY}} >> .env
+          echo KAKAO_REDIRECT_URI=${{ secrets.DEV_KAKAO_REDIRECT_URI }} >> .env
+          echo NAVER_CLIENT_ID=${{ secrets.DEV_NAVER_CLIENT_ID }} >> .env
+          echo NAVER_CLIENT_SECRET=${{ secrets.DEV_NAVER_CLIENT_SECRET }} >> .env
+          echo NAVER_REDIRECT_URI=${{ secrets.DEV_NAVER_REDIRECT_URI }} >> .env
+          echo NAVER_RANDOM_STATE=${{ secrets.DEV_NAVER_RANDOM_STATE }} >> .env
+          echo JWT_SECRET=${{ secrets.JWT_SECRET }} >> .env
+          echo JWT_ACCESS_EXPIRES=${{ secrets.JWT_ACCESS_EXPIRES }} >> .env
+          echo JWT_REFRESH_EXPIRES=${{ secrets.JWT_REFRESH_EXPIRES }} >> .env
+          echo JWT_ISSUER=${{ secrets.JWT_ISSUER }} >> .env
+          echo COOKIE_REFRESH_MAX_AGE=${{ secrets.COOKIE_REFRESH_MAX_AGE }} >> .env
+          echo USER_STATUS_WITHDRAWAL=${{ secrets.USER_STATUS_WITHDRAWAL }} >> .env
+          echo USER_STATUS_NEW=${{ secrets.USER_STATUS_NEW }} >> .env
+          echo USER_STATUS_NORMAL=${{ secrets.USER_STATUS_NORMAL }} >> .env
+          echo USER_STATUS_RESTRICTION=${{ secrets.USER_STATUS_RESTRICTION }} >> .env
+          echo DISCORD_ASK_WEBHOOK_URL=${{ secrets.DISCORD_ASK_WEBHOOK_URL }} >> .env
+          echo DISCORD_ERROR_WEBHOOK_URL=${{ secrets.DISCORD_ERROR_WEBHOOK_URL }} >> .env
+          echo S3_ACCESS_KEY=${{ secrets.S3_ACCESS_KEY }} >> .env
+          echo S3_SECRET_KEY=${{ secrets.S3_SECRET_KEY }} >> .env
+          echo BUCKET_NAME=${{ secrets.BUCKET_NAME }} >> .env
+          echo REGION=${{ secrets.REGION }} >> .env
+
+        # 이 작업은 buildx를 사용하는 경우 워크플로의 다음 단계에서 사용할 수 있는 빌더를 만들고 부팅합니다.
+        # 기본적으로 도커 컨테이너 빌더 드라이버는 BuildKit 컨테이너 덕분에 다중 플랫폼 이미지를 빌드하고 캐시를 내보내는 데 사용됩니다.
+        # https://github.com/docker/setup-buildx-action
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+        # "GitHub Action"을 사용하여 Docker 레지스트리에 로그인합니다.
+        # https://github.com/docker/login-action
+      - name: Login to DockerHub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+        # https://github.com/docker/build-push-action
+      - name: Build and push
+        id: docker_build
+        uses: docker/build-push-action@v3
+        with:
+          file: Dockerfile.dev
+          push: true
+          tags: coolwu/mbti-channel:mbtichannel
