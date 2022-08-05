@@ -17,8 +17,51 @@ jobs:
       - name: Create development env file
         run: |
           touch .development.env
-          echo PORT=${{ secrets.PORT }} >> .development.env
-          cat .development.env
+          echo "PORT=$PORT" >> .development.env
+          echo "KAKAO_REST_API_KEY=$KAKAO_REST_API_KEY" >> .development.env
+          echo "KAKAO_REDIRECT_URI=$KAKAO_REDIRECT_URI" >> .development.env
+          echo "NAVER_CLIENT_ID=$NAVER_CLIENT_ID" >> .development.env
+          echo "NAVER_CLIENT_SECRET=$NAVER_CLIENT_SECRET" >> .development.env
+          echo "NAVER_REDIRECT_URI=$NAVER_REDIRECT_URI" >> .development.env
+          echo "NAVER_RANDOM_STATE=$NAVER_RANDOM_STATE" >> .development.env
+          echo "JWT_SECRET=$JWT_SECRET" >> .development.env
+          echo "JWT_ACCESS_EXPIRES=$JWT_ACCESS_EXPIRES" >> .development.env
+          echo "JWT_REFRESH_EXPIRES=$JWT_REFRESH_EXPIRES" >> .development.env
+          echo "JWT_ISSUER=$JWT_ISSUER" >> .development.env
+          echo "COOKIE_REFRESH_MAX_AGE=$COOKIE_REFRESH_MAX_AGE" >> .development.env
+          echo "USER_STATUS_WITHDRAWAL=$USER_STATUS_WITHDRAWAL" >> .development.env
+          echo "USER_STATUS_NEW=$USER_STATUS_NEW" >> .development.env  
+          echo "USER_STATUS_NORMAL=$USER_STATUS_NORMAL" >> .development.env
+          echo "USER_STATUS_RESTRICTION=$USER_STATUS_RESTRICTION" >> .development.env
+          echo "DISCORD_ASK_WEBHOOK_URL=$DISCORD_ASK_WEBHOOK_URL" >> .development.env
+          echo "DISCORD_ERROR_WEBHOOK_URL=$DISCORD_ERROR_WEBHOOK_URL" >> .development.env
+          echo "S3_ACCESS_KEY=$S3_ACCESS_KEY" >> .development.env
+          echo "S3_SECRET_KEY=$S3_SECRET_KEY" >> .development.env
+          echo "BUCKET_NAME=$BUCKET_NAME" >> .development.env
+          echo "REGION=$REGION" >> .development.env
+        env:
+          PORT: ${{ secrets.PORT }}
+          KAKAO_REST_API_KEY: ${{ secrets.DEV_KAKAO_REST_API_KEY }}
+          KAKAO_REDIRECT_URI: ${{ secrets.DEV_KAKAO_REDIRECT_URI }}
+          NAVER_CLIENT_ID: ${{ secrets.DEV_NAVER_CLIENT_ID }}
+          NAVER_CLIENT_SECRET: ${{ secrets.DEV_NAVER_CLIENT_SECRET }}
+          NAVER_REDIRECT_URI: ${{ secrets.DEV_NAVER_REDIRECT_URI }}
+          NAVER_RANDOM_STATE: ${{ secrets.DEV_NAVER_RANDOM_STATE }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          JWT_ACCESS_EXPIRES: ${{ secrets.JWT_ACCESS_EXPIRES }}
+          JWT_REFRESH_EXPIRES: ${{ secrets.JWT_REFRESH_EXPIRES }}
+          JWT_ISSUER: ${{ secrets.JWT_ISSUER }}
+          COOKIE_REFRESH_MAX_AGE: ${{ secrets.COOKIE_REFRESH_MAX_AGE }}
+          USER_STATUS_WITHDRAWAL: ${{ secrets.USER_STATUS_WITHDRAWAL }}
+          USER_STATUS_NEW: ${{ secrets.USER_STATUS_NEW }}
+          USER_STATUS_NORMAL: ${{ secrets.USER_STATUS_NORMAL }}
+          USER_STATUS_RESTRICTION: ${{ secrets.USER_STATUS_RESTRICTION }}
+          DISCORD_ASK_WEBHOOK_URL: ${{ secrets.DISCORD_ASK_WEBHOOK_URL }}
+          DISCORD_ERROR_WEBHOOK_URL: ${{ secrets.DISCORD_ERROR_WEBHOOK_URL }}
+          S3_ACCESS_KEY: ${{ secrets.S3_ACCESS_KEY }}
+          S3_SECRET_KEY: ${{ secrets.S3_SECRET_KEY }}
+          BUCKET_NAME: ${{ secrets.BUCKET_NAME }}
+          REGION: ${{ secrets.REGION }}
 
         # 이 작업은 buildx를 사용하는 경우 워크플로의 다음 단계에서 사용할 수 있는 빌더를 만들고 부팅합니다.
         # 기본적으로 도커 컨테이너 빌더 드라이버는 BuildKit 컨테이너 덕분에 다중 플랫폼 이미지를 빌드하고 캐시를 내보내는 데 사용됩니다.
