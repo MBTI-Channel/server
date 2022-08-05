@@ -16,30 +16,29 @@ jobs:
 
       - name: Create development env file
         run: |
-          ls -a
-          touch .development.env
-          echo PORT=${{ secrets.PORT }} >> .development.env
-          echo KAKAO_REST_API_KEY=${{ secrets.DEV_KAKAO_REST_API_KEY}} >> .development.env
-          echo KAKAO_REDIRECT_URI=${{ secrets.DEV_KAKAO_REDIRECT_URI }} >> .development.env
-          echo NAVER_CLIENT_ID=${{ secrets.DEV_NAVER_CLIENT_ID }} >> .development.env
-          echo NAVER_CLIENT_SECRET=${{ secrets.DEV_NAVER_CLIENT_SECRET }} >> .development.env
-          echo NAVER_REDIRECT_URI=${{ secrets.DEV_NAVER_REDIRECT_URI }} >> .development.env
-          echo NAVER_RANDOM_STATE=${{ secrets.DEV_NAVER_RANDOM_STATE }} >> .development.env
-          echo JWT_SECRET=${{ secrets.JWT_SECRET }} >> .development.env
-          echo JWT_ACCESS_EXPIRES=${{ secrets.JWT_ACCESS_EXPIRES }} >> .development.env
-          echo JWT_REFRESH_EXPIRES=${{ secrets.JWT_REFRESH_EXPIRES }} >> .development.env
-          echo JWT_ISSUER=${{ secrets.JWT_ISSUER }} >> .development.env
-          echo COOKIE_REFRESH_MAX_AGE=${{ secrets.COOKIE_REFRESH_MAX_AGE }} >> .development.env
-          echo USER_STATUS_WITHDRAWAL=${{ secrets.USER_STATUS_WITHDRAWAL }} >> .development.env
-          echo USER_STATUS_NEW=${{ secrets.USER_STATUS_NEW }} >> .development.env
-          echo USER_STATUS_NORMAL=${{ secrets.USER_STATUS_NORMAL }} >> .development.env
-          echo USER_STATUS_RESTRICTION=${{ secrets.USER_STATUS_RESTRICTION }} >> .development.env
-          echo DISCORD_ASK_WEBHOOK_URL=${{ secrets.DISCORD_ASK_WEBHOOK_URL }} >> .development.env
-          echo DISCORD_ERROR_WEBHOOK_URL=${{ secrets.DISCORD_ERROR_WEBHOOK_URL }} >> .development.env
-          echo S3_ACCESS_KEY=${{ secrets.S3_ACCESS_KEY }} >> .development.env
-          echo S3_SECRET_KEY=${{ secrets.S3_SECRET_KEY }} >> .development.env
-          echo BUCKET_NAME=${{ secrets.BUCKET_NAME }} >> .development.env
-          echo REGION=${{ secrets.REGION }} >> .development.env
+          mkdir env && touch env/.development.env
+          echo PORT=${{ secrets.PORT }} >> env/.development.env
+          echo KAKAO_REST_API_KEY=${{ secrets.DEV_KAKAO_REST_API_KEY}} >> env/.development.env
+          echo KAKAO_REDIRECT_URI=${{ secrets.DEV_KAKAO_REDIRECT_URI }} >> env/.development.env
+          echo NAVER_CLIENT_ID=${{ secrets.DEV_NAVER_CLIENT_ID }} >> env/.development.env
+          echo NAVER_CLIENT_SECRET=${{ secrets.DEV_NAVER_CLIENT_SECRET }} >> env/.development.env
+          echo NAVER_REDIRECT_URI=${{ secrets.DEV_NAVER_REDIRECT_URI }} >> env/.development.env
+          echo NAVER_RANDOM_STATE=${{ secrets.DEV_NAVER_RANDOM_STATE }} >> env/.development.env
+          echo JWT_SECRET=${{ secrets.JWT_SECRET }} >> env/.development.env
+          echo JWT_ACCESS_EXPIRES=${{ secrets.JWT_ACCESS_EXPIRES }} >> env/.development.env
+          echo JWT_REFRESH_EXPIRES=${{ secrets.JWT_REFRESH_EXPIRES }} >> env/.development.env
+          echo JWT_ISSUER=${{ secrets.JWT_ISSUER }} >> env/.development.env
+          echo COOKIE_REFRESH_MAX_AGE=${{ secrets.COOKIE_REFRESH_MAX_AGE }} >> env/.development.env
+          echo USER_STATUS_WITHDRAWAL=${{ secrets.USER_STATUS_WITHDRAWAL }} >> env/.development.env
+          echo USER_STATUS_NEW=${{ secrets.USER_STATUS_NEW }} >> env/.development.env
+          echo USER_STATUS_NORMAL=${{ secrets.USER_STATUS_NORMAL }} >> env/.development.env
+          echo USER_STATUS_RESTRICTION=${{ secrets.USER_STATUS_RESTRICTION }} >> env/.development.env
+          echo DISCORD_ASK_WEBHOOK_URL=${{ secrets.DISCORD_ASK_WEBHOOK_URL }} >> env/.development.env
+          echo DISCORD_ERROR_WEBHOOK_URL=${{ secrets.DISCORD_ERROR_WEBHOOK_URL }} >> env/.development.env
+          echo S3_ACCESS_KEY=${{ secrets.S3_ACCESS_KEY }} >> env/.development.env
+          echo S3_SECRET_KEY=${{ secrets.S3_SECRET_KEY }} >> env/.development.env
+          echo BUCKET_NAME=${{ secrets.BUCKET_NAME }} >> env/.development.env
+          echo REGION=${{ secrets.REGION }} >> env/.development.env
 
         # 이 작업은 buildx를 사용하는 경우 워크플로의 다음 단계에서 사용할 수 있는 빌더를 만들고 부팅합니다.
         # 기본적으로 도커 컨테이너 빌더 드라이버는 BuildKit 컨테이너 덕분에 다중 플랫폼 이미지를 빌드하고 캐시를 내보내는 데 사용됩니다.
