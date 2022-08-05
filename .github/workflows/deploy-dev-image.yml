@@ -17,6 +17,7 @@ jobs:
       - name: Create development env file
         run: |
           touch .development.env
+          echo ${{ secrets.PORT }}
           echo PORT=${{ secrets.PORT }} >> .development.env
           echo KAKAO_REST_API_KEY=${{ secrets.DEV_KAKAO_REST_API_KEY}} >> .development.env
           echo KAKAO_REDIRECT_URI=${{ secrets.DEV_KAKAO_REDIRECT_URI }} >> .development.env
