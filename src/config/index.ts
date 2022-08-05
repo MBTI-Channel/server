@@ -1,15 +1,11 @@
 import dotenv from "dotenv";
 import path from "path";
 
-const ENV_ROOT = "./env/";
-
 dotenv.config({
   path: path.resolve(
     process.env.NODE_ENV === "production"
-      ? ENV_ROOT + ".production.env"
-      : process.env.NODE_ENV === "stage"
-      ? ENV_ROOT + ".stage.env"
-      : ENV_ROOT + ".development.env"
+      ? ".production.env"
+      : ".development.env"
   ),
 });
 
