@@ -1,0 +1,60 @@
+version: "3"
+
+services:
+  mysql:
+    image: "mysql:8.0"
+    container_name: mbtichannel-db
+    environment:
+      - MYSQL_ROOT_PASSWORD=root-pw
+      - MYSQL_USER=mbtichannel-user
+      - MYSQL_PASSWORD=mbtichannel-pw
+      - MYSQL_DATABASE=mbtichannel-db
+    restart: unless-stopped
+    volumes:
+      - mbti-volume:/var/lib/mysql
+    networks:
+      - mbtichannel-net
+    ports:
+      - "3306:3306"
+
+  redis:
+    image: "redis"
+    container_name: mbtichannel-redis
+    depends_on:
+      - mysql
+    volumes:
+      - mbti-volume:/data
+    networks:
+      - mbtichannel-net
+    ports:
+      - "6379:6379"
+
+  express:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: mbtichannel-app
+    environment:
+      # mysql
+      - MYSQL_HOST=mysql
+      - MYSQL_PORT=3306
+      - MYSQL_USER=mbtichannel-user
+      - MYSQL_PASSWORD=mbtichannel-pw
+      - MYSQL_DB=mbtichannel-db
+      # redis
+      - REDIS_HOST=redis://mbtichannel-redis
+      - REDIS_PORT=6379
+    depends_on:
+      - redis
+    restart: unless-stopped
+    # volumes:
+    #   - mbti-volume:/var/lib/backend/node_modules
+    networks:
+      - mbtichannel-net
+    ports:
+      - "8001:8001"
+
+networks:
+  mbtichannel-net:
+volumes:
+  mbti-volume:
