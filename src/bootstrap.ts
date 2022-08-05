@@ -6,7 +6,7 @@ import { TYPES } from "./core/types.core";
 import { IDatabaseService } from "./core/database/interfaces/IDatabase.service";
 import { IRedisService } from "./core/database/interfaces/IRedis.service";
 import config from "./config";
-
+console.log(config);
 export async function bootstrap() {
   const server = new InversifyExpressServer(container);
   await container.get<IDatabaseService>(TYPES.IDatabaseService).init();
