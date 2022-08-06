@@ -10,12 +10,12 @@ const { jwt: jwtConfig } = config;
 export class JwtUtil {
   constructor() {}
 
-  sign(payload: jwt.JwtPayload, options?: jwt.SignOptions) {
+  public sign(payload: jwt.JwtPayload, options?: jwt.SignOptions) {
     if (options) return jwt.sign(payload, jwtConfig.secret, options);
     return jwt.sign(payload, jwtConfig.secret);
   }
 
-  verify(token: string): DecodedDto {
+  public verify(token: string): DecodedDto {
     let dto: DecodedDto;
     try {
       let decoded = jwt.verify(token, jwtConfig.secret);
@@ -32,7 +32,7 @@ export class JwtUtil {
     return dto;
   }
 
-  decode(token: string): DecodedDto | null {
+  public decode(token: string): DecodedDto | null {
     try {
       let decodedToken = jwt.decode(token, {
         complete: false,
