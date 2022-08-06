@@ -14,7 +14,11 @@ export class LoginLogService implements ILoginLogService {
     private readonly _loginLogRepository: LoginLogRepository
   ) {}
 
-  async record(user: User, userAgent: string, ip: string): Promise<void> {
+  public async record(
+    user: User,
+    userAgent: string,
+    ip: string
+  ): Promise<void> {
     this._logger.trace(`[LoginLogService] record start`);
     const loginLogEntity = LoginLog.of(user, ip, userAgent);
 

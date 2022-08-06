@@ -26,7 +26,7 @@ export class BookmarkService implements IBookmarkService {
     private readonly _bookmarkRepository: IBookmarkRepository
   ) {}
 
-  async createBookmark(
+  public async createBookmark(
     targetId: number,
     user: User
   ): Promise<BookmarkResponseDto> {
@@ -57,7 +57,7 @@ export class BookmarkService implements IBookmarkService {
     return new BookmarkResponseDto(bookmark, post);
   }
 
-  async delete(user: User, id: number): Promise<void> {
+  public async delete(user: User, id: number): Promise<void> {
     this._logger.trace(`[BookmarkService] delete start`);
     // 북마크 검증
     const bookmark = await this._bookmarkRepository.findOneById(id);

@@ -21,7 +21,7 @@ export class DiscordApiService implements IApiWebhookService {
 
   constructor(@inject(TYPES.Logger) private readonly _logger: Logger) {}
 
-  async pushAskNotification(askEntity: Ask): Promise<void> {
+  public async pushAskNotification(askEntity: Ask): Promise<void> {
     //if (process.env.NODE_ENV === "development") return;
     const { email, title, content, createdAt, imageUrl } = askEntity;
     await axios({
@@ -61,7 +61,7 @@ export class DiscordApiService implements IApiWebhookService {
     }).catch((e) => this._logger.error(e));
   }
 
-  async pushErrorNotification(err: Error): Promise<void> {
+  public async pushErrorNotification(err: Error): Promise<void> {
     if (process.env.NODE_ENV === "development") return;
     await axios({
       url: this._errorChannel,

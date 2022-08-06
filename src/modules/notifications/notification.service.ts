@@ -26,7 +26,7 @@ export class NotificationService implements INotificationService {
   ) {}
 
   // targetUser에 의해 userId에게 알림을 생성한다.
-  async createByTargetUser(
+  public async createByTargetUser(
     targetUser: User,
     userId: number,
     targetId: number,
@@ -57,7 +57,7 @@ export class NotificationService implements INotificationService {
   }
 
   // user의 알림 리스트를 조회한다.
-  async findAll(user: User, pageOptionsDto: GetAllNotificationsDto) {
+  public async findAll(user: User, pageOptionsDto: GetAllNotificationsDto) {
     this._logger.trace(`[NotificationService] findAll start`);
 
     const [notificationArray, totalCount] =
@@ -86,7 +86,7 @@ export class NotificationService implements INotificationService {
     );
   }
 
-  async readOne(user: User, id: number): Promise<void> {
+  public async readOne(user: User, id: number): Promise<void> {
     this._logger.trace(`[NotificationService] readOne start`);
 
     this._logger.trace(`[NotificationService] exsits notification ? ${id}`);
@@ -107,7 +107,7 @@ export class NotificationService implements INotificationService {
   }
 
   // readAt 업데이트 후 읽은 알림 수를 리턴한다.
-  async readAll(user: User) {
+  public async readAll(user: User) {
     this._logger.trace(`[NotificationService] readAll start`);
     return await this._notificationRepository.updateAllUnread(user.id);
   }

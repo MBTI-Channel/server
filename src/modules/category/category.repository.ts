@@ -10,12 +10,12 @@ export class CategoryRepository implements ICategoryRepository {
     @inject(TYPES.IDatabaseService) private readonly _database: IDatabaseService
   ) {}
 
-  async findOneById(id: number): Promise<Category | null> {
+  public async findOneById(id: number): Promise<Category | null> {
     const repository = await this._database.getRepository(Category);
     return await repository.findOne({ where: { id } });
   }
 
-  async findOneByName(name: string): Promise<Category | null> {
+  public async findOneByName(name: string): Promise<Category | null> {
     const repository = await this._database.getRepository(Category);
     return await repository.findOne({ where: { name } });
   }

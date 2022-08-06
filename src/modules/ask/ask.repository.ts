@@ -10,7 +10,7 @@ export class AskRepository implements IAskRepository {
     @inject(TYPES.IDatabaseService) private readonly _database: IDatabaseService
   ) {}
 
-  async create(askEntity: Ask): Promise<Ask> {
+  public async create(askEntity: Ask): Promise<Ask> {
     const repository = await this._database.getRepository(Ask);
     const ask = await repository.save(askEntity);
     return ask;

@@ -27,7 +27,7 @@ export class BookmarkController {
     TYPES.ValidateAccessTokenMiddleware,
     bodyValidator(CreateBookmarkDto)
   )
-  async createBookmark(
+  public async createBookmark(
     @requestBody() body: CreateBookmarkDto,
     req: Request,
     res: Response
@@ -45,7 +45,11 @@ export class BookmarkController {
     TYPES.ValidateAccessTokenMiddleware,
     paramsValidator(IdDto)
   )
-  async delete(@requestParam() param: IdDto, req: Request, res: Response) {
+  public async delete(
+    @requestParam() param: IdDto,
+    req: Request,
+    res: Response
+  ) {
     const user = req.user as User;
     const { id } = param;
 

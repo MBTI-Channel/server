@@ -11,12 +11,12 @@ export class LikeRepository implements ILikeRepository {
     @inject(TYPES.IDatabaseService)
     private readonly _database: IDatabaseService
   ) {}
-  async findOneById(id: number): Promise<Like | null> {
+  public async findOneById(id: number): Promise<Like | null> {
     const repository = await this._database.getRepository(Like);
     return await repository.findOne({ where: { id } });
   }
 
-  async findOneByTarget(
+  public async findOneByTarget(
     userId: number,
     targetId: number,
     targetType: number
@@ -27,20 +27,20 @@ export class LikeRepository implements ILikeRepository {
     });
   }
 
-  async createLike(likeEntity: Like): Promise<Like> {
+  public async createLike(likeEntity: Like): Promise<Like> {
     const repository = await this._database.getRepository(Like);
     const like = await repository.save(likeEntity);
     return like;
   }
 
-  async remove(id: number): Promise<void> {
+  public async remove(id: number): Promise<void> {
     const repository = await this._database.getRepository(Like);
     await repository.update(id, {
       isActive: false,
     } as QueryDeepPartialEntity<Like>);
   }
 
-  async active(id: number): Promise<Like> {
+  public async active(id: number): Promise<Like> {
     const repository = await this._database.getRepository(Like);
     const like = await repository
       .update(id, {

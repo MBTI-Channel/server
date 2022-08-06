@@ -13,7 +13,7 @@ const { kakao } = config;
 export class KakaoApiService implements IApiAccountService {
   constructor(@inject(TYPES.Logger) private readonly _logger: Logger) {}
 
-  async getAccessToken(authCode: string): Promise<string | null> {
+  public async getAccessToken(authCode: string): Promise<string | null> {
     const url = `https://kauth.kakao.com/oauth/token?grant_type=authorization_code&client_id=${kakao.restApiKey}&redirect_uri=${kakao.redirectUri}&code=${authCode}`;
     try {
       const { data } = await axios.post(url, "", {
@@ -34,7 +34,7 @@ export class KakaoApiService implements IApiAccountService {
     }
   }
 
-  async getUserInfo(accessToken: string) {
+  public async getUserInfo(accessToken: string) {
     const url = "https://kapi.kakao.com/v2/user/me";
     try {
       const { data } = await axios.post(url, "", {
@@ -58,7 +58,7 @@ export class KakaoApiService implements IApiAccountService {
     }
   }
 
-  async expiresToken(accessToken: string) {
+  public async expiresToken(accessToken: string) {
     const url = "https://kapi.kakao.com/v1/user/logout";
     try {
       await axios.post(url, "", {

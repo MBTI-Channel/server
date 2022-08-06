@@ -22,7 +22,7 @@ export class AskController extends BaseHttpController {
     TYPES.ValidateAccessTokenMiddleware,
     bodyValidator(CreateAskDto)
   )
-  async createAsk(
+  public async createAsk(
     @requestBody() body: CreateAskDto,
     req: Request,
     res: Response

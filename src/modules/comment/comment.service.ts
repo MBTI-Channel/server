@@ -43,7 +43,7 @@ export class CommentService implements ICommentService {
     private readonly _dbService: IDatabaseService
   ) {}
 
-  async createComment(
+  public async createComment(
     user: User,
     postId: number,
     content: string,
@@ -78,7 +78,7 @@ export class CommentService implements ICommentService {
     }
   }
 
-  async createReply(
+  public async createReply(
     user: User,
     postId: number,
     parentId: number,
@@ -153,7 +153,7 @@ export class CommentService implements ICommentService {
     }
   }
 
-  async findAllComments(pageOptionsDto: GetAllCommentDto, user: User) {
+  public async findAllComments(pageOptionsDto: GetAllCommentDto, user: User) {
     this._logger.trace(`[CommentService] findAllComments start`);
 
     // 댓글을 조회할 게시글이 존재하는지 확인
@@ -176,7 +176,7 @@ export class CommentService implements ICommentService {
     );
   }
 
-  async findAllReplies(
+  public async findAllReplies(
     pageOptionsDto: GetAllRepliesDto,
     user: User
   ): Promise<any> {
@@ -216,7 +216,7 @@ export class CommentService implements ICommentService {
     );
   }
 
-  async increaseLikeCount(id: number): Promise<void> {
+  public async increaseLikeCount(id: number): Promise<void> {
     this._logger.trace(`[CommentService] increaseLikeCount start`);
     // 댓글이 존재하는지 확인
     const comment = await this._commentRepository.findOneById(id);
@@ -228,7 +228,7 @@ export class CommentService implements ICommentService {
     if (!hasIncreased) throw new NotFoundException(`not exists comment`);
   }
 
-  async decreaseLikeCount(id: number): Promise<void> {
+  public async decreaseLikeCount(id: number): Promise<void> {
     this._logger.trace(`[CommentService] decreaseLikeCount start`);
     // 댓글이 존재하는지 확인
     const comment = await this._commentRepository.findOneById(id);
@@ -240,7 +240,7 @@ export class CommentService implements ICommentService {
     if (!hasIncreased) throw new NotFoundException(`not exists comment`);
   }
 
-  async update(user: User, id: number, content: string) {
+  public async update(user: User, id: number, content: string) {
     // 댓글 존재하는지 확인
     const comment = await this._commentRepository.findOneById(id);
     if (!comment || !comment.isActive)
@@ -260,7 +260,7 @@ export class CommentService implements ICommentService {
     return new CommentResponseDto(updatedComment, user);
   }
 
-  async delete(user: User, id: number): Promise<void> {
+  public async delete(user: User, id: number): Promise<void> {
     this._logger.trace(`[CommentService] delete start`);
     // 댓글 존재하는지 확인
     const comment = await this._commentRepository.findOneById(id);

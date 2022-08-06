@@ -138,7 +138,11 @@ export class LikeService implements ILikeService {
     }
   }
 
-  async deleteLike(type: string, targetId: number, user: User): Promise<void> {
+  public async deleteLike(
+    type: string,
+    targetId: number,
+    user: User
+  ): Promise<void> {
     this._logger.trace(`[LikeService] deleteLike start`);
 
     // targetId 존재하는지 확인
