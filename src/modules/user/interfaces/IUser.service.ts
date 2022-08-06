@@ -14,9 +14,7 @@ export interface IUserService {
     gender?: number,
     ageRange?: string
   ): Promise<NeedSignUpResponseDto>;
-  //update(id: number, payload: Partial<User>): Promise<UserResponseDto | null>;
-  //findOne
-  getMyPosts(user: User, pageOptionsDto: GetMyPostsDto): Promise<any>;
+  getMyPosts(user: User, pageOptionsDto: GetMyPostsDto): Promise<any>; // TODO: 리턴타입, postService.getUserPosts로
   login(
     id: number,
     providerId: string,
