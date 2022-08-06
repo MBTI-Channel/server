@@ -4,6 +4,5 @@ get:
   description: 내가 쓴 댓글 조회
   security:
     - bearerAuth: []
-    - cookieAuth: []
   responses:
-    $ref: "../../responses/users/id.comments.get.yaml"
+    $ref: "../../responses/users/comments.get.yaml"
