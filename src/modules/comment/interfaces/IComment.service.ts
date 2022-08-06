@@ -1,11 +1,17 @@
 import { User } from "../../user/entity/user.entity";
-import { GetAllCommentDto, CommentResponseDto, ReplyResponseDto } from "../dto";
+import {
+  GetAllCommentDto,
+  GetAllRepliesDto,
+  GetAllByUserDto,
+  CommentResponseDto,
+  ReplyResponseDto,
+  UserCommentResponseDto,
+} from "../dto";
 import {
   PageInfiniteScrollInfoDto,
   PageInfoDto,
   PageResponseDto,
 } from "../../../shared/page";
-import { GetAllRepliesDto } from "../dto";
 
 export interface ICommentService {
   createComment(
@@ -30,6 +36,10 @@ export interface ICommentService {
     pageOptionsDto: GetAllRepliesDto,
     user: User
   ): Promise<PageResponseDto<PageInfiniteScrollInfoDto, ReplyResponseDto>>;
+  getAllByUser(
+    user: User,
+    pageOptionsDto: GetAllByUserDto
+  ): Promise<PageResponseDto<PageInfoDto, UserCommentResponseDto>>;
   increaseLikeCount(id: number): Promise<void>;
   decreaseLikeCount(id: number): Promise<void>;
   update(user: User, id: number, content: string): Promise<CommentResponseDto>;

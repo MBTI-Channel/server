@@ -5,7 +5,7 @@ import { IDatabaseService } from "../../core/database/interfaces/IDatabase.servi
 import { Comment } from "./entity/comment.entity";
 import { ICommentRepository } from "./interfaces/IComment.repository";
 import { Logger } from "../../shared/utils/logger.util";
-import { GetAllCommentDto, GetAllRepliesDto } from "./dto";
+import { GetAllByUserDto, GetAllCommentDto, GetAllRepliesDto } from "./dto";
 
 @injectable()
 export class CommentRepository implements ICommentRepository {
@@ -83,6 +83,36 @@ export class CommentRepository implements ICommentRepository {
       .innerJoin("comment.post", "post", "post.id = comment.postId")
       .take(maxResults + 1) // nextId를 위한 +1
       .orderBy(`comment.createdAt`, "ASC")
+      .getManyAndCount();
+  }
+
+  public async findAllByUser(
+    pageOptionsDto: GetAllByUserDto,
+    userId: number
+  ): Promise<[Comment[], number]> {
+    const repository = await this._database.getRepository(Comment);
+    return await repository
+      .createQueryBuilder("comment")
+      .select([
+        "comment.id",
+        "comment.content",
+        "comment.replyCount",
+        "comment.likesCount",
+        "comment.isPostWriter",
+        "comment.isActive",
+        "comment.createdAt",
+        "comment.updatedAt",
+        "post.id",
+        "post.title",
+        "post.isActive",
+        "post.commentCount",
+      ])
+      .where("comment.user_id = :userId", { userId })
+      .andWhere("comment.is_active = true")
+      .innerJoin("comment.post", "post", "post.id = comment.postId")
+      .take(pageOptionsDto.maxResults)
+      .skip(pageOptionsDto.skip)
+      .orderBy(`comment.createdAt`, "DESC")
       .getManyAndCount();
   }
 
