@@ -9,7 +9,6 @@ import {
   UserResponseDto,
   NeedSignUpResponseDto,
   AccessTokenResponseDto,
-  GetMyPostsDto,
 } from "./dto";
 import { Logger } from "../../shared/utils/logger.util";
 import { JwtUtil } from "../../shared/utils/jwt.util";
@@ -22,9 +21,7 @@ import {
   UnauthorizedException,
 } from "../../shared/errors/all.exception";
 import { Provider } from "../../shared/type.shared";
-import { PageInfoDto, PageResponseDto } from "../../shared/page";
 import config from "../../config";
-import { PostResponseDto } from "../post/dto";
 
 @injectable()
 export class UserService implements IUserService {
@@ -58,25 +55,6 @@ export class UserService implements IUserService {
     const user = await this._userRepository.findOneById(id);
     if (!user) return null;
     return new UserResponseDto(user);
-  }
-
-  // 내가 작성한 게시글 조회
-  public async getMyPosts(user: User, pageOptionsDto: GetMyPostsDto) {
-    const { id } = user;
-    const [myPostArray, totalCount] =
-      await this._postRepository.findAllByUserId(pageOptionsDto, id);
-
-    // 페이지 정보
-    const pageInfoDto = new PageInfoDto(
-      totalCount,
-      myPostArray.length,
-      pageOptionsDto.page
-    );
-
-    return new PageResponseDto(
-      pageInfoDto,
-      myPostArray.map((e) => new PostResponseDto(e, user))
-    );
   }
 
   // 로그인

@@ -19,9 +19,10 @@ import { ICommentService } from "../comment/interfaces/IComment.service";
 import { User } from "./entity/user.entity";
 import { OauthLoginDto } from "../auth/dto/oauth-login.dto";
 import { GetAllByUserDto } from "../comment/dto";
-import { SignUpDto, CheckDuplicateNicknameDto, GetMyPostsDto } from "./dto";
+import { SignUpDto, CheckDuplicateNicknameDto } from "./dto";
 import { convertUserAgent } from "../../shared/utils/user-agent.util";
 import config from "../../config";
+import { GetMyPostsDto } from "../post/dto";
 
 @controller("/users")
 export class UserController {
@@ -125,7 +126,7 @@ export class UserController {
     res: Response
   ) {
     const user = req.user as User;
-    const data = await this._userService.getMyPosts(user, query); //TODO: postService.getUserPosts로
+    const data = await this._postSerivce.getMyPosts(user, query); //TODO: postService.getUserPosts로
     return res.status(200).json(data);
   }
 
