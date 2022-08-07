@@ -31,7 +31,7 @@ export class PostController {
     TYPES.ValidateAccessTokenMiddleware,
     bodyValidator(CreatePostDto)
   )
-  async createPost(
+  public async createPost(
     @requestBody() body: CreatePostDto,
     req: Request,
     res: Response
@@ -56,7 +56,11 @@ export class PostController {
     TYPES.ValidateAccessTokenMiddleware,
     paramsValidator(IdDto)
   )
-  async deletePost(@requestParam() param: IdDto, req: Request, res: Response) {
+  public async deletePost(
+    @requestParam() param: IdDto,
+    req: Request,
+    res: Response
+  ) {
     const user = req.user as User;
     const { id } = param;
 
@@ -71,7 +75,7 @@ export class PostController {
     TYPES.CheckLoginStatusMiddleware,
     queryValidator(SearchPostDto)
   )
-  async searchPost(
+  public async searchPost(
     @queryParam() query: SearchPostDto,
     req: Request,
     res: Response
@@ -84,7 +88,7 @@ export class PostController {
 
   // 게시글 상세 조회
   @httpGet("/:id", TYPES.CheckLoginStatusMiddleware, paramsValidator(IdDto))
-  async getDetailPost(
+  public async getDetailPost(
     @requestParam() param: IdDto,
     req: Request,
     res: Response
@@ -98,7 +102,7 @@ export class PostController {
 
   // 게시글 전체 조회
   @httpGet("/", TYPES.CheckLoginStatusMiddleware, queryValidator(GetAllPostDto))
-  async getAllPosts(
+  public async getAllPosts(
     @queryParam() query: GetAllPostDto,
     req: Request,
     res: Response
@@ -114,7 +118,7 @@ export class PostController {
     paramsValidator(IdDto),
     bodyValidator(UpdatePostDto)
   )
-  async updatePost(
+  public async updatePost(
     @requestParam() param: IdDto,
     @requestBody() body: UpdatePostDto,
     req: Request,

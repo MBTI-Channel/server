@@ -21,8 +21,12 @@ export class GetProviderUserByOauth extends BaseMiddleware {
     super();
   }
 
+  private _log(message: string) {
+    this._logger.trace(`[GetProviderUserByOauth] ${message}`);
+  }
+
   public async handler(req: Request, res: Response, next: NextFunction) {
-    this._logger.trace(`[GetProviderUserByOauth] start`);
+    this._log("start");
     const { provider, authCode } = req.body;
     try {
       const providerUserInfo = await this._oauthService.getUserInfoByProvider(
@@ -37,7 +41,7 @@ export class GetProviderUserByOauth extends BaseMiddleware {
         ageRange: providerUserInfo.ageRange,
       });
 
-      this._logger.trace(`[GetProviderUserByOauth] call next`);
+      this._log("call next");
       return next();
     } catch (err) {
       return next(err);

@@ -10,22 +10,21 @@ export class DatabaseService implements IDatabaseService {
   private static myDataSource: DataSource;
   constructor(@inject(TYPES.Logger) private readonly _logger: Logger) {}
 
+  private _log(message: string) {
+    this._logger.trace(`[DatabaseService] ${message}`);
+  }
+
   private async _getConnection(): Promise<DataSource> {
     if (DatabaseService.myDataSource?.isInitialized) {
-      this._logger.trace(
-        "[DatabaseService] database connection already established"
-      );
+      this._log("database connection already established");
       return DatabaseService.myDataSource;
     }
 
     try {
       DatabaseService.myDataSource = await appDataSource.initialize();
-      this._logger.info("[DatabaseService] database connection established");
+      this._log("database connection established");
     } catch (err) {
-      this._logger.error(
-        err,
-        `[DatabaseService] database connection failed. Error: ${err}`
-      );
+      this._logger.error(err, `database connection failed. Error: ${err}`);
     }
 
     return DatabaseService.myDataSource;
@@ -36,14 +35,11 @@ export class DatabaseService implements IDatabaseService {
       DatabaseService.myDataSource = await appDataSource
         .initialize()
         .then((dataSource) => {
-          this._logger.info("[DatabaseService] database initialize success");
+          this._log("database initialize success");
           return dataSource;
         });
     } catch (err) {
-      this._logger.error(
-        err,
-        `[DatabaseService] database initialize error. Error: ${err}`
-      );
+      this._logger.error(err, `database initialize error. Error: ${err}`);
     }
     return;
   }

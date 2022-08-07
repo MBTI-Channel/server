@@ -15,18 +15,18 @@ export class CommentRepository implements ICommentRepository {
     @inject(TYPES.Logger) private readonly _logger: Logger
   ) {}
 
-  async createComment(commentEntity: Comment): Promise<Comment> {
+  public async createComment(commentEntity: Comment): Promise<Comment> {
     const repository = await this._database.getRepository(Comment);
     const comment = await repository.save(commentEntity);
     return comment;
   }
 
-  async findOneById(id: number): Promise<Comment | null> {
+  public async findOneById(id: number): Promise<Comment | null> {
     const repository = await this._database.getRepository(Comment);
     return await repository.findOne({ where: { id } });
   }
 
-  async findAllComments(
+  public async findAllComments(
     pageOptionsDto: GetAllCommentDto
   ): Promise<[Comment[], number]> {
     const repository = await this._database.getRepository(Comment);
@@ -56,7 +56,7 @@ export class CommentRepository implements ICommentRepository {
       .getManyAndCount();
   }
 
-  async findAllReplies(
+  public async findAllReplies(
     pageOptionsDto: GetAllRepliesDto
   ): Promise<[Comment[], number]> {
     const { parentId, startId, maxResults } = pageOptionsDto;
@@ -116,7 +116,7 @@ export class CommentRepository implements ICommentRepository {
       .getManyAndCount();
   }
 
-  async update(id: number, payload: Partial<Comment>) {
+  public async update(id: number, payload: Partial<Comment>) {
     const repository = await this._database.getRepository(Comment);
     return await repository
       .update(id, payload as QueryDeepPartialEntity<Comment>)
@@ -144,7 +144,7 @@ export class CommentRepository implements ICommentRepository {
     return false;
   }
 
-  async remove(id: number): Promise<void> {
+  public async remove(id: number): Promise<void> {
     const repository = await this._database.getRepository(Comment);
     await repository.update(id, {
       isActive: false,

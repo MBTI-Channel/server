@@ -65,7 +65,7 @@ export class Logger {
     winston.addColors(this._customLevels.colors);
   }
 
-  morganStream(message: string) {
+  public morganStream(message: string) {
     this._logger.info(message.substring(0, message.lastIndexOf("\n")));
   }
 
@@ -73,7 +73,7 @@ export class Logger {
    * @error 요청을 처리하는 중 문제가 발생한 경우
    * @level 0
    */
-  error(err: any, message?: string, meta?: any) {
+  public error(err: any, message?: string, meta?: any) {
     if (message)
       this._logger.error(`${err.name}: ${message} \n ${err.stack}`, meta);
     this._logger.error(`${err.name}: ${err.message} \n ${err.stack}`, meta);
@@ -83,7 +83,7 @@ export class Logger {
    * @warn 처리 가능한 문제, 향후 시스템 에러의 원인이 될 수 있는 경고성 메시지를 나타냄
    * @level 1
    */
-  warn(message: string, meta?: any) {
+  public warn(message: string, meta?: any) {
     this._logger.warn(message, meta);
   }
 
@@ -91,7 +91,7 @@ export class Logger {
    * @info 상태변경과 같은 정보성 메시지를 나타냄
    * @level 2
    */
-  info(message: string, meta?: any) {
+  public info(message: string, meta?: any) {
     this._logger.info(message, meta);
   }
 
@@ -99,7 +99,7 @@ export class Logger {
    * @debug 프로그램을 디버깅하기 위한 정보 지정
    * @level 3
    */
-  debug(message: string, meta?: any) {
+  public debug(message: string, meta?: any) {
     this._logger.debug(message, meta);
   }
 
@@ -107,7 +107,7 @@ export class Logger {
    * @trace debug보다 좀더 상세한 정보를 나타냄
    * @level 4
    */
-  trace(message: string, meta?: any) {
+  public trace(message: string, meta?: any) {
     this._logger.log("trace", message, meta);
   }
 }

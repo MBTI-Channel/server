@@ -25,12 +25,15 @@ export class BookmarkService implements IBookmarkService {
     @inject(TYPES.IBookmarkRepository)
     private readonly _bookmarkRepository: IBookmarkRepository
   ) {}
+  private _log(message: string) {
+    this._logger.trace(`[BookmarkService] ${message}`);
+  }
 
-  async createBookmark(
+  public async createBookmark(
     targetId: number,
     user: User
   ): Promise<BookmarkResponseDto> {
-    this._logger.trace(`[BookmarkService] createBookmark start`);
+    this._log(`createBookmark start`);
     // targetId 존재 여부
     const post = await this._postRepository.findOneById(targetId);
     if (!post || !post.isActive) throw new NotFoundException(`not exists post`);
@@ -57,8 +60,8 @@ export class BookmarkService implements IBookmarkService {
     return new BookmarkResponseDto(bookmark, post);
   }
 
-  async delete(user: User, id: number): Promise<void> {
-    this._logger.trace(`[BookmarkService] delete start`);
+  public async delete(user: User, id: number): Promise<void> {
+    this._log(`delete start`);
     // 북마크 검증
     const bookmark = await this._bookmarkRepository.findOneById(id);
     if (!bookmark || !bookmark.isActive)
@@ -68,7 +71,7 @@ export class BookmarkService implements IBookmarkService {
     if (bookmark.userId !== user.id)
       throw new ForbiddenException("authorization error");
 
-    this._logger.trace(`[BookmarkService] remove bookmark ${id}`);
+    this._log(`remove bookmark ${id}`);
     await this._bookmarkRepository.remove(id);
   }
 }

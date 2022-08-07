@@ -39,7 +39,7 @@ export class CommentController {
     TYPES.ValidateAccessTokenMiddleware,
     bodyValidator(CreateCommentDto)
   )
-  async createComment(
+  public async createComment(
     @requestBody() body: CreateCommentDto,
     req: Request,
     res: Response
@@ -63,7 +63,7 @@ export class CommentController {
     TYPES.ValidateAccessTokenMiddleware,
     bodyValidator(CreateReplyDto)
   )
-  async createReply(
+  public async createReply(
     @requestBody() body: CreateReplyDto,
     req: Request,
     res: Response
@@ -122,7 +122,7 @@ export class CommentController {
     paramsValidator(IdDto),
     bodyValidator(UpdateCommentDto)
   )
-  async update(
+  public async update(
     @requestParam() param: IdDto,
     @requestBody() body: UpdateCommentDto,
     req: Request,
@@ -141,7 +141,7 @@ export class CommentController {
     TYPES.ValidateAccessTokenMiddleware,
     paramsValidator(DeleteCommentDto)
   )
-  async delete(
+  public async delete(
     @requestParam() param: DeleteCommentDto,
     req: Request,
     res: Response

@@ -38,20 +38,24 @@ export class UserService implements IUserService {
     private readonly _postRepository: IPostRepository
   ) {}
 
+  private _log(message: string) {
+    this._logger.trace(`[UserService] ${message}`);
+  }
+
   public async create(
     provider: Provider,
     providerId: string,
     gender: number,
     ageRange: string
   ) {
-    this._logger.trace(`[UserService] create start`);
+    this._log(`create start`);
     const userEntitiy = User.of(provider, providerId, gender, ageRange);
     const user = await this._userRepository.create(userEntitiy);
     return new NeedSignUpResponseDto(user);
   }
 
   public async findOneById(id: number) {
-    this._logger.trace(`[UserService] findOneById start`);
+    this._log(`findOneById start`);
     const user = await this._userRepository.findOneById(id);
     if (!user) return null;
     return new UserResponseDto(user);
@@ -63,20 +67,18 @@ export class UserService implements IUserService {
     providerId: string,
     userAgent: string
   ): Promise<UserTokenResponseDto> {
-    this._logger.trace(`[UserService] login start`);
+    this._log(`login start`);
 
     const user = await this._userRepository.findOneById(id);
 
     // err: 존재하지 않는 user id
-    this._logger.trace(`[UserService] check is exists user id`);
+    this._log(`check is exists user id`);
     if (!user) {
       throw new NotFoundException("not exists user");
     }
 
     // err: user providerId와 요청 providerId 다름
-    this._logger.trace(
-      `[UserService] check user providerId and providerId match`
-    );
+    this._log(`check user providerId and providerId match`);
     if (user.providerId !== providerId)
       throw new UnauthorizedException("user does not match");
 
@@ -132,8 +134,7 @@ export class UserService implements IUserService {
     refreshToken: string,
     userAgent: string
   ) {
-    this._logger.trace(`[UserService] reissueAccessToken start`);
-
+    this._log(`reissueAccessToken start`);
     // redis의 정보와 일치하는지 확인
     const key = `${user.id}-${userAgent}`;
     const hasAuth = await this._authService.hasRefreshAuth(key, refreshToken);
@@ -159,7 +160,7 @@ export class UserService implements IUserService {
 
   // user가 유효한지 확인한다.
   public async isValid(id: number) {
-    this._logger.trace(`[UserService] is valid user id? : ${id}`);
+    this._log(`is valid user id? : ${id}`);
     const user = await this._userRepository.findOneStatus(id);
     if (!user) return false;
     if (!user.isActive()) return false;

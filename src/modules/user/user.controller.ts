@@ -38,7 +38,11 @@ export class UserController {
 
   // 회원가입 (nickname, mbti 설정)
   @httpPost("/", bodyValidator(SignUpDto))
-  async signUp(@requestBody() body: SignUpDto, req: Request, res: Response) {
+  public async signUp(
+    @requestBody() body: SignUpDto,
+    req: Request,
+    res: Response
+  ) {
     const { id, uuid, nickname, mbti } = body;
     const userAgent = convertUserAgent(req.headers["user-agent"]);
     const data = await this._userService.signUp(
@@ -53,7 +57,7 @@ export class UserController {
 
   // 닉네임 중복확인
   @httpGet("/check", queryValidator(CheckDuplicateNicknameDto))
-  async checkDuplicateNickname(
+  public async checkDuplicateNickname(
     @queryParam() dto: CheckDuplicateNicknameDto,
     req: Request,
     res: Response
@@ -70,7 +74,7 @@ export class UserController {
     TYPES.GetProviderUserByOauthMiddleware,
     TYPES.SocialSignUpMiddleware
   )
-  async oauthLogin(req: Request, res: Response) {
+  public async oauthLogin(req: Request, res: Response) {
     const user = req.user as User;
     const userAgent = convertUserAgent(req.headers["user-agent"]);
     const data = await this._userService.login(
@@ -92,7 +96,7 @@ export class UserController {
 
   // access token 재발급
   @httpGet("/accessToken", TYPES.ValidateReissueTokenMiddleware)
-  async reissueAccessToken(req: Request, res: Response) {
+  public async reissueAccessToken(req: Request, res: Response) {
     const user = req.user as User;
     const refreshToken = req.cookies.Refresh;
     const userAgent = convertUserAgent(req.headers["user-agent"]);
@@ -108,7 +112,7 @@ export class UserController {
 
   //사용자 유효한지 지속적으로 확인
   @httpGet("/me", TYPES.ValidateAccessTokenMiddleware)
-  async validateUser(req: Request, res: Response) {
+  public async validateUser(req: Request, res: Response) {
     const data = req.user as User;
 
     return res.status(200).json(data);
@@ -120,7 +124,7 @@ export class UserController {
     TYPES.ValidateAccessTokenMiddleware,
     queryValidator(GetMyPostsDto)
   )
-  async getMyPosts(
+  public async getMyPosts(
     @queryParam() query: GetMyPostsDto,
     req: Request,
     res: Response

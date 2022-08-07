@@ -27,7 +27,7 @@ export class LikeController {
     TYPES.ValidateAccessTokenMiddleware,
     bodyValidator(CreateLikeDto)
   )
-  async createLike(
+  public async createLike(
     @requestBody() body: CreateLikeDto,
     req: Request,
     res: Response
@@ -46,7 +46,7 @@ export class LikeController {
     TYPES.ValidateAccessTokenMiddleware,
     queryValidator(DeleteLikeDto)
   )
-  async deleteLike(
+  public async deleteLike(
     @queryParam() query: DeleteLikeDto,
     req: Request,
     res: Response

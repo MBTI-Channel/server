@@ -42,6 +42,10 @@ export class LikeService implements ILikeService {
     private readonly _dbService: IDatabaseService
   ) {}
 
+  private _log(message: string) {
+    this._logger.trace(`[LikeService] ${message}`);
+  }
+
   private async _checkMbti(target: Post | Comment, user: User, type: string) {
     let aver_target;
     if (type === LikeTargetType.POST) {
@@ -82,7 +86,7 @@ export class LikeService implements ILikeService {
     targetId: number,
     user: User
   ): Promise<LikeResponseDto> {
-    this._logger.trace(`[LikeService] createLike start`);
+    this._log("createLike satrt");
 
     // targetId 존재하는지 확인
     const likeTarget = await this._getLikeTarget(type, targetId);
@@ -138,8 +142,12 @@ export class LikeService implements ILikeService {
     }
   }
 
-  async deleteLike(type: string, targetId: number, user: User): Promise<void> {
-    this._logger.trace(`[LikeService] deleteLike start`);
+  public async deleteLike(
+    type: string,
+    targetId: number,
+    user: User
+  ): Promise<void> {
+    this._log("deleteLike satrt");
 
     // targetId 존재하는지 확인
     const likeTarget = await this._getLikeTarget(type, targetId);

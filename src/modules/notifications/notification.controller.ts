@@ -25,7 +25,7 @@ export class NotificationController {
 
   // 알림 전체 읽음 처리
   @httpPatch("/all/readAt", TYPES.ValidateAccessTokenMiddleware)
-  async readAll(req: Request, res: Response) {
+  public async readAll(req: Request, res: Response) {
     const user = req.user as User;
     const data = await this._notificationService.readAll(user);
     return res.status(200).json({ readCount: data });
@@ -37,7 +37,7 @@ export class NotificationController {
     TYPES.ValidateAccessTokenMiddleware,
     paramsValidator(ReadOneDto)
   )
-  async readOne(
+  public async readOne(
     @requestParam() param: ReadOneDto,
     req: Request,
     res: Response
@@ -54,7 +54,7 @@ export class NotificationController {
     TYPES.ValidateAccessTokenMiddleware,
     queryValidator(GetAllNotificationsDto)
   )
-  async getAll(
+  public async getAll(
     @queryParam() query: GetAllNotificationsDto,
     req: Request,
     res: Response

@@ -9,7 +9,7 @@ export class LoginLogRepository implements ILoginLogRepository {
   constructor(
     @inject(TYPES.IDatabaseService) private readonly _database: IDatabaseService
   ) {}
-  async create(loginLogEntity: LoginLog): Promise<void> {
+  public async create(loginLogEntity: LoginLog): Promise<void> {
     const repository = await this._database.getRepository(LoginLog);
     await repository.save(loginLogEntity);
   }

@@ -21,6 +21,10 @@ export class AuthService implements IAuthService {
     @inject(TYPES.IRedisService) private readonly _redisService: IRedisService
   ) {}
 
+  private _log(message: string) {
+    this._logger.trace(`[AuthService] ${message}`);
+  }
+
   public async generateAccessToken(user: User) {
     const { id, nickname, mbti, isAdmin, createdAt } = user;
     const payload: ITokenPayload = {
@@ -59,37 +63,33 @@ export class AuthService implements IAuthService {
     nickname: string,
     mbti: string
   ) {
-    this._logger.trace(`[validateUserWithToken] start`);
+    this._log("validateUserWithToken start");
 
     const user = await this._userRepository.findOneById(id);
 
     // 존재하지않는 user id
     if (!user) {
-      this._logger.warn(`[validateUserWithToken] not exists user id : ${id}`);
+      this._logger.warn(`[AuthService] not exists user id : ${id}`);
       throw new UnauthorizedException("authentication error");
     }
 
     // status가 normal이 아닌 user
     if (user.status !== config.user.status.normal) {
-      this._logger.warn(
-        `[validateUserWithToken] not normal status user id : ${id}`
-      );
+      this._logger.warn(`[AuthService] not normal status user id : ${id}`);
       throw new UnauthorizedException("authentication error");
     }
 
     // access token payload와 db의 user 정보 불일치
     if (user.mbti !== mbti || user.nickname !== nickname) {
       this._logger.warn(
-        `[validateUserWithToken] access token payload and database user info does not match`
+        `[AuthService] access token payload and database user info does not match`
       );
       throw new UnauthorizedException("authentication error");
     }
-
-    this._logger.trace(`[validateUserWithToken] clear`);
   }
 
   public async hasRefreshAuth(key: string, refreshToken: string) {
-    this._logger.trace(`[hasRefreshAuth] start`);
+    this._log(`hasRefreshAuth start`);
     const redisRefreshToken = await this._redisService.get(key);
     // 일치하는 key 없음
     if (!redisRefreshToken) return false;
@@ -99,7 +99,7 @@ export class AuthService implements IAuthService {
   }
 
   private async _setTokenInRedis(key: string, refreshToken: string) {
-    this._logger.trace(`[setTokenInRedis] start`);
+    this._log(`setTokenInRedis start`);
 
     await this._redisService.set(key, refreshToken);
   }

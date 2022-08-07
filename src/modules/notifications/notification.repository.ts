@@ -14,17 +14,17 @@ export class NotificationtRepository implements INotificationRepository {
     private readonly _database: IDatabaseService
   ) {}
 
-  async create(entity: Notification): Promise<void> {
+  public async create(entity: Notification): Promise<void> {
     const repository = await this._database.getRepository(Notification);
     await repository.save(entity);
   }
 
-  async findOneById(id: number): Promise<Notification> {
+  public async findOneById(id: number): Promise<Notification> {
     const repository = await this._database.getRepository(Notification);
     return repository.findOne({ where: { id } });
   }
 
-  async findAllByUserId(
+  public async findAllByUserId(
     userId: number,
     pageOptionsDto: GetAllNotificationsDto
   ): Promise<[Notification[], number]> {
@@ -44,14 +44,14 @@ export class NotificationtRepository implements INotificationRepository {
     return queryBuilder.getManyAndCount();
   }
 
-  async update(id: number, payload: Partial<Notification>) {
+  public async update(id: number, payload: Partial<Notification>) {
     const repository = await this._database.getRepository(Notification);
     return await repository
       .update(id, payload as QueryDeepPartialEntity<Notification>)
       .then(async () => await repository.findOne({ where: { id } }));
   }
 
-  async updateAllUnread(userId: number) {
+  public async updateAllUnread(userId: number) {
     const repository = await this._database.getRepository(Notification);
     const { affected } = await repository.update({ userId, readAt: IsNull() }, {
       readAt: new Date(),

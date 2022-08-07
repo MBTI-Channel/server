@@ -14,11 +14,19 @@ export class LoginLogService implements ILoginLogService {
     private readonly _loginLogRepository: LoginLogRepository
   ) {}
 
-  async record(user: User, userAgent: string, ip: string): Promise<void> {
-    this._logger.trace(`[LoginLogService] record start`);
+  private _log(message: string) {
+    this._logger.trace(`[LoginLogService] ${message}`);
+  }
+
+  public async record(
+    user: User,
+    userAgent: string,
+    ip: string
+  ): Promise<void> {
+    this._log(`record start`);
     const loginLogEntity = LoginLog.of(user, ip, userAgent);
 
     await this._loginLogRepository.create(loginLogEntity);
-    this._logger.trace(`[LoginLogService] record done`);
+    this._log(`record done`);
   }
 }

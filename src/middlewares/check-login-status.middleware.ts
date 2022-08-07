@@ -20,10 +20,14 @@ export class CheckLoginStatus extends BaseMiddleware {
     super();
   }
 
+  private _log(message: string) {
+    this._logger.trace(`[CheckLoginStatus] ${message}`);
+  }
+
   // 로그인 상태라면 req.user를 설정한다.
   public async handler(req: Request, res: Response, next: NextFunction) {
     try {
-      this._logger.trace(`[CheckLoginStatus] start`);
+      this._log(`start`);
       const AUTH_TYPE = "Bearer ";
       const header = req.headers.authorization;
       let accessToken;
@@ -33,24 +37,24 @@ export class CheckLoginStatus extends BaseMiddleware {
 
       // accessToken이 없다면 미로그인 상태. next 호출
       if (!accessToken) {
-        this._logger.trace(`[CheckLoginStatus] not logged in. call next`);
+        this._log(`not logged in. call next`);
         return next();
       }
 
       // access token이 있다면 유효 여부 판단
-      this._logger.trace(`[CheckLoginStatus] verify access token...`);
+      this._log(`verify access token...`);
       let decoded = this._jwtUtil.verify(accessToken);
       if (decoded.status === "invalid") {
-        this._logger.trace(`[CheckLoginStatus] jwt verify error`);
+        this._log(`jwt verify error`);
         throw new UnauthorizedException("authentication error");
       }
       if (decoded.status === "expired") {
-        this._logger.trace(`[CheckLoginStatus] jwt expired`);
+        this._log(`jwt expired`);
         throw new UnauthorizedException("access token expired");
       }
 
       // access token의 payload가 유효한 사용자 확인
-      this._logger.trace(`[CheckLoginStatus] validate user with token...`);
+      this._log(`validate user with token...`);
       await this._authService.validateUserWithToken(
         decoded.id,
         decoded.nickname,
@@ -64,7 +68,7 @@ export class CheckLoginStatus extends BaseMiddleware {
         isAdmin: decoded.isAdmin,
       });
 
-      this._logger.trace(`[CheckLoginStatus] logged in. call next`);
+      this._log(`logged in. call next`);
       return next();
     } catch (err) {
       return next(err);

@@ -13,7 +13,7 @@ const { naver } = config;
 export class NaverApiService implements IApiAccountService {
   constructor(@inject(TYPES.Logger) private readonly _logger: Logger) {}
 
-  async getAccessToken(authCode: string): Promise<string | null> {
+  public async getAccessToken(authCode: string): Promise<string | null> {
     const url = `https://nid.naver.com/oauth2.0/token?grant_type=authorization_code&client_id=${naver.clientId}&client_secret=${naver.clientSecret}&redirect_uri=${naver.redirectUri}&code=${authCode}&state=${naver.randomState}`;
     try {
       const { data } = await axios.post(url, "", {
@@ -37,7 +37,7 @@ export class NaverApiService implements IApiAccountService {
     }
   }
 
-  async getUserInfo(accessToken: string) {
+  public async getUserInfo(accessToken: string) {
     const url = "https://openapi.naver.com/v1/nid/me";
     try {
       const { data } = await axios.post(url, "", {
@@ -55,7 +55,7 @@ export class NaverApiService implements IApiAccountService {
     }
   }
 
-  async expiresToken(accessToken: string) {
+  public async expiresToken(accessToken: string) {
     const url = `https://nid.naver.com/oauth2.0/token?grant_type=delete&client_id=${naver.clientId}&client_secret=${naver.clientSecret}&access_token=${accessToken}&service_provider=NAVER`;
     try {
       await axios.post(url, "", {

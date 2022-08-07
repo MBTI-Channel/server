@@ -12,7 +12,7 @@ export class BookmarkRepository implements IBookmarkRepository {
     private readonly _database: IDatabaseService
   ) {}
 
-  async findOneByUserAndPost(
+  public async findOneByUserAndPost(
     postId: number,
     userId: number
   ): Promise<Bookmark> {
@@ -20,18 +20,18 @@ export class BookmarkRepository implements IBookmarkRepository {
     return await repository.findOne({ where: { postId, userId } });
   }
 
-  async findOneById(id: number): Promise<Bookmark | null> {
+  public async findOneById(id: number): Promise<Bookmark | null> {
     const repository = await this._database.getRepository(Bookmark);
     return await repository.findOne({ where: { id } });
   }
 
-  async createBookmark(bookmarkEntity: Bookmark): Promise<Bookmark> {
+  public async createBookmark(bookmarkEntity: Bookmark): Promise<Bookmark> {
     const repository = await this._database.getRepository(Bookmark);
     const bookmark = await repository.save(bookmarkEntity);
     return bookmark;
   }
 
-  async remove(id: number): Promise<void> {
+  public async remove(id: number): Promise<void> {
     const repository = await this._database.getRepository(Bookmark);
     await repository.update(id, {
       isActive: false,
