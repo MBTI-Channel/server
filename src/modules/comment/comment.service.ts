@@ -218,7 +218,7 @@ export class CommentService implements ICommentService {
     );
   }
 
-  async increaseLikeCount(id: number): Promise<void> {
+  public async increaseLikeCount(id: number): Promise<void> {
     this._logger.trace(`[CommentService] increaseLikeCount start`);
     // 댓글이 존재하는지 확인
     const comment = await this._commentRepository.findOneById(id);
