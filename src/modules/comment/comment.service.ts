@@ -16,8 +16,10 @@ import {
 import {
   GetAllCommentDto,
   GetAllRepliesDto,
+  GetAllByUserDto,
   CommentResponseDto,
   ReplyResponseDto,
+  UserCommentResponseDto,
 } from "./dto";
 import { Logger } from "../../shared/utils/logger.util";
 import { HttpException } from "../../shared/errors/http.exception";
@@ -213,6 +215,28 @@ export class CommentService implements ICommentService {
     return new PageResponseDto(
       pageInfoDto,
       replyArray.map((e) => new ReplyResponseDto(e, user))
+    );
+  }
+
+  public async getAllByUser(
+    user: User,
+    pageOptionsDto: GetAllByUserDto
+  ): Promise<PageResponseDto<PageInfoDto, UserCommentResponseDto>> {
+    const { id: userId } = user;
+
+    const [commentArray, totalCount] =
+      await this._commentRepository.findAllByUser(pageOptionsDto, userId);
+
+    // 페이지 정보
+    const pageInfoDto = new PageInfoDto(
+      totalCount,
+      commentArray.length,
+      pageOptionsDto.page
+    );
+
+    return new PageResponseDto(
+      pageInfoDto,
+      commentArray.map((e) => new UserCommentResponseDto(e, user))
     );
   }
 
