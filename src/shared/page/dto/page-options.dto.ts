@@ -1,8 +1,10 @@
 import { Type } from "class-transformer";
 import { IsInt, IsOptional, Max, Min } from "class-validator";
 
-// 무한스크롤로 수정 될 수 있음
-export class GetMyPostsDto {
+/**
+ * 일반 페이지네이션 요청 DTO
+ */
+export class PageOptionsDto {
   @IsInt()
   @Min(1)
   @Type(() => Number)

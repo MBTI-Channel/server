@@ -5,11 +5,15 @@ import {
   ForbiddenException,
   NotFoundException,
 } from "../../shared/errors/all.exception";
-import { PageResponseDto, PageInfiniteScrollInfoDto } from "../../shared/page";
+import {
+  PageResponseDto,
+  PageInfiniteScrollInfoDto,
+  PageInfoDto,
+} from "../../shared/page";
 import { Logger } from "../../shared/utils/logger.util";
 import { ICategoryRepository } from "../category/interfaces/ICategory.repository";
 import { User } from "../user/entity/user.entity";
-import { GetAllPostDto, PostResponseDto } from "./dto";
+import { GetAllPostDto, GetMyPostsDto, PostResponseDto } from "./dto";
 import { SearchPostDto } from "./dto/search-post.dto";
 import { Post } from "./entity/post.entity";
 import { IPostRepository } from "./interfaces/IPost.repository";
@@ -132,6 +136,25 @@ export class PostService implements IPostService {
     const post = await this._postRepository.findOneById(id);
     if (!post || !post.isActive) return false;
     return true;
+  }
+
+  // 내가 작성한 게시글 조회
+  public async getMyPosts(user: User, pageOptionsDto: GetMyPostsDto) {
+    const { id } = user;
+    const [myPostArray, totalCount] =
+      await this._postRepository.findAllByUserId(pageOptionsDto, id);
+
+    // 페이지 정보
+    const pageInfoDto = new PageInfoDto(
+      totalCount,
+      myPostArray.length,
+      pageOptionsDto.page
+    );
+
+    return new PageResponseDto(
+      pageInfoDto,
+      myPostArray.map((e) => new PostResponseDto(e, user))
+    );
   }
 
   public async getAll(

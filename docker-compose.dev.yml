@@ -41,9 +41,6 @@ services:
       - MYSQL_USER=mbtichannel-user
       - MYSQL_PASSWORD=mbtichannel-pw
       - MYSQL_DB=mbtichannel-db
-      # redis
-      - REDIS_HOST=redis://mbtichannel-redis
-      - REDIS_PORT=6379
     depends_on:
       - redis
     restart: unless-stopped

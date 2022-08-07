@@ -3,7 +3,6 @@ import {
   UserTokenResponseDto,
   NeedSignUpResponseDto,
   AccessTokenResponseDto,
-  GetMyPostsDto,
 } from "../dto";
 import { User } from "../entity/user.entity";
 
@@ -14,9 +13,6 @@ export interface IUserService {
     gender?: number,
     ageRange?: string
   ): Promise<NeedSignUpResponseDto>;
-  //update(id: number, payload: Partial<User>): Promise<UserResponseDto | null>;
-  //findOne
-  getMyPosts(user: User, pageOptionsDto: GetMyPostsDto): Promise<any>;
   login(
     id: number,
     providerId: string,
