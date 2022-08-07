@@ -66,10 +66,7 @@ export default {
     },
   },
   redis: {
-    redisUserName: isValidEnvVar("REDIS_USERNAME"),
-    redisPassword: isValidEnvVar("REDIS_PASSWORD"),
-    redisHost: isValidEnvVar("REDIS_HOST"),
-    redisPort: isValidEnvVar("REDIS_PORT"),
+    url: isValidEnvVar("REDIS_URL"),
   },
   discord: {
     askWebhookUrl: isValidEnvVar("DISCORD_ASK_WEBHOOK_URL"),

@@ -17,10 +17,7 @@ export class RedisService implements IRedisService {
     this._logger.info(`[RedisService] redis init...`);
 
     RedisService._client = createClient({
-      url:
-        process.env.NODE_ENV === "production"
-          ? `redis://${redis.redisUserName}:${redis.redisPassword}@${redis.redisHost}:${redis.redisPort}`
-          : redis.redisHost,
+      url: redis.url,
     });
     RedisService._client.on("error", (err) => {
       this._logger.error(
