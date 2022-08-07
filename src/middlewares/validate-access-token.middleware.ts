@@ -19,9 +19,13 @@ export class ValidateAccessToken extends BaseMiddleware {
     super();
   }
 
+  private _log(message: string) {
+    this._logger.trace(`[ValidateAccessToken] ${message}`);
+  }
+
   async handler(req: Request, res: Response, next: NextFunction) {
     try {
-      this._logger.trace(`[ValidateAccessToken] start`);
+      this._log(`start`);
       const AUTH_TYPE = "Bearer ";
       const header = req.headers.authorization;
 
@@ -31,8 +35,8 @@ export class ValidateAccessToken extends BaseMiddleware {
       if (header && header.startsWith(AUTH_TYPE)) {
         accessToken = header.split(" ")[1];
       } else {
-        this._logger.trace(
-          `[ValidateAccessToken] access token not in 'authorization' header or 'Bearer ' type`
+        this._log(
+          `access token not in 'authorization' header or 'Bearer ' type`
         );
         throw new UnauthorizedException("authentication error");
       }
@@ -40,11 +44,11 @@ export class ValidateAccessToken extends BaseMiddleware {
       // access token 유효 여부 판단
       const decoded = this._jwtUtil.verify(accessToken);
       if (decoded.status === "invalid") {
-        this._logger.trace(`[ValidateAccessToken] jwt verify error`);
+        this._log(`jwt verify error`);
         throw new UnauthorizedException("authentication error");
       }
       if (decoded.status === "expired") {
-        this._logger.trace(`[ValidateAccessToken] jwt expired`);
+        this._log(`jwt expired`);
         throw new UnauthorizedException("access token expired");
       }
 
@@ -60,7 +64,7 @@ export class ValidateAccessToken extends BaseMiddleware {
         createdAt: decoded.createdAt,
       });
 
-      this._logger.trace(`[ValidateAccessToken] call next`);
+      this._log(`call next`);
       return next();
     } catch (err) {
       return next(err);

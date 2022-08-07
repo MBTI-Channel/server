@@ -25,6 +25,10 @@ export class PostService implements IPostService {
     @inject(TYPES.Logger) private readonly _logger: Logger
   ) {}
 
+  private _log(message: string) {
+    this._logger.trace(`[PostService] ${message}`);
+  }
+
   public async create(
     isSecret: boolean,
     title: string,
@@ -32,7 +36,7 @@ export class PostService implements IPostService {
     categoryId: number,
     user: User
   ): Promise<PostResponseDto> {
-    this._logger.trace(`[PostService] create start`);
+    this._log(`create start`);
     const category = await this._categoryRepository.findOneById(categoryId);
 
     if (!category || !category.isActive) {
@@ -57,22 +61,22 @@ export class PostService implements IPostService {
   }
 
   public async increaseCommentCount(id: number): Promise<void> {
-    this._logger.trace(`[PostService] increaseCommentCount start`);
-    this._logger.trace(`[PostService] check exists post id: ${id}`);
+    this._log(`increaseCommentCount start`);
+    this._log(`check exists post id: ${id}`);
     const post = await this._postRepository.findOneById(id);
     // err: 존재하지 않는 || 삭제된 게시글 id
     if (!post || !post.isActive) throw new NotFoundException(`not exists post`);
 
-    this._logger.trace(`[PostService] try post id ${id} comment count + 1...`);
+    this._log(`try post id ${id} comment count + 1...`);
     const hasIncreased = await this._postRepository.increaseCommentCount(id);
-    this._logger.trace(`[PostService] check comment count has increased`);
+    this._log(`check comment count has increased`);
     // err: 업데이트 도중 삭제된 게시글 id
     if (!hasIncreased) throw new NotFoundException(`not exists post`);
-    this._logger.trace(`[PostService] clear`);
+    this._log(`increaseCommentCount done`);
   }
 
   public async increaseLikeCount(id: number): Promise<void> {
-    this._logger.trace(`[PostService] increaseLikeCount start`);
+    this._log(`increaseLikeCount start`);
     const post = await this._postRepository.findOneById(id);
     // err: 존재하지 않는 || 삭제된 게시글 id
     if (!post || !post.isActive) throw new NotFoundException(`not exists post`);
@@ -83,7 +87,7 @@ export class PostService implements IPostService {
   }
 
   public async decreaseLikeCount(id: number): Promise<void> {
-    this._logger.trace(`[PostService] decreaseLikeCount start`);
+    this._log(`decreaseLikeCount start`);
     const post = await this._postRepository.findOneById(id);
     // err: 존재하지 않는 || 삭제된 게시글 id
     if (!post || !post.isActive) throw new NotFoundException(`not exists post`);
@@ -94,24 +98,24 @@ export class PostService implements IPostService {
   }
 
   public async delete(user: User, id: number): Promise<void> {
-    this._logger.trace(`[PostService] delete start`);
+    this._log(`delete start`);
     const post = await this._postRepository.findOneById(id);
 
-    this._logger.trace(`[PostService] check exists post id ${id}`);
+    this._log(`check exists post id ${id}`);
     if (!post || !post.isActive) throw new NotFoundException("not exists post");
 
     if (post.userId !== user.id)
       throw new ForbiddenException("authorization error");
 
-    this._logger.trace(`[PostService] remove post ${id}`);
+    this._log(`remove post id ${id}`);
     await this._postRepository.remove(id);
   }
 
   public async getDetail(user: User, id: number): Promise<PostResponseDto> {
-    this._logger.trace(`[PostService] getDetail start`);
+    this._log(`getDetail start`);
     const post = await this._postRepository.findOneById(id);
 
-    this._logger.trace(`[PostService] check exists post id ${id}`);
+    this._log(`check exists post id ${id}`);
     if (!post || !post.isActive) throw new NotFoundException("not exists post");
 
     // 타입이 mbti 일 경우
@@ -124,7 +128,7 @@ export class PostService implements IPostService {
   }
 
   public async isValid(id: number): Promise<boolean> {
-    this._logger.trace(`[PostService] is valid post id ? ${id}`);
+    this._log(`is valid post id ? ${id}`);
     const post = await this._postRepository.findOneById(id);
     if (!post || !post.isActive) return false;
     return true;
@@ -134,10 +138,8 @@ export class PostService implements IPostService {
     user: User,
     pageOptionsDto: GetAllPostDto
   ): Promise<PageResponseDto<PageInfiniteScrollInfoDto, PostResponseDto>> {
-    this._logger.trace(`[PostService] getAll start`);
-    this._logger.trace(
-      `[PostService] check category name ${pageOptionsDto.category}`
-    );
+    this._log(`getAll start`);
+    this._log(`check category name ${pageOptionsDto.category}`);
 
     const category = await this._categoryRepository.findOneByName(
       pageOptionsDto.category
@@ -190,10 +192,10 @@ export class PostService implements IPostService {
     content: string,
     isSecret: boolean
   ): Promise<PostResponseDto> {
-    this._logger.trace(`[PostService] update start`);
+    this._log(`update start`);
     const post = await this._postRepository.findOneById(id);
 
-    this._logger.trace(`[PostService] check exists post id ${id}`);
+    this._log(`check exists post id ${id}`);
     if (!post || !post.isActive) throw new NotFoundException("not exists post");
 
     // 권환 확인
@@ -213,14 +215,14 @@ export class PostService implements IPostService {
     user: User,
     pageOptionsDto: SearchPostDto
   ): Promise<PageResponseDto<PageInfiniteScrollInfoDto, PostResponseDto>> {
-    this._logger.trace(`[PostService] search start`);
+    this._log(`search start`);
 
     let postArray: Post[] = [];
     let totalCount = 0;
 
     if (!pageOptionsDto.category) {
       // category가 없을 경우 게시글 전체 검색
-      this._logger.trace(`[PostService] search all posts`);
+      this._log(`search all posts`);
       if (!user) {
         // user가 없으므로 mbti 카테고리는 제외
         [postArray, totalCount] =
@@ -230,9 +232,7 @@ export class PostService implements IPostService {
       }
     } else {
       // 카테고리가 있을 경우 유효성 검사 후 카테고리에 따라 검색
-      this._logger.trace(
-        `[PostService] check category name ${pageOptionsDto.category}`
-      );
+      this._log(`check category name ${pageOptionsDto.category}`);
       const category = await this._categoryRepository.findOneByName(
         pageOptionsDto.category
       );
@@ -243,9 +243,7 @@ export class PostService implements IPostService {
       if (!user && pageOptionsDto.category === CategoryName.MBTI) {
         throw new ForbiddenException("not authorizatie");
       }
-      this._logger.trace(
-        `[PostService] search posts in category: ${pageOptionsDto.category}`
-      );
+      this._log(`search posts in category: ${pageOptionsDto.category}`);
       if (pageOptionsDto.category === CategoryName.MBTI) {
         [postArray, totalCount] =
           await this._postRepository.searchInMbtiCategory(

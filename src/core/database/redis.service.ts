@@ -13,9 +13,12 @@ export class RedisService implements IRedisService {
   private static _client: RedisClientType;
   constructor(@inject(TYPES.Logger) private readonly _logger: Logger) {}
 
-  public async init() {
-    this._logger.info(`[RedisService] redis init...`);
+  private _log(message: string) {
+    this._logger.trace(`[RedisService] ${message}`);
+  }
 
+  public async init() {
+    this._log("redis init...");
     RedisService._client = createClient({
       url:
         process.env.NODE_ENV === "production"
@@ -23,15 +26,12 @@ export class RedisService implements IRedisService {
           : redis.redisHost,
     });
     RedisService._client.on("error", (err) => {
-      this._logger.error(
-        err,
-        `[RedisService] redis connection failed. Error: ${err}`
-      );
+      this._logger.error(err, `redis connection failed. Error: ${err}`);
       RedisService._client.QUIT();
     });
     await RedisService._client
       .connect()
-      .then(() => this._logger.info(`[RedisService] redis done`));
+      .then(() => this._log("redis connecit done"));
   }
 
   // test용 임의로 둔 set

@@ -22,9 +22,13 @@ export class ValidateReissueToken extends BaseMiddleware {
     super();
   }
 
+  private _log(message: string) {
+    this._logger.trace(`[ValidateReissueToken] ${message}`);
+  }
+
   async handler(req: Request, res: Response, next: NextFunction) {
     try {
-      this._logger.trace(`[ValidateReissueToken] start`);
+      this._log("start");
       const AUTH_TYPE = "Bearer ";
       const header = req.headers.authorization;
 
@@ -35,8 +39,8 @@ export class ValidateReissueToken extends BaseMiddleware {
       if (header && header.startsWith(AUTH_TYPE)) {
         accessToken = header.split(" ")[1];
       } else {
-        this._logger.trace(
-          `[ValidateReissueToken] access token not in 'authorization' header or 'Bearer ' type`
+        this._log(
+          `access token not in 'authorization' header or 'Bearer ' type`
         );
         throw new UnauthorizedException("authentication error");
       }
@@ -44,19 +48,19 @@ export class ValidateReissueToken extends BaseMiddleware {
       const { status: accessTokenStatus } = this._jwtUtil.verify(accessToken);
       // 재발급시에 access token이 만료되어야 하므로 에러
       if (accessTokenStatus === "success") {
-        this._logger.trace(`[ValidateReissueToken] access token should expire`);
+        this._log(`access token should expire`);
         throw new BadReqeustException("access token should expire");
       }
       // access token 검증 에러
       if (accessTokenStatus === "invalid") {
-        this._logger.trace(`[ValidateReissueToken] authentication error`);
+        this._log(`authentication error`);
         throw new UnauthorizedException("authentication error");
       }
 
       // access token의 payload가 유효한 사용자 확인
       const accessTokenDecoded = this._jwtUtil.decode(accessToken);
       if (!accessTokenDecoded) {
-        this._logger.trace(`[ValidateReissueToken] authentication error`);
+        this._log(`authentication error`);
         throw new UnauthorizedException("authentication error");
       }
 
@@ -66,21 +70,19 @@ export class ValidateReissueToken extends BaseMiddleware {
       // refresh token이 쿠키에 있는지 확인
       refreshToken = req.cookies.Refresh;
       if (!refreshToken) {
-        this._logger.trace(
-          `[ValidateReissueToken] refresh token not in cookie`
-        );
+        this._log(`refresh token not in cookie error`);
         throw new UnauthorizedException("authentication error");
       }
 
       // refresh token 검증
       const { status: refreshTokenStatus } = this._jwtUtil.verify(refreshToken);
       if (refreshTokenStatus === "invalid") {
-        this._logger.trace(`[ValidateReissueToken] invald refresh token`);
+        this._log(`inavlid refresh token`);
         res.clearCookie("Refresh");
         throw new UnauthorizedException("authentication error");
       }
       if (refreshTokenStatus === "expired") {
-        this._logger.trace(`[ValidateReissueToken] expired refresh token`);
+        this._log(`expired refresh token`);
         res.clearCookie("Refresh");
         throw new UnauthorizedException("authentication error");
       }
@@ -92,7 +94,7 @@ export class ValidateReissueToken extends BaseMiddleware {
         isAdmin: accessTokenDecoded.isAdmin,
       });
 
-      this._logger.trace(`[ValidateReissueToken] call next`);
+      this._log(`call next`);
       return next();
     } catch (err) {
       return next(err);

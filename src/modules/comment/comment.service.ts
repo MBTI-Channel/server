@@ -43,6 +43,10 @@ export class CommentService implements ICommentService {
     private readonly _dbService: IDatabaseService
   ) {}
 
+  private _log(message: string) {
+    this._logger.trace(`[CommentService] ${message}`);
+  }
+
   public async createComment(
     user: User,
     postId: number,
@@ -154,8 +158,7 @@ export class CommentService implements ICommentService {
   }
 
   public async findAllComments(pageOptionsDto: GetAllCommentDto, user: User) {
-    this._logger.trace(`[CommentService] findAllComments start`);
-
+    this._log(`findAllComments start`);
     // 댓글을 조회할 게시글이 존재하는지 확인
     const isValidPost = this._postService.isValid(pageOptionsDto.postId);
     if (!isValidPost) throw new NotFoundException("not exists post");
@@ -180,7 +183,7 @@ export class CommentService implements ICommentService {
     pageOptionsDto: GetAllRepliesDto,
     user: User
   ): Promise<any> {
-    this._logger.trace(`[CommentService] findAllReplies start`);
+    this._log(`findAllReplies start`);
 
     // 부모댓글이 존재하는지 확인
     const comment = await this._commentRepository.findOneById(
@@ -217,7 +220,8 @@ export class CommentService implements ICommentService {
   }
 
   public async increaseLikeCount(id: number): Promise<void> {
-    this._logger.trace(`[CommentService] increaseLikeCount start`);
+    this._log(`increaseLikeCount start`);
+
     // 댓글이 존재하는지 확인
     const comment = await this._commentRepository.findOneById(id);
     if (!comment || !comment.isActive)
@@ -229,7 +233,8 @@ export class CommentService implements ICommentService {
   }
 
   public async decreaseLikeCount(id: number): Promise<void> {
-    this._logger.trace(`[CommentService] decreaseLikeCount start`);
+    this._log(`decreaseLikeCount start`);
+
     // 댓글이 존재하는지 확인
     const comment = await this._commentRepository.findOneById(id);
     if (!comment || !comment.isActive)
@@ -261,7 +266,7 @@ export class CommentService implements ICommentService {
   }
 
   public async delete(user: User, id: number): Promise<void> {
-    this._logger.trace(`[CommentService] delete start`);
+    this._log(`delete start`);
     // 댓글 존재하는지 확인
     const comment = await this._commentRepository.findOneById(id);
     this._logger.trace(`[CommentService] check exists comment id ${id}`);
@@ -269,13 +274,11 @@ export class CommentService implements ICommentService {
       throw new NotFoundException("not exists comment");
 
     // 권한 확인
-    this._logger.trace(
-      `[CommentService] check user authorization u: ${id} c: ${comment.id}`
-    );
+    this._log(`check user authorization u: ${id} c: ${comment.id}`);
     if (comment.userId !== user.id)
       throw new ForbiddenException("authorization error");
 
-    this._logger.trace(`[CommentService] remove comment ${id}`);
+    this._log(`remove comment ${id}`);
     await this._commentRepository.remove(id);
   }
 }

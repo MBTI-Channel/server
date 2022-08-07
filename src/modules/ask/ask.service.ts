@@ -18,6 +18,10 @@ export class AskService implements IAskService {
     private readonly _askRepository: IAskRepository
   ) {}
 
+  private _log(message: string) {
+    this._logger.trace(`[AskService] ${message}`);
+  }
+
   public async create(
     user: User,
     title: string,
@@ -25,8 +29,7 @@ export class AskService implements IAskService {
     imageUrl: string,
     email: string
   ): Promise<AskResponseDto> {
-    this._logger.trace(`[AskService] send start`);
-
+    this._log("create start");
     const askEntity = Ask.of(user, title, content, email, imageUrl);
 
     const createdAsk = await this._askRepository.create(askEntity);

@@ -16,18 +16,20 @@ export class SocialSignUp extends BaseMiddleware {
   @inject(TYPES.IUserRepository)
   private readonly _userRepository: IUserRepository;
 
+  private _log(message: string) {
+    this._logger.trace(`[SocialSignUp] ${message}`);
+  }
+
   public async handler(req: Request, res: Response, next: NextFunction) {
     try {
-      this._logger.trace(`[SocialSignUp] start`);
-      this._logger.trace(`[SocialSignUp] check if 'req.user' exists`);
+      this._log(`start`);
+      this._log(`check if 'req.user' exists`);
       // err: req.user 없음
       if (!req.user) throw new UnauthorizedException("authentication error");
 
       const { provider, providerId, gender, ageRange } = req.user as UserBase;
 
-      this._logger.trace(
-        `[SocialSignUp] find all user who provider && providerId match in database`
-      );
+      this._log(`find all user who provider && providerId match in database`);
       const userArray = await this._userRepository.findAllByProviderInfo(
         provider,
         providerId
@@ -40,9 +42,7 @@ export class SocialSignUp extends BaseMiddleware {
 
       // status !== withdrawal인 user가 하나도 없다면 create 후 need sign up 응답
       if (!user) {
-        this._logger.trace(
-          `[SocialSignUp] matching user in 'provider info' does not exist`
-        );
+        this._log(`matching user in 'provider info' does not exist`);
         const newUser = await this._userService.create(
           provider,
           providerId,
@@ -61,7 +61,7 @@ export class SocialSignUp extends BaseMiddleware {
         !user.nickname ||
         !user.mbti
       ) {
-        this._logger.trace(`[SocialSignUp] user id ${user.id} requires signup`);
+        this._log(`user id ${user.id} requires signup`);
         return res.status(200).json({
           message: "need sign up",
           id: user.id,
@@ -71,7 +71,7 @@ export class SocialSignUp extends BaseMiddleware {
 
       req.user = user;
 
-      this._logger.trace(`[SocialSignUp] call next`);
+      this._log(`call next`);
       return next();
     } catch (err) {
       return next(err);

@@ -25,6 +25,10 @@ export class OauthService implements IOauthService {
     };
   }
 
+  private _log(message: string) {
+    this._logger.trace(`[OauthService] ${message}`);
+  }
+
   private _getApiServiceByProvider(provider: Provider) {
     return this._apiServiceList[provider];
   }
@@ -36,25 +40,21 @@ export class OauthService implements IOauthService {
     const apiService = this._getApiServiceByProvider(provider);
 
     // authCode로 accessToken 얻어오기
-    this._logger.trace(
-      `[OauthService] start receiving provider token from ${provider}`
-    );
+    this._log(`start receiving provider token from ${provider}`);
     const accessToken = await apiService.getAccessToken(authCode);
     if (!accessToken) throw new UnauthorizedException("invallid auth code");
 
     // accessToken으로 userInfo 얻어오기
-    this._logger.trace(
-      `[OauthService] start receiving provider user info from ${provider}`
-    );
+    this._log(`start receiving provider user info from ${provider}`);
     const userInfo = await apiService.getUserInfo(accessToken);
     if (!userInfo)
       throw new UnauthorizedException("invallid provider access token");
 
     // accessToken만료시켜 로그아웃 처리
-    this._logger.trace(`[OauthService] start provider token expiration`);
+    this._log(`start provider token expiration`);
     await apiService.expiresToken(accessToken);
 
-    this._logger.trace(`[OauthService] return userInfo`);
+    this._log(`return userInfo`);
     return userInfo;
   }
 }
