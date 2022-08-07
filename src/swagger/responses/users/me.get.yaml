@@ -14,6 +14,9 @@
           isAdmin:
             type: boolean
             example: 0
+          createdAt:
+            type: string
+            example: 2022-07-21T17:32:28Z
 
 "401":
   description: access token 유효하지 않음 또는 만료됨

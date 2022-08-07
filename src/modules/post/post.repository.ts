@@ -8,7 +8,7 @@ import { GetAllPostDto } from "./dto/get-all-post.dto";
 import { SearchPostDto } from "./dto/search-post.dto";
 import { Post } from "./entity/post.entity";
 import { IPostRepository } from "./interfaces/IPost.repository";
-import { GetMyPostsDto } from "../user/dto";
+import { GetMyPostsDto } from "./dto";
 
 @injectable()
 export class PostRepository implements IPostRepository {

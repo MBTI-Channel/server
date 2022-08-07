@@ -3,7 +3,6 @@ import {
   UserTokenResponseDto,
   NeedSignUpResponseDto,
   AccessTokenResponseDto,
-  GetMyPostsDto,
 } from "../dto";
 import { User } from "../entity/user.entity";
 
@@ -14,7 +13,6 @@ export interface IUserService {
     gender?: number,
     ageRange?: string
   ): Promise<NeedSignUpResponseDto>;
-  getMyPosts(user: User, pageOptionsDto: GetMyPostsDto): Promise<any>; // TODO: 리턴타입, postService.getUserPosts로
   login(
     id: number,
     providerId: string,
