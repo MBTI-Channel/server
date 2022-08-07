@@ -8,6 +8,7 @@ export class PageInfoDto {
     this.totalCount = totalCount;
     this.itemsPerPage = itemsPerPage;
     this.currentPage = currentPage;
-    this.totalPage = Math.ceil(totalCount / itemsPerPage);
+    this.totalPage =
+      totalCount === 0 ? 1 : Math.ceil(totalCount / itemsPerPage);
   }
 }

@@ -16,8 +16,10 @@ import {
 import {
   GetAllCommentDto,
   GetAllRepliesDto,
+  GetAllByUserDto,
   CommentResponseDto,
   ReplyResponseDto,
+  UserCommentResponseDto,
 } from "./dto";
 import { Logger } from "../../shared/utils/logger.util";
 import { HttpException } from "../../shared/errors/http.exception";
@@ -216,7 +218,7 @@ export class CommentService implements ICommentService {
     );
   }
 
-  public async increaseLikeCount(id: number): Promise<void> {
+  async increaseLikeCount(id: number): Promise<void> {
     this._logger.trace(`[CommentService] increaseLikeCount start`);
     // 댓글이 존재하는지 확인
     const comment = await this._commentRepository.findOneById(id);

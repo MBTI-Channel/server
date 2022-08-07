@@ -15,19 +15,26 @@ import {
 import { IUserService } from "./interfaces/IUser.service";
 import { ILoginLogService } from "../login-log/interfaces/ILogin-log.service";
 import { IPostService } from "../post/interfaces/IPost.service";
+import { ICommentService } from "../comment/interfaces/IComment.service";
 import { User } from "./entity/user.entity";
 import { OauthLoginDto } from "../auth/dto/oauth-login.dto";
+import { GetAllByUserDto } from "../comment/dto";
 import { SignUpDto, CheckDuplicateNicknameDto, GetMyPostsDto } from "./dto";
 import { convertUserAgent } from "../../shared/utils/user-agent.util";
 import config from "../../config";
 
 @controller("/users")
 export class UserController {
-  @inject(TYPES.IUserService) private readonly _userService: IUserService;
-  @inject(TYPES.ILoginLogService)
-  private readonly _loginLogService: ILoginLogService;
-  @inject(TYPES.IPostService)
-  private readonly _postSerivce: IPostService;
+  constructor(
+    @inject(TYPES.IUserService) private readonly _userService: IUserService,
+    @inject(TYPES.ILoginLogService)
+    private readonly _loginLogService: ILoginLogService,
+    @inject(TYPES.IPostService)
+    private readonly _postSerivce: IPostService,
+    @inject(TYPES.ICommentService)
+    private readonly _commentService: ICommentService
+  ) {}
+
   // 회원가입 (nickname, mbti 설정)
   @httpPost("/", bodyValidator(SignUpDto))
   public async signUp(
@@ -122,17 +129,25 @@ export class UserController {
     res: Response
   ) {
     const user = req.user as User;
-    const data = await this._userService.getMyPosts(user, query);
+    const data = await this._userService.getMyPosts(user, query); //TODO: postService.getUserPosts로
     return res.status(200).json(data);
   }
 
   // 내가 댓글단 글 조회
-  // @httpGet("/comments", TYPES.ValidateAccessTokenMiddleware)
-  // async getMyComments(req: Request, res: Response) {
-  //   const user = req.user as User;
-
-  //   return res.status(200).json();
-  // }
+  @httpGet(
+    "/comments",
+    TYPES.ValidateAccessTokenMiddleware,
+    queryValidator(GetAllByUserDto)
+  )
+  async getMyComments(
+    @queryParam() query: GetAllByUserDto,
+    req: Request,
+    res: Response
+  ) {
+    const user = req.user as User;
+    const data = await this._commentService.getAllByUser(user, query);
+    return res.status(200).json(data);
+  }
 
   // 임시 kakao 라우터
   @httpGet("/kakao")

@@ -1,4 +1,4 @@
-import { GetAllCommentDto, GetAllRepliesDto } from "../dto";
+import { GetAllByUserDto, GetAllCommentDto, GetAllRepliesDto } from "../dto";
 import { Comment } from "../entity/comment.entity";
 
 export interface ICommentRepository {
@@ -9,6 +9,10 @@ export interface ICommentRepository {
   ): Promise<[Comment[], number]>;
   findAllReplies(
     pageOptionsDto: GetAllRepliesDto
+  ): Promise<[Comment[], number]>;
+  findAllByUser(
+    pageOptionsDto: GetAllByUserDto,
+    userId: number
   ): Promise<[Comment[], number]>;
   update(id: number, content: Partial<Comment>): Promise<Comment>;
   increaseReplyCount(id: number): Promise<boolean>;

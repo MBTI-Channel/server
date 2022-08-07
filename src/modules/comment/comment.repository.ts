@@ -5,7 +5,7 @@ import { IDatabaseService } from "../../core/database/interfaces/IDatabase.servi
 import { Comment } from "./entity/comment.entity";
 import { ICommentRepository } from "./interfaces/IComment.repository";
 import { Logger } from "../../shared/utils/logger.util";
-import { GetAllCommentDto, GetAllRepliesDto } from "./dto";
+import { GetAllByUserDto, GetAllCommentDto, GetAllRepliesDto } from "./dto";
 
 @injectable()
 export class CommentRepository implements ICommentRepository {
@@ -86,7 +86,7 @@ export class CommentRepository implements ICommentRepository {
       .getManyAndCount();
   }
 
-  public async update(id: number, payload: Partial<Comment>) {
+  async update(id: number, payload: Partial<Comment>) {
     const repository = await this._database.getRepository(Comment);
     return await repository
       .update(id, payload as QueryDeepPartialEntity<Comment>)

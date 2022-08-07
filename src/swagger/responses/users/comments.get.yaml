@@ -1,0 +1,74 @@
+"200":
+  description: 댓글 조회 성공
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          pageInfo:
+            type: object
+            properties:
+              totalCounts:
+                type: integer
+                example: 11
+              itemsPerPage:
+                type: integer
+                example: 10
+              currentPage:
+                type: integer
+                example: 1
+              totalPage:
+                type: integer
+                example: 2
+          items:
+            type: array
+            items:
+              type: object
+              properties:
+                isMy:
+                  type: boolean
+                  example: true
+                isPostWriter:
+                  type: boolean
+                  example: true
+                id:
+                  type: integer
+                  example: 23
+                content:
+                  type: string
+                  example: "댓글 내용입니다."
+                replyCount:
+                  type: integer
+                  example: 3
+                likesCount:
+                  type: integer
+                  example: 6
+                createdAt:
+                  type: string
+                  example: 2022-07-21T17:32:28Z
+                updatedAt:
+                  type: string
+                  example: 2022-07-21T17:32:28Z
+                postId:
+                  type: integer
+                  example: 23
+                postTitle:
+                  type: string
+                  example: 게시글 제목입니다
+                postCommentsCount:
+                  type: integer
+                  example: 10
+                isActivePost:
+                  type: boolean
+                  example: true
+
+"401":
+  description: access token 유효하지 않음
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          message:
+            type: string
+            example: authentication error
