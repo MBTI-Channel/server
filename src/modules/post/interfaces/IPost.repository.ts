@@ -1,4 +1,4 @@
-import { GetMyPostsDto } from "../../user/dto";
+import { GetMyPostsDto } from "../dto";
 import { GetAllPostDto } from "../dto/get-all-post.dto";
 import { SearchPostDto } from "../dto/search-post.dto";
 import { Post } from "../entity/post.entity";
@@ -9,6 +9,7 @@ export interface IPostRepository {
   increaseCommentCount(id: number): Promise<boolean>;
   increaseLikeCount(id: number): Promise<boolean>;
   decreaseLikeCount(id: number): Promise<boolean>;
+  increaseViewCount(id: number): Promise<boolean>;
   remove(id: number): Promise<void>;
   findAllPosts(
     pageOptionsDto: GetAllPostDto,
