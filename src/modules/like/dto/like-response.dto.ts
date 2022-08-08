@@ -6,7 +6,7 @@ export class LikeResponseDto {
   targetId: number;
   targetType: string;
   userId: number;
-  userNickname: string;
+  userNickname: string | null;
   userMbti: string;
   isSecret: boolean;
   isActive: boolean;
@@ -19,7 +19,7 @@ export class LikeResponseDto {
     this.isSecret = target.isSecret;
     this.isActive = target.isActive;
     this.userId = target.userId;
-    this.userNickname = target.userNickname ?? "";
+    this.userNickname = target.userNickname ?? null; // null은 익명일 경우
     this.userMbti = target.userMbti;
     this.createdAt = target.createdAt;
     this.updatedAt =
