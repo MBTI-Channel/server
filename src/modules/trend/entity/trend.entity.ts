@@ -11,4 +11,10 @@ export class Trend extends BaseEntity {
 
   @Column({ unsigned: true })
   postId: number;
+
+  public static of(postId: number) {
+    const trend = new Trend();
+    trend.postId = postId;
+    return trend;
+  }
 }
