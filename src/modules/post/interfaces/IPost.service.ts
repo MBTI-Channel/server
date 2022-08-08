@@ -16,6 +16,7 @@ export interface IPostService {
     categoryId: number,
     user: User
   ): Promise<PostResponseDto>;
+  increaseReportCount(id: number): Promise<void>;
   increaseCommentCount(id: number): Promise<void>;
   increaseLikeCount(id: number): Promise<void>;
   decreaseLikeCount(id: number): Promise<void>;

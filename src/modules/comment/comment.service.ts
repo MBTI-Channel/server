@@ -309,4 +309,5 @@ export class CommentService implements ICommentService {
 
   public async isValid(id: number): Promise<boolean> {
     return true;
+  }
 }
