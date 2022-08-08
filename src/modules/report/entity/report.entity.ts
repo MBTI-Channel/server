@@ -26,7 +26,7 @@ export class Report extends BaseEntity {
   @Column({ comment: "신고받은 유저 아이디" })
   targetUserId: number;
 
-  @Column({ nullable: true, comment: "신고사유 (max: 300)" })
+  @Column({ nullable: true, comment: "신고사유 (max: 200)", length: 200 })
   reason?: string;
 
   @ManyToOne(() => User, (user) => user.id)
