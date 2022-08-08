@@ -111,9 +111,9 @@ export class PostService implements IPostService {
     // err: 존재하지 않는 || 삭제된 게시글 id
     if (!post || !post.isActive) throw new NotFoundException(`not exists post`);
 
-    const hasIncreased = await this._postRepository.decreaseLikeCount(id);
+    const hasDecreased = await this._postRepository.decreaseLikeCount(id);
     // err: 업데이트 도중 삭제된 게시글 id
-    if (!hasIncreased) throw new NotFoundException(`not exists post`);
+    if (!hasDecreased) throw new NotFoundException(`not exists post`);
   }
 
   public async delete(user: User, id: number): Promise<void> {
