@@ -9,4 +9,8 @@ export interface IApiWebhookService {
    * 서버 에러 발생 알림
    */
   pushErrorNotification(err: Error): Promise<void>;
+  /**
+   * 새로운 신고 알림
+   */
+  pushReportNotification(impl: any): Promise<void>;
 }

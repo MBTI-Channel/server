@@ -90,4 +90,8 @@ export class DiscordApiService implements IApiWebhookService {
       },
     }).catch((e) => this._logger.error(e));
   }
+
+  public async pushReportNotification(impl: any): Promise<void> {
+    console.log("will be pushReportNotification");
+  }
 }
