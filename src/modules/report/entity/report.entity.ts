@@ -1,5 +1,6 @@
 import { Entity, Column, ManyToOne } from "typeorm";
 import { BaseEntity } from "../../../shared/base.entity";
+import { ReportTargetType } from "../../../shared/enum.shared";
 
 import { User } from "../../user/entity/user.entity";
 
@@ -15,7 +16,7 @@ export class Report extends BaseEntity {
   targetId: number;
 
   @Column({ type: "tinyint", comment: "1: 게시글, 2: 댓글" })
-  targetType: number;
+  targetType: number | ReportTargetType;
 
   @Column({ comment: "신고받은 유저 아이디" })
   targetUserId: number;
