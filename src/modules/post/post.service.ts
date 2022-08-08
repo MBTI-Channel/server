@@ -96,7 +96,11 @@ export class PostService implements IPostService {
     if (!hasIncreased) throw new NotFoundException(`not exists post`);
     post.likesCount++;
     // 인기 게시글 등록을 위한 검사 진행
-    if (post.likesCount >= TREND_LIKE && post.viewCount >= TREND_VIEW) {
+    if (
+      post.type === PostType.POST &&
+      post.likesCount >= TREND_LIKE &&
+      post.viewCount >= TREND_VIEW
+    ) {
       await this._trendService.createTrend(id);
     }
   }
@@ -144,7 +148,11 @@ export class PostService implements IPostService {
     if (!hasIncreased) throw new NotFoundException(`not exists post`);
     post.viewCount++;
     // 인기 게시글 등록을 위한 검사 진행
-    if (post.likesCount >= TREND_LIKE && post.viewCount >= TREND_VIEW) {
+    if (
+      post.type === PostType.POST &&
+      post.likesCount >= TREND_LIKE &&
+      post.viewCount >= TREND_VIEW
+    ) {
       await this._trendService.createTrend(id);
     }
 
