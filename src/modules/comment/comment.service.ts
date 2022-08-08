@@ -243,6 +243,8 @@ export class CommentService implements ICommentService {
     );
   }
 
+  public async increaseReportCount(id: number): Promise<void> {}
+
   public async increaseLikeCount(id: number): Promise<void> {
     this._log(`increaseLikeCount start`);
     // 댓글이 존재하는지 확인
@@ -303,5 +305,9 @@ export class CommentService implements ICommentService {
 
     this._log(`remove comment ${id}`);
     await this._commentRepository.remove(id);
+  }
+
+  public async isValid(id: number): Promise<boolean> {
+    return true;
   }
 }

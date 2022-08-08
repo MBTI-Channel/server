@@ -34,6 +34,9 @@ export const TYPES = {
   /* like */
   ILikeService: Symbol.for("ILikeService"),
   ILikeRepository: Symbol.for("ILikeRepository"),
+  /* report */
+  IReportService: Symbol.for("IReportService"),
+  IReportRepository: Symbol.for("IReportRepository"),
   /* middleware */
   GetProviderUserByOauthMiddleware: Symbol.for(
     "GetProviderUserByOauthMiddleware"

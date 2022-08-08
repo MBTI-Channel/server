@@ -64,6 +64,8 @@ export class PostService implements IPostService {
     return new PostResponseDto(createdPost, user);
   }
 
+  public async increaseReportCount(id: number): Promise<void> {}
+
   public async increaseCommentCount(id: number): Promise<void> {
     this._log(`increaseCommentCount start`);
     this._log(`check exists post id: ${id}`);

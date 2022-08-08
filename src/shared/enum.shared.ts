@@ -32,3 +32,8 @@ export enum LikeTargetType {
   POST = "post",
   COMMENT = "comment",
 }
+
+export enum ReportTargetType { // TODO: LikeTargetType랑 중복
+  POST = "post",
+  COMMENT = "comment",
+}

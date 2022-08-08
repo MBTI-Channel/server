@@ -15,6 +15,7 @@ import { categoryModule } from "../modules/category/category.module";
 import { bookmarkMoudle } from "../modules/bookmark/bookmark.module";
 import { authModule } from "../modules/auth/auth.module";
 import { askModule } from "../modules/ask/ask.module";
+import { reportModule } from "../modules/report/report.module";
 /* shared import */
 import { utilModule } from "../shared/utils/util.module";
 import { apiModule } from "../shared/api/api.module";
@@ -35,6 +36,7 @@ container.load(
   loginLogModule,
   notificationModule,
   postModule,
+  reportModule,
   userModule,
   /* shared */
   utilModule,

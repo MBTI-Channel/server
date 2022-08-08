@@ -40,8 +40,10 @@ export interface ICommentService {
     user: User,
     pageOptionsDto: GetAllByUserDto
   ): Promise<PageResponseDto<PageInfoDto, UserCommentResponseDto>>;
+  increaseReportCount(id: number): Promise<void>;
   increaseLikeCount(id: number): Promise<void>;
   decreaseLikeCount(id: number): Promise<void>;
   update(user: User, id: number, content: string): Promise<CommentResponseDto>;
   delete(user: User, id: number): Promise<void>;
+  isValid(id:number): Promise<boolean>
 }
