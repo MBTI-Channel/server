@@ -31,4 +31,20 @@ export class Report extends BaseEntity {
 
   @ManyToOne(() => User, (user) => user.id)
   user: User;
+
+  public static of(
+    userId: number,
+    targetId: number,
+    targetType: ReportTargetType,
+    targetUserId: number,
+    reason?: string
+  ) {
+    const report = new Report();
+    report.userId = userId;
+    report.targetId = targetId;
+    report.targetType = targetType;
+    report.targetUserId = targetUserId;
+    report.reason = reason ?? undefined;
+    return report;
+  }
 }
