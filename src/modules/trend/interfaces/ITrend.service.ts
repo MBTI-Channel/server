@@ -1,7 +1,13 @@
+import {
+  PageInfiniteScrollInfoDto,
+  PageResponseDto,
+} from "../../../shared/page";
 import { GetAllTrendDto } from "../dto/get-all-trend.dto";
-import { Trend } from "../entity/trend.entity";
+import { TrendResponseDto } from "../dto/trend-response.dto";
 
 export interface ITrendService {
   createTrend(targetId: number): Promise<void>;
-  getTrends(pageOptionsDto: GetAllTrendDto): Promise<any>; // TODO: 반환 타입 변경
+  getTrends(
+    pageOptionsDto: GetAllTrendDto
+  ): Promise<PageResponseDto<PageInfiniteScrollInfoDto, TrendResponseDto>>;
 }

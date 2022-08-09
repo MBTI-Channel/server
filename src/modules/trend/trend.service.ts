@@ -56,15 +56,10 @@ export class TrendService implements ITrendService {
       nextId
     );
 
+    // TODO: 인기글에 등록이 되었는데, 게시글을 삭제했을 경우 처리
     return new PageResponseDto(
       pageInfoDto,
-      await Promise.all(
-        trendArray.map(async (e: Trend) => {
-          let post = await this._postRepository.findOneById(e.postId);
-          // TODO: 인기글에 등록이 되었는데, 게시글을 삭제했을 경우 처리
-          if (post) return new TrendResponseDto(e, post);
-        })
-      )
+      trendArray.map((e) => new TrendResponseDto(e, e.post))
     );
   }
 }

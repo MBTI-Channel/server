@@ -16,10 +16,15 @@ export class TrendRepository implements ITrendRepository {
     return await repository.save(trendEntity);
   }
 
-  public async findAllTrends(pageOptionsDto: GetAllTrendDto): Promise<any> {
+  public async findAllTrends(
+    pageOptionsDto: GetAllTrendDto
+  ): Promise<[Trend[], number]> {
     const repository = await this._database.getRepository(Trend);
     return await repository.findAndCount({
       select: ["id", "postId", "createdAt", "updatedAt"],
+      relations: {
+        post: true,
+      },
       take: pageOptionsDto.maxResults + 1,
       skip: pageOptionsDto.skip,
     });
