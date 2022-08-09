@@ -112,6 +112,11 @@ paths:
         type: integer
         description: Post ID
     $ref: "./paths/bookmarks/id.yaml"
+
+  # report
+  /reports:
+    $ref: "./paths/reports/index.yaml"
+
 # #1) Define the security scheme type (HTTP bearer)
 components:
   securitySchemes:

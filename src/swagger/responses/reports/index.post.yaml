@@ -1,0 +1,64 @@
+"201":
+  description: 신고 등록 성공
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          userId:
+            type: number
+            example: 2
+          targetId:
+            type: number
+            example: 45
+          targetType:
+            type: string
+            example: comment
+          targetUserId:
+            type: number
+            example: 123
+          reason:
+            type: string
+            example: 욕설을 했어요 ㅜㅜ
+          id:
+            type: number
+            example: 4
+          createdAt:
+            type: string
+            example: "2022-07-14T04:16:42.150Z"
+          updatedAt:
+            type: string
+            example: "2022-07-14T04:16:42.150Z"
+
+"400":
+  description: 잘못된 신고 요청. <br> 본인 게시글이나 댓글을 신고할 때 발생하는 응답입니다.
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          message:
+            type: string
+            example: invalid report. unable to report yourself
+
+"401":
+  description: access token 유효하지 않음
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          message:
+            type: string
+            example: authentication error
+
+"404":
+  description: 존재하지 않는 (삭제된) 게시글 또는 댓글
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          message:
+            type: string
+            example: not exists post
