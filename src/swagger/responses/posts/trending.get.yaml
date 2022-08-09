@@ -1,2 +1,70 @@
 "200":
-  description: 인기 게시글 조회 성공
+  description: 인기글 리스트 조회 성공
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          totalComments:
+            type: integer
+          commentsPerPage:
+            type: integer
+          currentPage:
+            type: integer
+          maxPage:
+            type: integer
+
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                example: 23
+              type:
+                type: string
+                example: "post"
+              postId:
+                type: integer
+                example: 32
+              categoryId:
+                type: integer
+                example: 2
+              userId:
+                type: integer
+                example: 32
+              userNickname:
+                type: string
+                example: 지나가는 나그네
+              userMbti:
+                type: string
+                example: ENFP
+              isSecret:
+                type: boolean
+                example: false
+              title:
+                type: string
+                example: 저녁 뭐먹지
+              content:
+                type: string
+                example: 나는 뭐 먹지..?
+              viewCount:
+                type: integer
+                example: 6
+              commentCount:
+                type: integer
+                example: 6
+              likesCount:
+                type: integer
+                example: 6
+              reportCount:
+                type: integer
+                example: 6
+              isActive:
+                type: boolean
+                example: true
+              createdAt:
+                type: string
+                example: 2022-07-21T17:32:28Z
+              updatedAt:
+                type: string
+                example: 2022-07-21T17:32:28Z

@@ -2,5 +2,20 @@ get:
   tags:
     - posts
   description: 인기 게시글 조회
+  parameters:
+    - name: startId
+      in: query
+      description: 검색 시작 id
+      required: true
+      type: integer
+      example: 23
+
+    - name: maxResults
+      in: query
+      description: 한 번에 검색할 인기글 개수
+      required: true
+      type: integer
+      example: 50
+
   responses:
     $ref: "../../responses/posts/trending.get.yaml"
