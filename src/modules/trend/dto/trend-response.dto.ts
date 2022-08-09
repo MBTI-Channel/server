@@ -1,5 +1,6 @@
 import { PostType } from "../../../shared/enum.shared";
 import { Post } from "../../post/entity/post.entity";
+import { Trend } from "../entity/trend.entity";
 
 export class TrendResponseDto {
   id: number;
@@ -19,9 +20,10 @@ export class TrendResponseDto {
   reportCount: number;
   createdAt: Date;
   updatedAt: Date | null;
-  constructor(post: Post) {
-    this.id = post.id;
+  constructor(trend: Trend, post: Post) {
+    this.id = trend.id;
     this.type = post.type as PostType;
+    this.postId = post.id;
     this.categoryId = post.categoryId;
     this.isActive = post.isActive;
     this.userId = post.userId;
