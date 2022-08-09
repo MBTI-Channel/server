@@ -14,6 +14,15 @@
           type:
             type: string
             example: survey
+          isActive:
+            type: boolean
+            example: true
+          isActiveUser:
+            type: boolean
+            example: true
+          isMy:
+            type: boolean
+            example: true
           userId:
             type: integer
             example: 42
@@ -23,9 +32,6 @@
           userNickname:
             type: string
             example: 지나가는 나그네
-          isDisabledUser:
-            type: boolean
-            example: true
           isSecret:
             type: boolean
             example: false
@@ -44,18 +50,15 @@
           likesCount:
             type: integer
             example: 6
-          isDisabled:
-            type: boolean
-            example: true
-          datetime:
+          reportCount:
+            type: integer
+            example: 6
+          createdAt:
             type: string
             example: 2022-07-21T17:32:28Z
-          updateDatetime:
+          updatedAt:
             type: string
             example: 2022-07-21T17:32:28Z
-          isMy:
-            type: boolean
-            example: true
 
 "404":
   description: 존재하지 않는 게시글

@@ -13,22 +13,22 @@
         items:
           type: object
           properties:
+            id:
+              type: integer
+              example: 23
+            categoryId:
+              type: integer
+              example: 2
+            type:
+              type: string
+              example: survey
+            isActive:
+              type: boolean
+              example: true
             isActiveUser:
               type: boolean
               example: true
             isMy:
-              type: boolean
-              example: true
-            id:
-              type: integer
-              example: 23
-            type:
-              type: integer
-              example: 1
-            categoryId:
-              type: integer
-              example: 3
-            isActive:
               type: boolean
               example: true
             userId:
@@ -60,10 +60,10 @@
               example: 6
             reportCount:
               type: integer
-              example: 2
+              example: 6
             createdAt:
-              type: Date
+              type: string
               example: 2022-07-21T17:32:28Z
             updatedAt:
-              type: Date
+              type: string
               example: 2022-07-21T17:32:28Z
