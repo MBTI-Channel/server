@@ -3,5 +3,5 @@ import { Trend } from "../entity/trend.entity";
 
 export interface ITrendRepository {
   createTrend(trendEntity: Trend): Promise<Trend>;
-  findAllTrends(pageOptionsDto: GetAllTrendDto): Promise<[Trend[], number]>;
+  findAllTrends(pageOptionsDto: GetAllTrendDto): Promise<Trend[]>;
 }

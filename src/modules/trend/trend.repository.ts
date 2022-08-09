@@ -16,17 +16,30 @@ export class TrendRepository implements ITrendRepository {
     return await repository.save(trendEntity);
   }
 
-  public async findAllTrends(
-    pageOptionsDto: GetAllTrendDto
-  ): Promise<[Trend[], number]> {
+  public async findAllTrends(pageOptionsDto: GetAllTrendDto): Promise<Trend[]> {
     const repository = await this._database.getRepository(Trend);
-    return await repository.findAndCount({
-      select: ["id", "postId", "createdAt", "updatedAt"],
-      relations: {
-        post: true,
-      },
-      take: pageOptionsDto.maxResults + 1,
-      skip: pageOptionsDto.skip,
-    });
+    return await repository
+      .createQueryBuilder("trend")
+      .select([
+        "trend.id",
+        "trend.createdAt",
+        "trend.updatedAt",
+        "post.userId",
+        "post.userMbti",
+        "post.userNickname",
+        "post.isSecret",
+        "post.createdAt",
+        "post.updatedAt",
+        "post.title",
+        "post.content",
+        "post.viewCount",
+        "post.likesCount",
+        "post.commentCount",
+      ])
+      .innerJoin("trend.post", "post", "post.id = trend.postId")
+      .skip(pageOptionsDto.skip)
+      .take(pageOptionsDto.maxResults + 1) // nextId를 위한 +1
+      .orderBy(`trend.createdAt`, "DESC")
+      .getMany();
   }
 }

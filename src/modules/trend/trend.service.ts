@@ -38,11 +38,9 @@ export class TrendService implements ITrendService {
   ): Promise<PageResponseDto<PageInfiniteScrollInfoDto, TrendResponseDto>> {
     this._log("getTrends start");
 
-    let trendArray, totalCount;
-    [trendArray, totalCount] = await this._trendRepository.findAllTrends(
-      pageOptionsDto
-    );
-
+    let trendArray;
+    trendArray = await this._trendRepository.findAllTrends(pageOptionsDto);
+    console.log(trendArray);
     let nextId = null;
     if (trendArray.length === pageOptionsDto.maxResults + 1) {
       nextId = trendArray[trendArray.length - 1].id;
@@ -50,11 +48,7 @@ export class TrendService implements ITrendService {
     }
     let itemsPerPage = trendArray.length;
 
-    const pageInfoDto = new PageInfiniteScrollInfoDto(
-      totalCount,
-      itemsPerPage,
-      nextId
-    );
+    const pageInfoDto = new PageInfiniteScrollInfoDto(0, itemsPerPage, nextId);
 
     // TODO: 인기글에 등록이 되었는데, 게시글을 삭제했을 경우 처리
     return new PageResponseDto(
