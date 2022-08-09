@@ -16,6 +16,8 @@ import {
   paramsValidator,
   queryValidator,
 } from "../../middlewares/validator.middleware";
+import { GetAllTrendDto } from "../trend/dto/get-all-trend.dto";
+import { ITrendService } from "../trend/interfaces/ITrend.service";
 import { User } from "../user/entity/user.entity";
 import { IdDto, CreatePostDto, GetAllPostDto, SearchPostDto } from "./dto";
 import { UpdatePostDto } from "./dto/update-post.dto";
@@ -24,6 +26,8 @@ import { IPostService } from "./interfaces/IPost.service";
 @controller("/posts")
 export class PostController {
   @inject(TYPES.IPostService) private readonly _postService: IPostService;
+  @inject(TYPES.ITrendService)
+  private readonly _trendService: ITrendService;
 
   // 게시글 등록
   @httpPost(
@@ -83,6 +87,17 @@ export class PostController {
     const user = req.user as User;
 
     const data = await this._postService.search(user, query);
+    return res.status(200).json(data);
+  }
+
+  // 인기글 조회
+  @httpGet("/trending", queryValidator(GetAllTrendDto))
+  public async getTrends(
+    @queryParam() query: GetAllTrendDto,
+    req: Request,
+    res: Response
+  ) {
+    const data = await this._trendService.getTrends(query);
     return res.status(200).json(data);
   }
 
