@@ -15,6 +15,7 @@ export interface ICommentRepository {
     userId: number
   ): Promise<[Comment[], number]>;
   update(id: number, content: Partial<Comment>): Promise<Comment>;
+  increaseReportCount(id: number): Promise<boolean>;
   increaseReplyCount(id: number): Promise<boolean>;
   increaseLikeCount(id: number): Promise<boolean>;
   decreaseLikeCount(id: number): Promise<boolean>;
