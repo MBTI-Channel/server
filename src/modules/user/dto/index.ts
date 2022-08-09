@@ -1,4 +1,5 @@
 export { CreateUserDto } from "./create-user.dto";
+export { UpdateUserDto } from "./update-user.dto";
 export { LoginDto } from "./login.dto";
 export { CheckDuplicateNicknameDto } from "./check-duplicate-nickname.dto";
 export { SignUpDto } from "./sign-up.dto";

@@ -3,6 +3,7 @@ import { inject } from "inversify";
 import {
   controller,
   httpGet,
+  httpPatch,
   httpPost,
   queryParam,
   requestBody,
@@ -19,10 +20,10 @@ import { ICommentService } from "../comment/interfaces/IComment.service";
 import { User } from "./entity/user.entity";
 import { OauthLoginDto } from "../auth/dto/oauth-login.dto";
 import { GetAllByUserDto } from "../comment/dto";
-import { SignUpDto, CheckDuplicateNicknameDto } from "./dto";
+import { SignUpDto, CheckDuplicateNicknameDto, UpdateUserDto } from "./dto";
 import { convertUserAgent } from "../../shared/utils/user-agent.util";
-import config from "../../config";
 import { GetMyPostsDto } from "../post/dto";
+import config from "../../config";
 
 @controller("/users")
 export class UserController {
@@ -114,6 +115,24 @@ export class UserController {
   @httpGet("/me", TYPES.ValidateAccessTokenMiddleware)
   public async validateUser(req: Request, res: Response) {
     const data = req.user as User;
+
+    return res.status(200).json(data);
+  }
+
+  @httpPatch(
+    "/me",
+    TYPES.ValidateAccessTokenMiddleware,
+    bodyValidator(UpdateUserDto)
+  )
+  public async updateUser(
+    @requestBody() body: UpdateUserDto,
+    req: Request,
+    res: Response
+  ) {
+    const user = req.user as User;
+    const { nickname, mbti } = body;
+
+    const data = await this._userService.update(user, nickname, mbti);
 
     return res.status(200).json(data);
   }

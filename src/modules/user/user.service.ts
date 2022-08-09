@@ -21,6 +21,7 @@ import {
   UnauthorizedException,
 } from "../../shared/errors/all.exception";
 import { Provider } from "../../shared/type.shared";
+import { Mbti } from "../../shared/enum.shared";
 import config from "../../config";
 
 @injectable()
@@ -52,6 +53,24 @@ export class UserService implements IUserService {
     const userEntitiy = User.of(provider, providerId, gender, ageRange);
     const user = await this._userRepository.create(userEntitiy);
     return new NeedSignUpResponseDto(user);
+  }
+
+  public async update(
+    user: User,
+    nickname: string,
+    mbti: Mbti
+  ): Promise<AccessTokenResponseDto> {
+    this._log(`update start`);
+    const updatedUser = await this._userRepository.update(user.id, {
+      nickname,
+      mbti,
+    });
+
+    const accessToken = await this._authService.generateAccessToken(
+      updatedUser
+    );
+
+    return new AccessTokenResponseDto(accessToken);
   }
 
   public async findOneById(id: number) {
