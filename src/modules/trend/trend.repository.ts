@@ -1,6 +1,7 @@
 import { inject, injectable } from "inversify";
 import { IDatabaseService } from "../../core/database/interfaces/IDatabase.service";
 import { TYPES } from "../../core/types.core";
+import { GetAllTrendDto } from "./dto/get-all-trend.dto";
 import { Trend } from "./entity/trend.entity";
 import { ITrendRepository } from "./interfaces/ITrendRepository";
 
@@ -13,5 +14,14 @@ export class TrendRepository implements ITrendRepository {
   public async createTrend(trendEntity: Trend): Promise<Trend> {
     const repository = await this._database.getRepository(Trend);
     return await repository.save(trendEntity);
+  }
+
+  public async findAllTrends(pageOptionsDto: GetAllTrendDto): Promise<any> {
+    const repository = await this._database.getRepository(Trend);
+    return await repository.findAndCount({
+      select: ["id", "postId", "createdAt", "updatedAt"],
+      take: pageOptionsDto.maxResults + 1,
+      skip: pageOptionsDto.skip,
+    });
   }
 }
