@@ -318,6 +318,9 @@ export class CommentService implements ICommentService {
   }
 
   public async isValid(id: number): Promise<boolean> {
+    this._log(`is valid comment id ? ${id}`);
+    const comment = await this._commentRepository.findOneById(id);
+    if (!comment || !comment.isActive) return false;
     return true;
   }
 }

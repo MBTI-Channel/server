@@ -47,7 +47,10 @@ export class ReportService implements IReportService {
 
     // 본인한테 신고요청이라면 에러
     // targetUserId는 유저가 작성후 탈퇴로 회피할 수 있으므로 검증하지 않는다.
-    if (user.id === targetUserId) throw new BadReqeustException("");
+    if (user.id === targetUserId)
+      throw new BadReqeustException(
+        "invalid report. unable to report yourself"
+      );
 
     // 신고 대상이 존재하는지 확인한다
     await this._checkValidTarget(targetType, targetId);
@@ -61,8 +64,8 @@ export class ReportService implements IReportService {
     );
 
     const report = await this._reportRepository.createReport(reportEntity);
-    await this._increaseTargetReportCount(targetType, targetUserId);
     await this._apiWebhookService.pushReportNotification(report);
+    await this._increaseTargetReportCount(targetType, targetUserId);
 
     return report;
   }
