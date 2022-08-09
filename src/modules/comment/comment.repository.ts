@@ -123,6 +123,13 @@ export class CommentRepository implements ICommentRepository {
       .then(async () => await repository.findOne({ where: { id } }));
   }
 
+  public async increaseReportCount(id: number): Promise<boolean> {
+    const repository = await this._database.getRepository(Comment);
+    const result = await repository.increment({ id }, "reportCount", 1);
+    if (result.affected === 1) return true;
+    return false;
+  }
+
   public async increaseReplyCount(id: number): Promise<boolean> {
     const repository = await this._database.getRepository(Comment);
     const result = await repository.increment({ id }, "replyCount", 1);

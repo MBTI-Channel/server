@@ -243,7 +243,17 @@ export class CommentService implements ICommentService {
     );
   }
 
-  public async increaseReportCount(id: number): Promise<void> {}
+  public async increaseReportCount(id: number): Promise<void> {
+    this._log(`increaseReportCount start`);
+    // 댓글이 존재하는지 확인
+    const comment = await this._commentRepository.findOneById(id);
+    if (!comment || !comment.isActive)
+      throw new NotFoundException(`not exists comment`);
+
+    // 댓글 신고 수 증가. 만약 도중에 삭제되었다면 false 반환
+    const hasIncreased = await this._commentRepository.increaseReportCount(id);
+    if (!hasIncreased) throw new NotFoundException(`not exists comment`);
+  }
 
   public async increaseLikeCount(id: number): Promise<void> {
     this._log(`increaseLikeCount start`);
