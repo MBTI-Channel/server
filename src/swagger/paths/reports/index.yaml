@@ -1,0 +1,33 @@
+post:
+  tags:
+    - reports
+  description: 게시글 또는 댓글을 신고합니다.<br>
+    (필수)targetId 신고 대상 ID <br>
+    (필수)targetType 신고 대상 종류. comment 또는 post<br>
+    (필수)targetUserId 신고받는 유저 아이디<br>
+    reason 신고 사유. 최대 200자
+  security:
+    - bearerAuth: []
+  requestBody:
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            targetId:
+              required: true
+              type: number
+              example: 45
+            targetType:
+              required: true
+              type: string
+              exmaple: "comment"
+            targetUserId:
+              required: true
+              type: number
+              exmaple: 123
+            reason:
+              type: string
+              example: 욕설을 했어요 ㅜㅜ
+  responses:
+    $ref: "../../responses/reports/index.post.yaml"
