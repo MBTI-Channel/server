@@ -28,6 +28,13 @@ export class PostRepository implements IPostRepository {
     return post;
   }
 
+  public async increaseReportCount(id: number): Promise<boolean> {
+    const repository = await this._database.getRepository(Post);
+    const result = await repository.increment({ id }, "reportCount", 1);
+    if (result.affected === 1) return true;
+    return false;
+  }
+
   public async increaseCommentCount(id: number): Promise<boolean> {
     const repository = await this._database.getRepository(Post);
     const result = await repository.increment({ id }, "commentCount", 1);

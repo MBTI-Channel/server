@@ -6,6 +6,7 @@ import { Post } from "../entity/post.entity";
 export interface IPostRepository {
   create(postEntity: Post): Promise<Post>;
   findOneById(id: number): Promise<Post | null>;
+  increaseReportCount(id: number): Promise<boolean>;
   increaseCommentCount(id: number): Promise<boolean>;
   increaseLikeCount(id: number): Promise<boolean>;
   decreaseLikeCount(id: number): Promise<boolean>;

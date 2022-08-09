@@ -68,7 +68,16 @@ export class PostService implements IPostService {
     return new PostResponseDto(createdPost, user);
   }
 
-  public async increaseReportCount(id: number): Promise<void> {}
+  public async increaseReportCount(id: number): Promise<void> {
+    this._log(`increaseReportCount start`);
+    // 댓글이 존재하는지 확인
+    const post = await this._postRepository.findOneById(id);
+    if (!post || !post.isActive) throw new NotFoundException(`not exists post`);
+
+    // 댓글 신고 수 증가. 만약 도중에 삭제되었다면 false 반환
+    const hasIncreased = await this._postRepository.increaseReportCount(id);
+    if (!hasIncreased) throw new NotFoundException(`not exists post`);
+  }
 
   public async increaseCommentCount(id: number): Promise<void> {
     this._log(`increaseCommentCount start`);
