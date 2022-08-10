@@ -17,8 +17,13 @@ import {
   queryValidator,
 } from "../../middlewares/validator.middleware";
 import { User } from "../user/entity/user.entity";
-import { IdDto, CreatePostDto, GetAllPostDto, SearchPostDto } from "./dto";
-import { UpdatePostDto } from "./dto/update-post.dto";
+import {
+  IdDto,
+  CreatePostDto,
+  GetAllPostDto,
+  SearchPostDto,
+  UpdatePostDto,
+} from "./dto";
 import { IPostService } from "./interfaces/IPost.service";
 
 @controller("/posts")
