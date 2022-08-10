@@ -7,9 +7,7 @@ export interface ICommentRepository {
   findAllComments(
     pageOptionsDto: GetAllCommentDto
   ): Promise<[Comment[], number]>;
-  findAllReplies(
-    pageOptionsDto: GetAllRepliesDto
-  ): Promise<[Comment[], number]>;
+  findAllReplies(pageOptionsDto: GetAllRepliesDto): Promise<Comment[]>;
   findAllByUser(
     pageOptionsDto: GetAllByUserDto,
     userId: number

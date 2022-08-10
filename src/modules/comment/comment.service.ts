@@ -181,10 +181,7 @@ export class CommentService implements ICommentService {
     );
   }
 
-  public async findAllReplies(
-    pageOptionsDto: GetAllRepliesDto,
-    user: User
-  ): Promise<any> {
+  public async getAllReplies(pageOptionsDto: GetAllRepliesDto, user: User) {
     this._log(`findAllReplies start`);
 
     // 부모댓글이 존재하는지 확인
@@ -198,19 +195,16 @@ export class CommentService implements ICommentService {
     if (!isValidPost) throw new NotFoundException("not exists post");
 
     // 대댓글 조회
-    const [replyArray, totalCount] =
-      await this._commentRepository.findAllReplies(pageOptionsDto);
+    const replyArray = await this._commentRepository.findAllReplies(
+      pageOptionsDto
+    );
 
-    // 다음 대댓글 페이지 있는지 확인
-    let nextId = null;
-    if (replyArray.length === pageOptionsDto.maxResults + 1) {
-      nextId = replyArray[replyArray.length - 1].id;
-      replyArray.pop();
-    }
+    // 배열 마지막 id를 nextId에 할당
+    const nextId = replyArray[replyArray.length - 1].id;
 
     // 응답 DTO로 변환후 리턴
     const pageInfoDto = new PageInfiniteScrollInfoDto(
-      totalCount,
+      comment.replyCount,
       replyArray.length,
       nextId
     );
