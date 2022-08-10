@@ -1,0 +1,21 @@
+"200":
+  description: 유저 정보 수정 성공
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          accessToken:
+            type: string
+            example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ.eyJpZCI6Mywibmlja25hbWUiOiLsiJjsoJUiLCJtYnRpIjoiSVNUUCIsImlzQWRtaW4iOmZhbHNlLCJjcmVhdGVkQXQiOiIyMDIyLTA4LTA0VDA3OjUxOjU5Ljk3N1oiLCJpYXQiOjE2NjAwOTcyMTQsImV4cCI6MTY2MDA5OTAxNCwiaXNzIjoiTUJUSV9DaGFubmVsIn0.hFlHNs-h_lEKzQmIPPNNKu7AnMrxzrNE1P23TFVOZyQ
+
+"401":
+  description: access token 유효하지 않음
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          message:
+            type: string
+            example: authentication error

@@ -6,3 +6,26 @@ get:
     - bearerAuth: []
   responses:
     $ref: "../../responses/users/me.get.yaml"
+
+patch:
+  tags:
+    - users
+  description: 닉네임, mbti를 업데이트 합니다. 업데이트된 새 access token을 반환합니다.
+  security:
+    - bearerAuth: []
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            nickname:
+              type: string
+              enum: 지나가는 나그네
+              example: kakao
+            mbti:
+              type: string
+              example: ENFP
+  responses:
+    $ref: "../../responses/users/me.patch.yaml"
