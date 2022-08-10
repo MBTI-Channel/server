@@ -28,11 +28,11 @@ export interface ICommentService {
     content: string,
     isSecret: boolean
   ): Promise<ReplyResponseDto>;
-  findAllComments(
+  getAllComments(
     pageOptionsDto: GetAllCommentDto,
     user: User
   ): Promise<PageResponseDto<PageInfoDto, CommentResponseDto>>;
-  findAllReplies(
+  getAllReplies(
     pageOptionsDto: GetAllRepliesDto,
     user: User
   ): Promise<PageResponseDto<PageInfiniteScrollInfoDto, ReplyResponseDto>>;
@@ -45,5 +45,5 @@ export interface ICommentService {
   decreaseLikeCount(id: number): Promise<void>;
   update(user: User, id: number, content: string): Promise<CommentResponseDto>;
   delete(user: User, id: number): Promise<void>;
-  isValid(id:number): Promise<boolean>
+  isValid(id: number): Promise<boolean>;
 }

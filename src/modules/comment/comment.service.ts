@@ -159,7 +159,7 @@ export class CommentService implements ICommentService {
     }
   }
 
-  public async findAllComments(pageOptionsDto: GetAllCommentDto, user: User) {
+  public async getAllComments(pageOptionsDto: GetAllCommentDto, user: User) {
     this._log(`findAllComments start`);
     // 댓글을 조회할 게시글이 존재하는지 확인
     const isValidPost = this._postService.isValid(pageOptionsDto.postId);
@@ -181,7 +181,7 @@ export class CommentService implements ICommentService {
     );
   }
 
-  public async findAllReplies(
+  public async getAllReplies(
     pageOptionsDto: GetAllRepliesDto,
     user: User
   ): Promise<any> {
