@@ -13,6 +13,7 @@ export interface IUserService {
     gender?: number,
     ageRange?: string
   ): Promise<NeedSignUpResponseDto>;
+  updateNickname(user: User, nickname: string): Promise<AccessTokenResponseDto>;
   login(
     id: number,
     providerId: string,
