@@ -17,7 +17,13 @@ import {
   queryValidator,
 } from "../../middlewares/validator.middleware";
 import { User } from "../user/entity/user.entity";
-import { IdDto, CreatePostDto, GetAllPostDto, SearchPostDto } from "./dto";
+import {
+  IdDto,
+  CreatePostDto,
+  GetAllPostDto,
+  SearchPostDto,
+  GetTrendDto,
+} from "./dto";
 import { UpdatePostDto } from "./dto/update-post.dto";
 import { IPostService } from "./interfaces/IPost.service";
 
@@ -83,6 +89,23 @@ export class PostController {
     const user = req.user as User;
 
     const data = await this._postService.search(user, query);
+    return res.status(200).json(data);
+  }
+
+  // 인기게시글 조회
+  @httpGet(
+    "/trending",
+    TYPES.CheckLoginStatusMiddleware,
+    queryValidator(GetTrendDto)
+  )
+  public async getTrendPosts(
+    @queryParam() query: GetTrendDto,
+    req: Request,
+    res: Response
+  ) {
+    const user = req.user as User;
+    const data = await this._postService.getTrends(user, query);
+
     return res.status(200).json(data);
   }
 
