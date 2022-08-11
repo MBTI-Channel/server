@@ -20,6 +20,7 @@ import { reportModule } from "../modules/report/report.module";
 import { utilModule } from "../shared/utils/util.module";
 import { apiModule } from "../shared/api/api.module";
 import { trendModule } from "../modules/trend/trend.module";
+import { surveyModule } from "../modules/survey/survey.module";
 
 const container = new Container({ defaultScope: "Singleton" });
 
@@ -38,6 +39,7 @@ container.load(
   notificationModule,
   postModule,
   reportModule,
+  surveyModule,
   trendModule,
   userModule,
   /* shared */
