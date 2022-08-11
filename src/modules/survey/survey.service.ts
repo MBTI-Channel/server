@@ -49,8 +49,8 @@ export class SurveyService implements ISurveyService {
       const surveyEntity = Survey.of(post, user, isAgree);
       survey = await this._surveyRepository.create(surveyEntity);
     } else {
-      const previous_vote = survey.isAgree;
-      if (previous_vote === isAgree) {
+      const previousVote = survey.isAgree;
+      if (previousVote === isAgree) {
         // 기존의 투표 취소
         // TODO: survey isActive === false ??
       } else {
