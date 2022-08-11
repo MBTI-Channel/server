@@ -159,20 +159,23 @@ export class CommentService implements ICommentService {
     }
   }
 
-  public async findAllComments(pageOptionsDto: GetAllCommentDto, user: User) {
+  public async getAllComments(pageOptionsDto: GetAllCommentDto, user: User) {
     this._log(`findAllComments start`);
+    const { postId, maxResults, page } = pageOptionsDto;
     // 댓글을 조회할 게시글이 존재하는지 확인
-    const isValidPost = this._postService.isValid(pageOptionsDto.postId);
-    if (!isValidPost) throw new NotFoundException("not exists post");
+    const foundPost = await this._postRepository.findOneById(postId);
+    if (!foundPost || !foundPost.isActive)
+      throw new NotFoundException("not exists post");
 
-    const [commentArray, totalCount] =
-      await this._commentRepository.findAllComments(pageOptionsDto);
+    const commentArray = await this._commentRepository.findAllComments(
+      pageOptionsDto
+    );
 
     // 페이지 정보
     const pageInfoDto = new PageInfoDto(
-      totalCount,
-      commentArray.length,
-      pageOptionsDto.page
+      foundPost.commentCount,
+      maxResults,
+      page
     );
 
     return new PageResponseDto(
@@ -181,7 +184,7 @@ export class CommentService implements ICommentService {
     );
   }
 
-  public async findAllReplies(
+  public async getAllReplies(
     pageOptionsDto: GetAllRepliesDto,
     user: User
   ): Promise<any> {
