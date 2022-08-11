@@ -4,11 +4,14 @@ import { QueryDeepPartialEntity } from "typeorm/query-builder/QueryPartialEntity
 import { TYPES } from "../../core/types.core";
 import { IDatabaseService } from "../../core/database/interfaces/IDatabase.service";
 import { Category } from "../category/entity/category.entity";
-import { GetAllPostDto } from "./dto/get-all-post.dto";
-import { SearchPostDto } from "./dto/search-post.dto";
 import { Post } from "./entity/post.entity";
 import { IPostRepository } from "./interfaces/IPost.repository";
-import { GetMyPostsDto } from "./dto";
+import {
+  GetMyPostsDto,
+  GetTrendDto,
+  GetAllPostDto,
+  SearchPostDto,
+} from "./dto";
 
 @injectable()
 export class PostRepository implements IPostRepository {
@@ -26,6 +29,13 @@ export class PostRepository implements IPostRepository {
     const repository = await this._database.getRepository(Post);
     const post = await repository.findOne({ where: { id } });
     return post;
+  }
+
+  public async increaseReportCount(id: number): Promise<boolean> {
+    const repository = await this._database.getRepository(Post);
+    const result = await repository.increment({ id }, "reportCount", 1);
+    if (result.affected === 1) return true;
+    return false;
   }
 
   public async increaseCommentCount(id: number): Promise<boolean> {
@@ -267,6 +277,38 @@ export class PostRepository implements IPostRepository {
         ]),
         title: Like(`%${pageOptionsDto.searchWord}%`),
       },
+      take: pageOptionsDto.maxResults + 1,
+      skip: pageOptionsDto.skip,
+      order: { [pageOptionsDto.order]: "DESC" },
+    });
+    return [result, totalCount];
+  }
+
+  // 인기글 검색
+  public async searchTrend(
+    pageOptionsDto: GetTrendDto
+  ): Promise<[Post[], number]> {
+    const repository = await this._database.getRepository(Post);
+    const [result, totalCount] = await repository.findAndCount({
+      select: [
+        "id",
+        "categoryId",
+        "type",
+        "isActive",
+        "userId",
+        "userNickname",
+        "userMbti",
+        "isSecret",
+        "title",
+        "content",
+        "viewCount",
+        "commentCount",
+        "likesCount",
+        "reportCount",
+        "createdAt",
+        "updatedAt",
+      ],
+      where: { isTrend: true },
       take: pageOptionsDto.maxResults + 1,
       skip: pageOptionsDto.skip,
       order: { [pageOptionsDto.order]: "DESC" },

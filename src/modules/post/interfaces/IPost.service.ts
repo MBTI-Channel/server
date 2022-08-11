@@ -3,10 +3,13 @@ import {
   PageResponseDto,
 } from "../../../shared/page";
 import { User } from "../../user/entity/user.entity";
-import { GetMyPostsDto } from "../dto";
-import { GetAllPostDto } from "../dto/get-all-post.dto";
-import { PostResponseDto } from "../dto/post-response.dto";
-import { SearchPostDto } from "../dto/search-post.dto";
+import {
+  GetMyPostsDto,
+  PostResponseDto,
+  GetAllPostDto,
+  GetTrendDto,
+  SearchPostDto,
+} from "../dto";
 
 export interface IPostService {
   create(
@@ -24,6 +27,10 @@ export interface IPostService {
   getDetail(user: User, id: number): Promise<PostResponseDto>;
   isValid(id: number): Promise<boolean>;
   getMyPosts(user: User, pageOptionsDto: GetMyPostsDto): Promise<any>; // TODO: 리턴타입, postService.getUserPosts로
+  getTrends(
+    user: User,
+    pageOptionsDto: GetTrendDto
+  ): Promise<PageResponseDto<PageInfiniteScrollInfoDto, PostResponseDto>>;
   getAll(
     user: User,
     pageOptionsDto: GetAllPostDto

@@ -1,11 +1,15 @@
-import { GetMyPostsDto } from "../dto";
-import { GetAllPostDto } from "../dto/get-all-post.dto";
-import { SearchPostDto } from "../dto/search-post.dto";
+import {
+  GetMyPostsDto,
+  GetAllPostDto,
+  GetTrendDto,
+  SearchPostDto,
+} from "../dto";
 import { Post } from "../entity/post.entity";
 
 export interface IPostRepository {
   create(postEntity: Post): Promise<Post>;
   findOneById(id: number): Promise<Post | null>;
+  increaseReportCount(id: number): Promise<boolean>;
   increaseCommentCount(id: number): Promise<boolean>;
   increaseLikeCount(id: number): Promise<boolean>;
   decreaseLikeCount(id: number): Promise<boolean>;
@@ -34,6 +38,7 @@ export interface IPostRepository {
     categoryId: number,
     mbti: string
   ): Promise<[Post[], number]>;
+  searchTrend(pageOptionsDto: GetTrendDto): Promise<[Post[], number]>;
   searchAll(): Promise<[Post[], number]>;
   searchWithoutMbtiCategory(
     pageOptionsDto: SearchPostDto

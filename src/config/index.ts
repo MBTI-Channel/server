@@ -71,6 +71,7 @@ export default {
   discord: {
     askWebhookUrl: isValidEnvVar("DISCORD_ASK_WEBHOOK_URL"),
     errorWebhookUrl: isValidEnvVar("DISCORD_ERROR_WEBHOOK_URL"),
+    reportWebhookUrl: isValidEnvVar("DISCORD_REPORT_WEBHOOK_URL"),
   },
   aws: {
     s3AccessKey: isValidEnvVar("S3_ACCESS_KEY"),

@@ -6,6 +6,7 @@ import { Comment } from "./entity/comment.entity";
 import { ICommentRepository } from "./interfaces/IComment.repository";
 import { Logger } from "../../shared/utils/logger.util";
 import { GetAllByUserDto, GetAllCommentDto, GetAllRepliesDto } from "./dto";
+import { CommentOrder } from "../../shared/enum.shared";
 
 @injectable()
 export class CommentRepository implements ICommentRepository {
@@ -28,9 +29,9 @@ export class CommentRepository implements ICommentRepository {
 
   public async findAllComments(
     pageOptionsDto: GetAllCommentDto
-  ): Promise<[Comment[], number]> {
+  ): Promise<Comment[]> {
     const repository = await this._database.getRepository(Comment);
-    return await repository
+    const queryBuilder = repository
       .createQueryBuilder("comment")
       .select([
         "comment.id",
@@ -52,13 +53,18 @@ export class CommentRepository implements ICommentRepository {
       .innerJoin("comment.post", "post", "post.id = comment.postId")
       .take(pageOptionsDto.maxResults)
       .skip(pageOptionsDto.skip)
-      .orderBy(`comment.${pageOptionsDto.order}`, pageOptionsDto.orderOption)
-      .getManyAndCount();
+      .orderBy(`comment.id`, "ASC");
+    //TODO: LIKES_COUNT 개선 필요
+    if (pageOptionsDto.order === CommentOrder.LIKES_COUNT) {
+      queryBuilder.addOrderBy(`comment.${pageOptionsDto.order}`, "ASC");
+    }
+
+    return queryBuilder.getMany();
   }
 
   public async findAllReplies(
     pageOptionsDto: GetAllRepliesDto
-  ): Promise<[Comment[], number]> {
+  ): Promise<Comment[]> {
     const { parentId, startId, maxResults } = pageOptionsDto;
     const repository = await this._database.getRepository(Comment);
     return await repository
@@ -78,12 +84,12 @@ export class CommentRepository implements ICommentRepository {
         "comment.updatedAt",
         "post.userId",
       ])
-      .where("comment.id >= :startId", { startId })
+      .where("comment.id > :startId", { startId })
       .andWhere("comment.parent_id = :parentId", { parentId })
       .innerJoin("comment.post", "post", "post.id = comment.postId")
-      .take(maxResults + 1) // nextId를 위한 +1
-      .orderBy(`comment.createdAt`, "ASC")
-      .getManyAndCount();
+      .take(maxResults)
+      .orderBy(`comment.id`, "ASC")
+      .getMany();
   }
 
   public async findAllByUser(
@@ -121,6 +127,13 @@ export class CommentRepository implements ICommentRepository {
     return await repository
       .update(id, payload as QueryDeepPartialEntity<Comment>)
       .then(async () => await repository.findOne({ where: { id } }));
+  }
+
+  public async increaseReportCount(id: number): Promise<boolean> {
+    const repository = await this._database.getRepository(Comment);
+    const result = await repository.increment({ id }, "reportCount", 1);
+    if (result.affected === 1) return true;
+    return false;
   }
 
   public async increaseReplyCount(id: number): Promise<boolean> {

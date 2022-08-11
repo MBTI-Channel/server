@@ -3,6 +3,7 @@ import { inject } from "inversify";
 import {
   controller,
   httpGet,
+  httpPatch,
   httpPost,
   queryParam,
   requestBody,
@@ -19,7 +20,11 @@ import { ICommentService } from "../comment/interfaces/IComment.service";
 import { User } from "./entity/user.entity";
 import { OauthLoginDto } from "../auth/dto/oauth-login.dto";
 import { GetAllByUserDto } from "../comment/dto";
-import { SignUpDto, CheckDuplicateNicknameDto } from "./dto";
+import {
+  SignUpDto,
+  CheckDuplicateNicknameDto,
+  UpdateUserNicknameDto,
+} from "./dto";
 import { convertUserAgent } from "../../shared/utils/user-agent.util";
 import config from "../../config";
 import { GetMyPostsDto } from "../post/dto";
@@ -114,6 +119,25 @@ export class UserController {
   @httpGet("/me", TYPES.ValidateAccessTokenMiddleware)
   public async validateUser(req: Request, res: Response) {
     const data = req.user as User;
+
+    return res.status(200).json(data);
+  }
+
+  // 닉네임 업데이트
+  @httpPatch(
+    "/me/nickname",
+    TYPES.ValidateAccessTokenMiddleware,
+    bodyValidator(UpdateUserNicknameDto)
+  )
+  public async updateNickname(
+    @requestBody() body: UpdateUserNicknameDto,
+    req: Request,
+    res: Response
+  ) {
+    const user = req.user as User;
+    const { nickname } = body;
+
+    const data = await this._userService.updateNickname(user, nickname);
 
     return res.status(200).json(data);
   }

@@ -159,20 +159,24 @@ export class CommentService implements ICommentService {
     }
   }
 
-  public async findAllComments(pageOptionsDto: GetAllCommentDto, user: User) {
+  public async getAllComments(pageOptionsDto: GetAllCommentDto, user: User) {
     this._log(`findAllComments start`);
+    const { postId, maxResults, page } = pageOptionsDto;
     // 댓글을 조회할 게시글이 존재하는지 확인
-    const isValidPost = this._postService.isValid(pageOptionsDto.postId);
-    if (!isValidPost) throw new NotFoundException("not exists post");
+    const foundPost = await this._postRepository.findOneById(postId);
+    if (!foundPost || !foundPost.isActive)
+      throw new NotFoundException("not exists post");
 
-    const [commentArray, totalCount] =
-      await this._commentRepository.findAllComments(pageOptionsDto);
+    const commentArray = await this._commentRepository.findAllComments(
+      pageOptionsDto
+    );
 
     // 페이지 정보
     const pageInfoDto = new PageInfoDto(
-      totalCount,
+      foundPost.commentCount,
       commentArray.length,
-      pageOptionsDto.page
+      page,
+      maxResults
     );
 
     return new PageResponseDto(
@@ -181,10 +185,7 @@ export class CommentService implements ICommentService {
     );
   }
 
-  public async findAllReplies(
-    pageOptionsDto: GetAllRepliesDto,
-    user: User
-  ): Promise<any> {
+  public async getAllReplies(pageOptionsDto: GetAllRepliesDto, user: User) {
     this._log(`findAllReplies start`);
 
     // 부모댓글이 존재하는지 확인
@@ -198,19 +199,16 @@ export class CommentService implements ICommentService {
     if (!isValidPost) throw new NotFoundException("not exists post");
 
     // 대댓글 조회
-    const [replyArray, totalCount] =
-      await this._commentRepository.findAllReplies(pageOptionsDto);
+    const replyArray = await this._commentRepository.findAllReplies(
+      pageOptionsDto
+    );
 
-    // 다음 대댓글 페이지 있는지 확인
-    let nextId = null;
-    if (replyArray.length === pageOptionsDto.maxResults + 1) {
-      nextId = replyArray[replyArray.length - 1].id;
-      replyArray.pop();
-    }
+    // 배열 마지막 id를 nextId에 할당
+    const nextId = replyArray[replyArray.length - 1].id;
 
     // 응답 DTO로 변환후 리턴
     const pageInfoDto = new PageInfiniteScrollInfoDto(
-      totalCount,
+      comment.replyCount,
       replyArray.length,
       nextId
     );
@@ -226,6 +224,7 @@ export class CommentService implements ICommentService {
     pageOptionsDto: GetAllByUserDto
   ): Promise<PageResponseDto<PageInfoDto, UserCommentResponseDto>> {
     const { id: userId } = user;
+    const { page, maxResults } = pageOptionsDto;
 
     const [commentArray, totalCount] =
       await this._commentRepository.findAllByUser(pageOptionsDto, userId);
@@ -234,7 +233,8 @@ export class CommentService implements ICommentService {
     const pageInfoDto = new PageInfoDto(
       totalCount,
       commentArray.length,
-      pageOptionsDto.page
+      page,
+      maxResults
     );
 
     return new PageResponseDto(
@@ -243,7 +243,17 @@ export class CommentService implements ICommentService {
     );
   }
 
-  public async increaseReportCount(id: number): Promise<void> {}
+  public async increaseReportCount(id: number): Promise<void> {
+    this._log(`increaseReportCount start`);
+    // 댓글이 존재하는지 확인
+    const comment = await this._commentRepository.findOneById(id);
+    if (!comment || !comment.isActive)
+      throw new NotFoundException(`not exists comment`);
+
+    // 댓글 신고 수 증가. 만약 도중에 삭제되었다면 false 반환
+    const hasIncreased = await this._commentRepository.increaseReportCount(id);
+    if (!hasIncreased) throw new NotFoundException(`not exists comment`);
+  }
 
   public async increaseLikeCount(id: number): Promise<void> {
     this._log(`increaseLikeCount start`);
@@ -308,6 +318,9 @@ export class CommentService implements ICommentService {
   }
 
   public async isValid(id: number): Promise<boolean> {
+    this._log(`is valid comment id ? ${id}`);
+    const comment = await this._commentRepository.findOneById(id);
+    if (!comment || !comment.isActive) return false;
     return true;
   }
 }

@@ -1,4 +1,5 @@
 import { inject, injectable } from "inversify";
+import { IDatabaseService } from "../../core/database/interfaces/IDatabase.service";
 import { TYPES } from "../../core/types.core";
 import { TREND_LIKE, TREND_VIEW } from "../../shared/constant.shared";
 import { CategoryName, PostType } from "../../shared/enum.shared";
@@ -6,6 +7,7 @@ import {
   ForbiddenException,
   NotFoundException,
 } from "../../shared/errors/all.exception";
+import { HttpException } from "../../shared/errors/http.exception";
 import {
   PageResponseDto,
   PageInfiniteScrollInfoDto,
@@ -13,10 +15,15 @@ import {
 } from "../../shared/page";
 import { Logger } from "../../shared/utils/logger.util";
 import { ICategoryRepository } from "../category/interfaces/ICategory.repository";
-import { ITrendService } from "../trend/interfaces/ITrend.service";
+import { INotificationService } from "../notifications/interfaces/INotification.service";
 import { User } from "../user/entity/user.entity";
-import { GetAllPostDto, GetMyPostsDto, PostResponseDto } from "./dto";
-import { SearchPostDto } from "./dto/search-post.dto";
+import {
+  GetAllPostDto,
+  GetMyPostsDto,
+  PostResponseDto,
+  SearchPostDto,
+  GetTrendDto,
+} from "./dto";
 import { Post } from "./entity/post.entity";
 import { IPostRepository } from "./interfaces/IPost.repository";
 import { IPostService } from "./interfaces/IPost.service";
@@ -28,9 +35,11 @@ export class PostService implements IPostService {
     private readonly _postRepository: IPostRepository,
     @inject(TYPES.ICategoryRepository)
     private readonly _categoryRepository: ICategoryRepository,
-    @inject(TYPES.ITrendService)
-    private readonly _trendService: ITrendService,
-    @inject(TYPES.Logger) private readonly _logger: Logger
+    @inject(TYPES.Logger) private readonly _logger: Logger,
+    @inject(TYPES.IDatabaseService)
+    private readonly _dbService: IDatabaseService,
+    @inject(TYPES.INotificationService)
+    private readonly _notificationService: INotificationService
   ) {}
 
   private _log(message: string) {
@@ -68,7 +77,16 @@ export class PostService implements IPostService {
     return new PostResponseDto(createdPost, user);
   }
 
-  public async increaseReportCount(id: number): Promise<void> {}
+  public async increaseReportCount(id: number): Promise<void> {
+    this._log(`increaseReportCount start`);
+    // 댓글이 존재하는지 확인
+    const post = await this._postRepository.findOneById(id);
+    if (!post || !post.isActive) throw new NotFoundException(`not exists post`);
+
+    // 댓글 신고 수 증가. 만약 도중에 삭제되었다면 false 반환
+    const hasIncreased = await this._postRepository.increaseReportCount(id);
+    if (!hasIncreased) throw new NotFoundException(`not exists post`);
+  }
 
   public async increaseCommentCount(id: number): Promise<void> {
     this._log(`increaseCommentCount start`);
@@ -94,6 +112,7 @@ export class PostService implements IPostService {
     const hasIncreased = await this._postRepository.increaseLikeCount(id);
     // err: 업데이트 도중 삭제된 게시글 id
     if (!hasIncreased) throw new NotFoundException(`not exists post`);
+
     post.likesCount++;
     // 인기 게시글 등록을 위한 검사 진행
     if (
@@ -101,7 +120,25 @@ export class PostService implements IPostService {
       post.likesCount >= TREND_LIKE &&
       post.viewCount >= TREND_VIEW
     ) {
-      await this._trendService.createTrend(id);
+      const t = await this._dbService.getTransaction();
+      await t.startTransaction();
+      try {
+        await this._postRepository.update(id, {
+          isTrend: true,
+        });
+        await this._notificationService.createByTargetUser(
+          post.user,
+          post.userId,
+          post.id,
+          "trend"
+        );
+        await t.commitTransaction();
+      } catch (err: any) {
+        await t.rollbackTransaction();
+        throw new HttpException(err.name, err.message, err.status);
+      } finally {
+        await t.release();
+      }
     }
   }
 
@@ -153,7 +190,25 @@ export class PostService implements IPostService {
       post.likesCount >= TREND_LIKE &&
       post.viewCount >= TREND_VIEW
     ) {
-      await this._trendService.createTrend(id);
+      const t = await this._dbService.getTransaction();
+      await t.startTransaction();
+      try {
+        await this._postRepository.update(id, {
+          isTrend: true,
+        });
+        await this._notificationService.createByTargetUser(
+          post.user,
+          post.userId,
+          post.id,
+          "trend"
+        );
+        await t.commitTransaction();
+      } catch (err: any) {
+        await t.rollbackTransaction();
+        throw new HttpException(err.name, err.message, err.status);
+      } finally {
+        await t.release();
+      }
     }
 
     return new PostResponseDto(post, user);
@@ -169,6 +224,7 @@ export class PostService implements IPostService {
   // 내가 작성한 게시글 조회
   public async getMyPosts(user: User, pageOptionsDto: GetMyPostsDto) {
     const { id } = user;
+    const { page, maxResults } = pageOptionsDto;
     const [myPostArray, totalCount] =
       await this._postRepository.findAllByUserId(pageOptionsDto, id);
 
@@ -176,12 +232,43 @@ export class PostService implements IPostService {
     const pageInfoDto = new PageInfoDto(
       totalCount,
       myPostArray.length,
-      pageOptionsDto.page
+      page,
+      maxResults
     );
 
     return new PageResponseDto(
       pageInfoDto,
       myPostArray.map((e) => new PostResponseDto(e, user))
+    );
+  }
+
+  public async getTrends(
+    user: User,
+    pageOptionsDto: GetTrendDto
+  ): Promise<PageResponseDto<PageInfiniteScrollInfoDto, PostResponseDto>> {
+    this._log(`getTrends start`);
+
+    let postArray, totalCount;
+    [postArray, totalCount] = await this._postRepository.searchTrend(
+      pageOptionsDto
+    );
+
+    let nextId = null;
+    if (postArray.length === pageOptionsDto.maxResults + 1) {
+      nextId = postArray[postArray.length - 1].id;
+      postArray.pop();
+    }
+    let itemsPerPage = postArray.length;
+
+    const pageInfoDto = new PageInfiniteScrollInfoDto(
+      totalCount, // 결과에 맞는 개수
+      itemsPerPage,
+      nextId
+    );
+
+    return new PageResponseDto(
+      pageInfoDto,
+      postArray.map((e) => new PostResponseDto(e, user))
     );
   }
 

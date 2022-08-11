@@ -2,6 +2,7 @@ import axios from "axios";
 import { inject, injectable } from "inversify";
 import { TYPES } from "../../core/types.core";
 import { Ask } from "../../modules/ask/entity/ask.entity";
+import { Report } from "../../modules/report/entity/report.entity";
 import { Logger } from "../utils/logger.util";
 import { IApiWebhookService } from "./interfaces/IApi-webhook.service";
 import config from "../../config";
@@ -13,11 +14,13 @@ import config from "../../config";
 const { discord } = config;
 const DARK_RED = 10038562;
 const GREEN = 5763719;
+const GOLD = 15844367;
 
 @injectable()
 export class DiscordApiService implements IApiWebhookService {
   private _askChannel = discord.askWebhookUrl;
   private _errorChannel = discord.errorWebhookUrl;
+  private _reportChannel = discord.reportWebhookUrl;
 
   constructor(@inject(TYPES.Logger) private readonly _logger: Logger) {}
 
@@ -91,7 +94,47 @@ export class DiscordApiService implements IApiWebhookService {
     }).catch((e) => this._logger.error(e));
   }
 
-  public async pushReportNotification(impl: any): Promise<void> {
-    console.log("will be pushReportNotification");
+  public async pushReportNotification(reportEntity: Report): Promise<void> {
+    if (process.env.NODE_ENV === "development") return;
+
+    await axios({
+      url: this._reportChannel,
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      data: {
+        embeds: [
+          {
+            title: `새로운 신고가 발생했어요 !`,
+            color: GOLD,
+            fields: [
+              {
+                name: "datetime",
+                value: reportEntity.createdAt,
+              },
+              {
+                name: "신고한 유저 아이디",
+                value: reportEntity.userId,
+              },
+              {
+                name: "신고 대상",
+                value: reportEntity.targetType,
+              },
+              {
+                name: "신고 받은 대상 아이디",
+                value: reportEntity.targetId,
+              },
+              {
+                name: "신고 받은 유저 아이디",
+                value: reportEntity.targetUserId,
+              },
+              {
+                name: "신고사유",
+                value: reportEntity.reason ?? "사유 없음",
+              },
+            ],
+          },
+        ],
+      },
+    }).catch((e) => this._logger.error(e));
   }
 }
