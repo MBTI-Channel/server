@@ -5,9 +5,7 @@ export interface ICommentRepository {
   createComment(commentEntity: Comment): Promise<Comment>;
   findOneById(id: number): Promise<Comment | null>;
   findAllComments(pageOptionsDto: GetAllCommentDto): Promise<Comment[]>;
-  findAllReplies(
-    pageOptionsDto: GetAllRepliesDto
-  ): Promise<[Comment[], number]>;
+  findAllReplies(pageOptionsDto: GetAllRepliesDto): Promise<Comment[]>;
   findAllByUser(
     pageOptionsDto: GetAllByUserDto,
     userId: number

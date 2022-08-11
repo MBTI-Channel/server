@@ -64,7 +64,7 @@ export class CommentRepository implements ICommentRepository {
 
   public async findAllReplies(
     pageOptionsDto: GetAllRepliesDto
-  ): Promise<[Comment[], number]> {
+  ): Promise<Comment[]> {
     const { parentId, startId, maxResults } = pageOptionsDto;
     const repository = await this._database.getRepository(Comment);
     return await repository
@@ -84,12 +84,12 @@ export class CommentRepository implements ICommentRepository {
         "comment.updatedAt",
         "post.userId",
       ])
-      .where("comment.id >= :startId", { startId })
+      .where("comment.id > :startId", { startId })
       .andWhere("comment.parent_id = :parentId", { parentId })
       .innerJoin("comment.post", "post", "post.id = comment.postId")
-      .take(maxResults + 1) // nextId를 위한 +1
-      .orderBy(`comment.createdAt`, "ASC")
-      .getManyAndCount();
+      .take(maxResults)
+      .orderBy(`comment.id`, "ASC")
+      .getMany();
   }
 
   public async findAllByUser(
