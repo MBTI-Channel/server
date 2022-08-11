@@ -1,4 +1,5 @@
 import { inject, injectable } from "inversify";
+import { IDatabaseService } from "../../core/database/interfaces/IDatabase.service";
 import { TYPES } from "../../core/types.core";
 import { TREND_LIKE, TREND_VIEW } from "../../shared/constant.shared";
 import { CategoryName, PostType } from "../../shared/enum.shared";
@@ -6,6 +7,7 @@ import {
   ForbiddenException,
   NotFoundException,
 } from "../../shared/errors/all.exception";
+import { HttpException } from "../../shared/errors/http.exception";
 import {
   PageResponseDto,
   PageInfiniteScrollInfoDto,
@@ -13,6 +15,7 @@ import {
 } from "../../shared/page";
 import { Logger } from "../../shared/utils/logger.util";
 import { ICategoryRepository } from "../category/interfaces/ICategory.repository";
+import { INotificationService } from "../notifications/interfaces/INotification.service";
 import { User } from "../user/entity/user.entity";
 import {
   GetAllPostDto,
@@ -32,7 +35,11 @@ export class PostService implements IPostService {
     private readonly _postRepository: IPostRepository,
     @inject(TYPES.ICategoryRepository)
     private readonly _categoryRepository: ICategoryRepository,
-    @inject(TYPES.Logger) private readonly _logger: Logger
+    @inject(TYPES.Logger) private readonly _logger: Logger,
+    @inject(TYPES.IDatabaseService)
+    private readonly _dbService: IDatabaseService,
+    @inject(TYPES.INotificationService)
+    private readonly _notificationService: INotificationService
   ) {}
 
   private _log(message: string) {
@@ -113,9 +120,25 @@ export class PostService implements IPostService {
       post.likesCount >= TREND_LIKE &&
       post.viewCount >= TREND_VIEW
     ) {
-      await this._postRepository.update(id, {
-        isTrend: true,
-      });
+      const t = await this._dbService.getTransaction();
+      await t.startTransaction();
+      try {
+        await this._postRepository.update(id, {
+          isTrend: true,
+        });
+        await this._notificationService.createByTargetUser(
+          post.user,
+          post.userId,
+          post.id,
+          "trend"
+        );
+        await t.commitTransaction();
+      } catch (err: any) {
+        await t.rollbackTransaction();
+        throw new HttpException(err.name, err.message, err.status);
+      } finally {
+        await t.release();
+      }
     }
   }
 
@@ -167,9 +190,25 @@ export class PostService implements IPostService {
       post.likesCount >= TREND_LIKE &&
       post.viewCount >= TREND_VIEW
     ) {
-      await this._postRepository.update(id, {
-        isTrend: true,
-      });
+      const t = await this._dbService.getTransaction();
+      await t.startTransaction();
+      try {
+        await this._postRepository.update(id, {
+          isTrend: true,
+        });
+        await this._notificationService.createByTargetUser(
+          post.user,
+          post.userId,
+          post.id,
+          "trend"
+        );
+        await t.commitTransaction();
+      } catch (err: any) {
+        await t.rollbackTransaction();
+        throw new HttpException(err.name, err.message, err.status);
+      } finally {
+        await t.release();
+      }
     }
 
     return new PostResponseDto(post, user);
