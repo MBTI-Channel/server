@@ -4,9 +4,7 @@ import { Comment } from "../entity/comment.entity";
 export interface ICommentRepository {
   createComment(commentEntity: Comment): Promise<Comment>;
   findOneById(id: number): Promise<Comment | null>;
-  findAllComments(
-    pageOptionsDto: GetAllCommentDto
-  ): Promise<[Comment[], number]>;
+  findAllComments(pageOptionsDto: GetAllCommentDto): Promise<Comment[]>;
   findAllReplies(pageOptionsDto: GetAllRepliesDto): Promise<Comment[]>;
   findAllByUser(
     pageOptionsDto: GetAllByUserDto,

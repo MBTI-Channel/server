@@ -28,7 +28,7 @@ export interface ICommentService {
     content: string,
     isSecret: boolean
   ): Promise<ReplyResponseDto>;
-  findAllComments(
+  getAllComments(
     pageOptionsDto: GetAllCommentDto,
     user: User
   ): Promise<PageResponseDto<PageInfoDto, CommentResponseDto>>;

@@ -61,6 +61,21 @@ export class UserService implements IUserService {
     return new UserResponseDto(user);
   }
 
+  public async updateNickname(user: User, nickname: string) {
+    this._log(`updateNickname start`);
+    // 닉네임 중복 확인
+    await this.checkDuplicateNickname(nickname);
+
+    // 닉네임 업데이트 후 업데이트된 accessToken 리턴
+    const updatedUser = await this._userRepository.update(user.id, {
+      nickname,
+    });
+    const accessToken = await this._authService.generateAccessToken(
+      updatedUser
+    );
+    return new AccessTokenResponseDto(accessToken);
+  }
+
   // 로그인
   public async login(
     id: number,

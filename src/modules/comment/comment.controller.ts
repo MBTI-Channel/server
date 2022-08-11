@@ -95,7 +95,7 @@ export class CommentController {
     res: Response
   ) {
     const user = req.user as User;
-    const data = await this._commentService.findAllComments(query, user);
+    const data = await this._commentService.getAllComments(query, user);
     return res.status(200).json(data);
   }
 

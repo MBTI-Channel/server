@@ -6,6 +6,7 @@ import { Comment } from "./entity/comment.entity";
 import { ICommentRepository } from "./interfaces/IComment.repository";
 import { Logger } from "../../shared/utils/logger.util";
 import { GetAllByUserDto, GetAllCommentDto, GetAllRepliesDto } from "./dto";
+import { CommentOrder } from "../../shared/enum.shared";
 
 @injectable()
 export class CommentRepository implements ICommentRepository {
@@ -28,9 +29,9 @@ export class CommentRepository implements ICommentRepository {
 
   public async findAllComments(
     pageOptionsDto: GetAllCommentDto
-  ): Promise<[Comment[], number]> {
+  ): Promise<Comment[]> {
     const repository = await this._database.getRepository(Comment);
-    return await repository
+    const queryBuilder = repository
       .createQueryBuilder("comment")
       .select([
         "comment.id",
@@ -52,8 +53,13 @@ export class CommentRepository implements ICommentRepository {
       .innerJoin("comment.post", "post", "post.id = comment.postId")
       .take(pageOptionsDto.maxResults)
       .skip(pageOptionsDto.skip)
-      .orderBy(`comment.${pageOptionsDto.order}`, pageOptionsDto.orderOption)
-      .getManyAndCount();
+      .orderBy(`comment.id`, "ASC");
+    //TODO: LIKES_COUNT 개선 필요
+    if (pageOptionsDto.order === CommentOrder.LIKES_COUNT) {
+      queryBuilder.addOrderBy(`comment.${pageOptionsDto.order}`, "ASC");
+    }
+
+    return queryBuilder.getMany();
   }
 
   public async findAllReplies(
