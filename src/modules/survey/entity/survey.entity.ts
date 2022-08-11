@@ -24,4 +24,13 @@ export class Survey extends BaseEntity {
 
   @Column({ default: false, comment: "찬성 여부" })
   isAgree: boolean;
+
+  static of(post: Post, user: User, isAgree: boolean) {
+    const survey = new Survey();
+    survey.post = post;
+    survey.user = user;
+    survey.userMbti = user.mbti;
+    survey.isAgree = isAgree;
+    return survey;
+  }
 }

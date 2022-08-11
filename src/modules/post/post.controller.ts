@@ -22,9 +22,9 @@ import {
   CreatePostDto,
   GetAllPostDto,
   SearchPostDto,
+  UpdatePostDto,
   GetTrendDto,
 } from "./dto";
-import { UpdatePostDto } from "./dto/update-post.dto";
 import { IPostService } from "./interfaces/IPost.service";
 
 @controller("/posts")
