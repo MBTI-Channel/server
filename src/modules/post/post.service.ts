@@ -178,6 +178,7 @@ export class PostService implements IPostService {
   // 내가 작성한 게시글 조회
   public async getMyPosts(user: User, pageOptionsDto: GetMyPostsDto) {
     const { id } = user;
+    const { page, maxResults } = pageOptionsDto;
     const [myPostArray, totalCount] =
       await this._postRepository.findAllByUserId(pageOptionsDto, id);
 
@@ -185,7 +186,8 @@ export class PostService implements IPostService {
     const pageInfoDto = new PageInfoDto(
       totalCount,
       myPostArray.length,
-      pageOptionsDto.page
+      page,
+      maxResults
     );
 
     return new PageResponseDto(

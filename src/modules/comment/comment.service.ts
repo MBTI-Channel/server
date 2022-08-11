@@ -174,8 +174,9 @@ export class CommentService implements ICommentService {
     // 페이지 정보
     const pageInfoDto = new PageInfoDto(
       foundPost.commentCount,
-      maxResults,
-      page
+      commentArray.length,
+      page,
+      maxResults
     );
 
     return new PageResponseDto(
@@ -223,6 +224,7 @@ export class CommentService implements ICommentService {
     pageOptionsDto: GetAllByUserDto
   ): Promise<PageResponseDto<PageInfoDto, UserCommentResponseDto>> {
     const { id: userId } = user;
+    const { page, maxResults } = pageOptionsDto;
 
     const [commentArray, totalCount] =
       await this._commentRepository.findAllByUser(pageOptionsDto, userId);
@@ -231,7 +233,8 @@ export class CommentService implements ICommentService {
     const pageInfoDto = new PageInfoDto(
       totalCount,
       commentArray.length,
-      pageOptionsDto.page
+      page,
+      maxResults
     );
 
     return new PageResponseDto(
