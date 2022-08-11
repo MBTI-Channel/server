@@ -37,9 +37,6 @@ export const TYPES = {
   /* report */
   IReportService: Symbol.for("IReportService"),
   IReportRepository: Symbol.for("IReportRepository"),
-  /* trend */
-  ITrendService: Symbol.for("ITrendService"),
-  ITrendRepository: Symbol.for("ITrendRepository"),
   /* middleware */
   GetProviderUserByOauthMiddleware: Symbol.for(
     "GetProviderUserByOauthMiddleware"

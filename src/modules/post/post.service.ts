@@ -13,7 +13,6 @@ import {
 } from "../../shared/page";
 import { Logger } from "../../shared/utils/logger.util";
 import { ICategoryRepository } from "../category/interfaces/ICategory.repository";
-import { ITrendService } from "../trend/interfaces/ITrend.service";
 import { User } from "../user/entity/user.entity";
 import { GetAllPostDto, GetMyPostsDto, PostResponseDto } from "./dto";
 import { SearchPostDto } from "./dto/search-post.dto";
@@ -28,8 +27,6 @@ export class PostService implements IPostService {
     private readonly _postRepository: IPostRepository,
     @inject(TYPES.ICategoryRepository)
     private readonly _categoryRepository: ICategoryRepository,
-    @inject(TYPES.ITrendService)
-    private readonly _trendService: ITrendService,
     @inject(TYPES.Logger) private readonly _logger: Logger
   ) {}
 
@@ -105,13 +102,13 @@ export class PostService implements IPostService {
     if (!hasIncreased) throw new NotFoundException(`not exists post`);
     post.likesCount++;
     // 인기 게시글 등록을 위한 검사 진행
-    if (
-      post.type === PostType.POST &&
-      post.likesCount >= TREND_LIKE &&
-      post.viewCount >= TREND_VIEW
-    ) {
-      await this._trendService.createTrend(id);
-    }
+    // if (
+    //   post.type === PostType.POST &&
+    //   post.likesCount >= TREND_LIKE &&
+    //   post.viewCount >= TREND_VIEW
+    // ) {
+    //   await this._trendService.createTrend(id);
+    // }
   }
 
   public async decreaseLikeCount(id: number): Promise<void> {
@@ -157,13 +154,13 @@ export class PostService implements IPostService {
     if (!hasIncreased) throw new NotFoundException(`not exists post`);
     post.viewCount++;
     // 인기 게시글 등록을 위한 검사 진행
-    if (
-      post.type === PostType.POST &&
-      post.likesCount >= TREND_LIKE &&
-      post.viewCount >= TREND_VIEW
-    ) {
-      await this._trendService.createTrend(id);
-    }
+    // if (
+    //   post.type === PostType.POST &&
+    //   post.likesCount >= TREND_LIKE &&
+    //   post.viewCount >= TREND_VIEW
+    // ) {
+    //   await this._trendService.createTrend(id);
+    // }
 
     return new PostResponseDto(post, user);
   }

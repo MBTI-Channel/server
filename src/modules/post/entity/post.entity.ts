@@ -44,6 +44,12 @@ export class Post extends BaseEntity {
   })
   isSecret: boolean;
 
+  @Column({
+    default: false,
+    comment: "게시글 인기글 여부",
+  })
+  isTrend: boolean;
+
   @Column({ length: "30", comment: "게시글 제목" })
   title: string;
 
