@@ -100,15 +100,18 @@ export class PostService implements IPostService {
     const hasIncreased = await this._postRepository.increaseLikeCount(id);
     // err: 업데이트 도중 삭제된 게시글 id
     if (!hasIncreased) throw new NotFoundException(`not exists post`);
+
     post.likesCount++;
     // 인기 게시글 등록을 위한 검사 진행
-    // if (
-    //   post.type === PostType.POST &&
-    //   post.likesCount >= TREND_LIKE &&
-    //   post.viewCount >= TREND_VIEW
-    // ) {
-    //   await this._trendService.createTrend(id);
-    // }
+    if (
+      post.type === PostType.POST &&
+      post.likesCount >= TREND_LIKE &&
+      post.viewCount >= TREND_VIEW
+    ) {
+      await this._postRepository.update(id, {
+        isTrend: true,
+      });
+    }
   }
 
   public async decreaseLikeCount(id: number): Promise<void> {
@@ -154,13 +157,15 @@ export class PostService implements IPostService {
     if (!hasIncreased) throw new NotFoundException(`not exists post`);
     post.viewCount++;
     // 인기 게시글 등록을 위한 검사 진행
-    // if (
-    //   post.type === PostType.POST &&
-    //   post.likesCount >= TREND_LIKE &&
-    //   post.viewCount >= TREND_VIEW
-    // ) {
-    //   await this._trendService.createTrend(id);
-    // }
+    if (
+      post.type === PostType.POST &&
+      post.likesCount >= TREND_LIKE &&
+      post.viewCount >= TREND_VIEW
+    ) {
+      await this._postRepository.update(id, {
+        isTrend: true,
+      });
+    }
 
     return new PostResponseDto(post, user);
   }
