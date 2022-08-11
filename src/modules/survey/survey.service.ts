@@ -41,9 +41,25 @@ export class SurveyService implements ISurveyService {
     if (post.type !== PostType.SURVEY)
       throw new BadReqeustException(`post type should survey`);
 
-    const surveyEntity = Survey.of(post, user, isAgree);
-    const survey = await this._surveyRepository.create(surveyEntity);
+    // 이미 참여한 survey인지 확인
+    let survey = await this._surveyRepository.findOneByUser(user.id, postId);
 
+    // 참여하지 않은 survey인 경우
+    if (!survey) {
+      const surveyEntity = Survey.of(post, user, isAgree);
+      survey = await this._surveyRepository.create(surveyEntity);
+    } else {
+      const previous_vote = survey.isAgree;
+      if (previous_vote === isAgree) {
+        // 기존의 투표 취소
+        // TODO: survey isActive === false ??
+      } else {
+        // 기존의 투표에서 변경
+        survey = await this._surveyRepository.update(survey.id, {
+          isAgree,
+        });
+      }
+    }
     return new SurveyResponseDto(survey, post, user);
   }
 }
