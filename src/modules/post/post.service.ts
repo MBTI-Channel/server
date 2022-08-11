@@ -14,8 +14,13 @@ import {
 import { Logger } from "../../shared/utils/logger.util";
 import { ICategoryRepository } from "../category/interfaces/ICategory.repository";
 import { User } from "../user/entity/user.entity";
-import { GetAllPostDto, GetMyPostsDto, PostResponseDto } from "./dto";
-import { SearchPostDto } from "./dto/search-post.dto";
+import {
+  GetAllPostDto,
+  GetMyPostsDto,
+  PostResponseDto,
+  SearchPostDto,
+  GetTrendDto,
+} from "./dto";
 import { Post } from "./entity/post.entity";
 import { IPostRepository } from "./interfaces/IPost.repository";
 import { IPostService } from "./interfaces/IPost.service";
@@ -193,6 +198,36 @@ export class PostService implements IPostService {
     return new PageResponseDto(
       pageInfoDto,
       myPostArray.map((e) => new PostResponseDto(e, user))
+    );
+  }
+
+  public async getTrends(
+    user: User,
+    pageOptionsDto: GetTrendDto
+  ): Promise<PageResponseDto<PageInfiniteScrollInfoDto, PostResponseDto>> {
+    this._log(`getTrends start`);
+
+    let postArray, totalCount;
+    [postArray, totalCount] = await this._postRepository.searchTrend(
+      pageOptionsDto
+    );
+
+    let nextId = null;
+    if (postArray.length === pageOptionsDto.maxResults + 1) {
+      nextId = postArray[postArray.length - 1].id;
+      postArray.pop();
+    }
+    let itemsPerPage = postArray.length;
+
+    const pageInfoDto = new PageInfiniteScrollInfoDto(
+      totalCount, // 결과에 맞는 개수
+      itemsPerPage,
+      nextId
+    );
+
+    return new PageResponseDto(
+      pageInfoDto,
+      postArray.map((e) => new PostResponseDto(e, user))
     );
   }
 
