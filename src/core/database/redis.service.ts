@@ -45,4 +45,8 @@ export class RedisService implements IRedisService {
     }
     return value;
   }
+
+  public async del(key: string) {
+    await RedisService._client.del(key);
+  }
 }
