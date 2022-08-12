@@ -1,5 +1,5 @@
 "200":
-  description: 댓글 리스트 조회 성공
+  description: 댓글 리스트 조회 성공. 익명 등록(isSecret:true)이라면 userNickname = null
   content:
     application/json:
       schema:
