@@ -1,5 +1,5 @@
 "201":
-  description: 대댓글 등록 성공. isSecret이 true라면 userNickname = ""
+  description: 대댓글 등록 성공. isSecret이 true라면 userNickname = null
   content:
     application/json:
       schema:
@@ -40,7 +40,7 @@
             example: "2022-07-14T04:16:42.150Z"
           updatedAt:
             type: string
-            example: "2022-07-14T04:16:42.150Z"
+            example: null
           parentId:
             type: integer
             example: 23
