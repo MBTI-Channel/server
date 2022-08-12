@@ -76,9 +76,9 @@ export class PostRepository implements IPostRepository {
   public async findAllPosts(
     pageOptionsDto: GetAllPostDto,
     categoryId: number
-  ): Promise<[Post[], number]> {
+  ): Promise<Post[]> {
     const repository = await this._database.getRepository(Post);
-    const [result, totalCount] = await repository.findAndCount({
+    const result = await repository.find({
       select: [
         "id",
         "categoryId",
@@ -100,18 +100,18 @@ export class PostRepository implements IPostRepository {
       where: { categoryId },
       take: pageOptionsDto.maxResults + 1,
       skip: pageOptionsDto.skip,
-      order: { [pageOptionsDto.order]: "DESC" },
+      order: { id: "DESC" },
     });
-    return [result, totalCount];
+    return result;
   }
 
   public async findAllPostsWithMbti(
     pageOptionsDto: GetAllPostDto,
     categoryId: number,
     mbti: string
-  ): Promise<[Post[], number]> {
+  ): Promise<Post[]> {
     const repository = await this._database.getRepository(Post);
-    const [result, totalCount] = await repository.findAndCount({
+    const result = await repository.find({
       select: [
         "id",
         "categoryId",
@@ -133,9 +133,9 @@ export class PostRepository implements IPostRepository {
       where: { categoryId, userMbti: mbti },
       take: pageOptionsDto.maxResults + 1,
       skip: pageOptionsDto.skip,
-      order: { [pageOptionsDto.order]: "DESC" },
+      order: { id: "DESC" },
     });
-    return [result, totalCount];
+    return result;
   }
 
   // 일반 페이지네이션

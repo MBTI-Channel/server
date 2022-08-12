@@ -260,11 +260,7 @@ export class PostService implements IPostService {
     }
     let itemsPerPage = postArray.length;
 
-    const pageInfoDto = new PageInfiniteScrollInfoDto(
-      totalCount, // 결과에 맞는 개수
-      itemsPerPage,
-      nextId
-    );
+    const pageInfoDto = new PageInfiniteScrollInfoDto(itemsPerPage, nextId);
 
     return new PageResponseDto(
       pageInfoDto,
@@ -285,20 +281,20 @@ export class PostService implements IPostService {
     if (!category || !category.isActive) {
       throw new NotFoundException("not exists category");
     }
-    let postArray, totalCount;
+    let postArray;
 
     if (!user && pageOptionsDto.category === CategoryName.MBTI) {
       throw new ForbiddenException("not authorizatie");
     }
 
     if (pageOptionsDto.category === CategoryName.MBTI) {
-      [postArray, totalCount] = await this._postRepository.findAllPostsWithMbti(
+      postArray = await this._postRepository.findAllPostsWithMbti(
         pageOptionsDto,
         category.id,
         user.mbti
       );
     } else {
-      [postArray, totalCount] = await this._postRepository.findAllPosts(
+      postArray = await this._postRepository.findAllPosts(
         pageOptionsDto,
         category.id
       );
@@ -311,11 +307,7 @@ export class PostService implements IPostService {
     }
     let itemsPerPage = postArray.length;
 
-    const pageInfoDto = new PageInfiniteScrollInfoDto(
-      totalCount, // 결과에 맞는 개수
-      itemsPerPage,
-      nextId
-    );
+    const pageInfoDto = new PageInfiniteScrollInfoDto(itemsPerPage, nextId);
 
     return new PageResponseDto(
       pageInfoDto,
@@ -404,11 +396,7 @@ export class PostService implements IPostService {
     }
     let itemsPerPage = postArray.length;
 
-    const pageInfoDto = new PageInfiniteScrollInfoDto(
-      totalCount, // 결과에 맞는 개수
-      itemsPerPage,
-      nextId
-    );
+    const pageInfoDto = new PageInfiniteScrollInfoDto(itemsPerPage, nextId);
 
     return new PageResponseDto(
       pageInfoDto,

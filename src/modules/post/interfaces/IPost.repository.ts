@@ -18,12 +18,12 @@ export interface IPostRepository {
   findAllPosts(
     pageOptionsDto: GetAllPostDto,
     categoryId: number
-  ): Promise<[Post[], number]>;
+  ): Promise<Post[]>;
   findAllPostsWithMbti(
     pageOptionsDto: GetAllPostDto,
     categoryId: number,
     mbti: string
-  ): Promise<[Post[], number]>;
+  ): Promise<Post[]>;
   update(id: number, payload: Partial<Post>): Promise<Post>;
   findAllByUserId(
     pageOptionsDto: GetMyPostsDto,
