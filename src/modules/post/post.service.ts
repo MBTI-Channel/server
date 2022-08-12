@@ -356,7 +356,7 @@ export class PostService implements IPostService {
           pageOptionsDto
         );
       } else {
-        // user가 있으므로 user에 맞는 mbti 게시글 포함
+        // TODO: user가 있으므로 user에 맞는 mbti 게시글 포함
       }
     } else {
       // 카테고리가 있을 경우 유효성 검사 후 카테고리에 따라 검색
