@@ -18,12 +18,12 @@ export interface IPostRepository {
   findAllPosts(
     pageOptionsDto: GetAllPostDto,
     categoryId: number
-  ): Promise<[Post[], number]>;
+  ): Promise<Post[]>;
   findAllPostsWithMbti(
     pageOptionsDto: GetAllPostDto,
     categoryId: number,
     mbti: string
-  ): Promise<[Post[], number]>;
+  ): Promise<Post[]>;
   update(id: number, payload: Partial<Post>): Promise<Post>;
   findAllByUserId(
     pageOptionsDto: GetMyPostsDto,
@@ -32,15 +32,13 @@ export interface IPostRepository {
   searchInCategory(
     pageOptionsDto: SearchPostDto,
     categoryId: number
-  ): Promise<[Post[], number]>;
+  ): Promise<Post[]>;
   searchInMbtiCategory(
     pageOptionsDto: SearchPostDto,
     categoryId: number,
     mbti: string
-  ): Promise<[Post[], number]>;
-  searchTrend(pageOptionsDto: GetTrendDto): Promise<[Post[], number]>;
-  searchAll(): Promise<[Post[], number]>;
-  searchWithoutMbtiCategory(
-    pageOptionsDto: SearchPostDto
-  ): Promise<[Post[], number]>;
+  ): Promise<Post[]>;
+  searchTrend(pageOptionsDto: GetTrendDto): Promise<Post[]>;
+  searchAll(): Promise<Post[]>;
+  searchWithoutMbtiCategory(pageOptionsDto: SearchPostDto): Promise<Post[]>;
 }

@@ -208,7 +208,6 @@ export class CommentService implements ICommentService {
 
     // 응답 DTO로 변환후 리턴
     const pageInfoDto = new PageInfiniteScrollInfoDto(
-      comment.replyCount,
       replyArray.length,
       nextId
     );

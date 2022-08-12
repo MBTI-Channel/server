@@ -74,7 +74,6 @@ export class NotificationService implements INotificationService {
 
     // 응답 DTO로 변환후 리턴
     const pageInfoDto = new PageInfiniteScrollInfoDto(
-      totalCount,
       notificationArray.length,
       nextId
     );

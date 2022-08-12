@@ -248,10 +248,8 @@ export class PostService implements IPostService {
   ): Promise<PageResponseDto<PageInfiniteScrollInfoDto, PostResponseDto>> {
     this._log(`getTrends start`);
 
-    let postArray, totalCount;
-    [postArray, totalCount] = await this._postRepository.searchTrend(
-      pageOptionsDto
-    );
+    let postArray;
+    postArray = await this._postRepository.searchTrend(pageOptionsDto);
 
     let nextId = null;
     if (postArray.length === pageOptionsDto.maxResults + 1) {
@@ -260,11 +258,7 @@ export class PostService implements IPostService {
     }
     let itemsPerPage = postArray.length;
 
-    const pageInfoDto = new PageInfiniteScrollInfoDto(
-      totalCount, // 결과에 맞는 개수
-      itemsPerPage,
-      nextId
-    );
+    const pageInfoDto = new PageInfiniteScrollInfoDto(itemsPerPage, nextId);
 
     return new PageResponseDto(
       pageInfoDto,
@@ -285,20 +279,20 @@ export class PostService implements IPostService {
     if (!category || !category.isActive) {
       throw new NotFoundException("not exists category");
     }
-    let postArray, totalCount;
+    let postArray;
 
     if (!user && pageOptionsDto.category === CategoryName.MBTI) {
       throw new ForbiddenException("not authorizatie");
     }
 
     if (pageOptionsDto.category === CategoryName.MBTI) {
-      [postArray, totalCount] = await this._postRepository.findAllPostsWithMbti(
+      postArray = await this._postRepository.findAllPostsWithMbti(
         pageOptionsDto,
         category.id,
         user.mbti
       );
     } else {
-      [postArray, totalCount] = await this._postRepository.findAllPosts(
+      postArray = await this._postRepository.findAllPosts(
         pageOptionsDto,
         category.id
       );
@@ -311,11 +305,7 @@ export class PostService implements IPostService {
     }
     let itemsPerPage = postArray.length;
 
-    const pageInfoDto = new PageInfiniteScrollInfoDto(
-      totalCount, // 결과에 맞는 개수
-      itemsPerPage,
-      nextId
-    );
+    const pageInfoDto = new PageInfiniteScrollInfoDto(itemsPerPage, nextId);
 
     return new PageResponseDto(
       pageInfoDto,
@@ -356,17 +346,17 @@ export class PostService implements IPostService {
     this._log(`search start`);
 
     let postArray: Post[] = [];
-    let totalCount = 0;
 
     if (!pageOptionsDto.category) {
       // category가 없을 경우 게시글 전체 검색
       this._log(`search all posts`);
       if (!user) {
         // user가 없으므로 mbti 카테고리는 제외
-        [postArray, totalCount] =
-          await this._postRepository.searchWithoutMbtiCategory(pageOptionsDto);
+        postArray = await this._postRepository.searchWithoutMbtiCategory(
+          pageOptionsDto
+        );
       } else {
-        // user가 있으므로 user에 맞는 mbti 게시글 포함
+        // TODO: user가 있으므로 user에 맞는 mbti 게시글 포함
       }
     } else {
       // 카테고리가 있을 경우 유효성 검사 후 카테고리에 따라 검색
@@ -383,14 +373,13 @@ export class PostService implements IPostService {
       }
       this._log(`search posts in category: ${pageOptionsDto.category}`);
       if (pageOptionsDto.category === CategoryName.MBTI) {
-        [postArray, totalCount] =
-          await this._postRepository.searchInMbtiCategory(
-            pageOptionsDto,
-            category.id,
-            user.mbti
-          );
+        postArray = await this._postRepository.searchInMbtiCategory(
+          pageOptionsDto,
+          category.id,
+          user.mbti
+        );
       } else {
-        [postArray, totalCount] = await this._postRepository.searchInCategory(
+        postArray = await this._postRepository.searchInCategory(
           pageOptionsDto,
           category.id
         );
@@ -404,11 +393,7 @@ export class PostService implements IPostService {
     }
     let itemsPerPage = postArray.length;
 
-    const pageInfoDto = new PageInfiniteScrollInfoDto(
-      totalCount, // 결과에 맞는 개수
-      itemsPerPage,
-      nextId
-    );
+    const pageInfoDto = new PageInfiniteScrollInfoDto(itemsPerPage, nextId);
 
     return new PageResponseDto(
       pageInfoDto,
