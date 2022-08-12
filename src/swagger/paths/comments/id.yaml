@@ -28,7 +28,14 @@ patch:
 delete:
   tags:
     - comments
-  description: 댓글 삭제
+  description: 댓글을 삭제합니다. <br>
+    (필수)id 식제할 댓글 아이디 <br>
+  parameters:
+    - in: path
+      name: id
+      type: integer
+      description: 댓글 아이디
+      required: true
   security:
     - bearerAuth: []
   responses:
