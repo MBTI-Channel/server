@@ -118,7 +118,7 @@ export class CommentRepository implements ICommentRepository {
       .innerJoin("comment.post", "post", "post.id = comment.postId")
       .take(pageOptionsDto.maxResults)
       .skip(pageOptionsDto.skip)
-      .orderBy(`comment.createdAt`, "DESC")
+      .orderBy(`comment.id`, "DESC")
       .getManyAndCount();
   }
 
