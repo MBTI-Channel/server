@@ -248,10 +248,8 @@ export class PostService implements IPostService {
   ): Promise<PageResponseDto<PageInfiniteScrollInfoDto, PostResponseDto>> {
     this._log(`getTrends start`);
 
-    let postArray, totalCount;
-    [postArray, totalCount] = await this._postRepository.searchTrend(
-      pageOptionsDto
-    );
+    let postArray;
+    postArray = await this._postRepository.searchTrend(pageOptionsDto);
 
     let nextId = null;
     if (postArray.length === pageOptionsDto.maxResults + 1) {
@@ -348,15 +346,15 @@ export class PostService implements IPostService {
     this._log(`search start`);
 
     let postArray: Post[] = [];
-    let totalCount = 0;
 
     if (!pageOptionsDto.category) {
       // category가 없을 경우 게시글 전체 검색
       this._log(`search all posts`);
       if (!user) {
         // user가 없으므로 mbti 카테고리는 제외
-        [postArray, totalCount] =
-          await this._postRepository.searchWithoutMbtiCategory(pageOptionsDto);
+        postArray = await this._postRepository.searchWithoutMbtiCategory(
+          pageOptionsDto
+        );
       } else {
         // user가 있으므로 user에 맞는 mbti 게시글 포함
       }
@@ -375,14 +373,13 @@ export class PostService implements IPostService {
       }
       this._log(`search posts in category: ${pageOptionsDto.category}`);
       if (pageOptionsDto.category === CategoryName.MBTI) {
-        [postArray, totalCount] =
-          await this._postRepository.searchInMbtiCategory(
-            pageOptionsDto,
-            category.id,
-            user.mbti
-          );
+        postArray = await this._postRepository.searchInMbtiCategory(
+          pageOptionsDto,
+          category.id,
+          user.mbti
+        );
       } else {
-        [postArray, totalCount] = await this._postRepository.searchInCategory(
+        postArray = await this._postRepository.searchInCategory(
           pageOptionsDto,
           category.id
         );

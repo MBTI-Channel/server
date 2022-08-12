@@ -166,7 +166,7 @@ export class PostRepository implements IPostRepository {
       .where("post.user_id = :userId", { userId })
       .take(pageOptionsDto.maxResults)
       .skip(pageOptionsDto.skip)
-      .orderBy(`post.createdAt`, "DESC")
+      .orderBy(`post.id`, "DESC")
       .getManyAndCount();
   }
 
@@ -180,9 +180,9 @@ export class PostRepository implements IPostRepository {
   public async searchInCategory(
     pageOptionsDto: SearchPostDto,
     categoryId: number
-  ): Promise<[Post[], number]> {
+  ): Promise<Post[]> {
     const repository = await this._database.getRepository(Post);
-    const [result, totalCount] = await repository.findAndCount({
+    const result = await repository.find({
       select: [
         "id",
         "categoryId",
@@ -204,18 +204,18 @@ export class PostRepository implements IPostRepository {
       where: { categoryId, title: Like(`%${pageOptionsDto.searchWord}%`) },
       take: pageOptionsDto.maxResults + 1,
       skip: pageOptionsDto.skip,
-      order: { [pageOptionsDto.order]: "DESC" },
+      order: { id: "DESC" },
     });
-    return [result, totalCount];
+    return result;
   }
 
   public async searchInMbtiCategory(
     pageOptionsDto: SearchPostDto,
     categoryId: number,
     mbti: string
-  ): Promise<[Post[], number]> {
+  ): Promise<Post[]> {
     const repository = await this._database.getRepository(Post);
-    const [result, totalCount] = await repository.findAndCount({
+    const result = await repository.find({
       select: [
         "id",
         "categoryId",
@@ -241,16 +241,16 @@ export class PostRepository implements IPostRepository {
       },
       take: pageOptionsDto.maxResults + 1,
       skip: pageOptionsDto.skip,
-      order: { [pageOptionsDto.order]: "DESC" },
+      order: { id: "DESC" },
     });
-    return [result, totalCount];
+    return result;
   }
 
   public async searchWithoutMbtiCategory(
     pageOptionsDto: SearchPostDto
-  ): Promise<[Post[], number]> {
+  ): Promise<Post[]> {
     const repository = await this._database.getRepository(Post);
-    const [result, totalCount] = await repository.findAndCount({
+    const result = await repository.find({
       select: [
         "id",
         "categoryId",
@@ -279,17 +279,15 @@ export class PostRepository implements IPostRepository {
       },
       take: pageOptionsDto.maxResults + 1,
       skip: pageOptionsDto.skip,
-      order: { [pageOptionsDto.order]: "DESC" },
+      order: { id: "DESC" },
     });
-    return [result, totalCount];
+    return result;
   }
 
   // 인기글 검색
-  public async searchTrend(
-    pageOptionsDto: GetTrendDto
-  ): Promise<[Post[], number]> {
+  public async searchTrend(pageOptionsDto: GetTrendDto): Promise<Post[]> {
     const repository = await this._database.getRepository(Post);
-    const [result, totalCount] = await repository.findAndCount({
+    const result = await repository.find({
       select: [
         "id",
         "categoryId",
@@ -299,6 +297,7 @@ export class PostRepository implements IPostRepository {
         "userNickname",
         "userMbti",
         "isSecret",
+        "isTrend",
         "title",
         "content",
         "viewCount",
@@ -311,14 +310,14 @@ export class PostRepository implements IPostRepository {
       where: { isTrend: true },
       take: pageOptionsDto.maxResults + 1,
       skip: pageOptionsDto.skip,
-      order: { [pageOptionsDto.order]: "DESC" },
+      order: { id: "DESC" },
     });
-    return [result, totalCount];
+    return result;
   }
 
-  public async searchAll(): Promise<[Post[], number]> {
+  public async searchAll(): Promise<Post[]> {
     const repository = await this._database.getRepository(Post);
     // 수정 필요
-    return [[], 0];
+    return [];
   }
 }
