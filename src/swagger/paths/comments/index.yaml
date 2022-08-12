@@ -28,7 +28,12 @@ post:
 get:
   tags:
     - comments
-  description: 댓글 리스트 조회
+  description:
+    일반 페이지네이션이 적용된 게시글의 댓글 리스트를 조회합니다. <br>
+    (필수)postId 댓글을 조회할 게시글 아이디 <br>
+    page 페이지 번호 default - 1 <br>
+    maxResults 페이지당 출력할 댓글 수 default - 30 <br>
+    order 댓글 정렬 방법 createdAt 또는 likesCount default - createdAt
   parameters:
     - name: postId
       in: query
@@ -39,16 +44,22 @@ get:
 
     - name: page
       in: query
-      description: 댓글 page
+      description: 페이지 번호 default - 1
       required: true
       type: integer
       example: 2
 
     - name: maxResults
       in: query
-      description: 한 번에 검색할 댓글 개수. default - 30
+      description: 페이지당 출력할 댓글 수. default - 30
       required: true
       type: integer
       example: 30
+    
+    - name: order
+      in: query
+      escription: 댓글 정렬 방법
+      type: string
+      example: createdAt 또는 likesCount default - createdAt
   responses:
     $ref: "../../responses/comments/index.get.yaml"
