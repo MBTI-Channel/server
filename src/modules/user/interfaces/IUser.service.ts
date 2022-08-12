@@ -26,6 +26,7 @@ export interface IUserService {
     mbti: string,
     userAgent: string
   ): Promise<UserTokenResponseDto>;
+  leave(id: number, refreshToken: string, userAgent: string): Promise<void>;
   reissueAccessToken(
     user: User,
     refreshToken: string,

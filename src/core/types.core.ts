@@ -50,6 +50,9 @@ export const TYPES = {
   SocialSignUpMiddleware: Symbol.for("SocialSignUpMiddleware"),
   ValidateAccessTokenMiddleware: Symbol.for("ValidateAccessTokenMiddleware"),
   ValidateReissueTokenMiddleware: Symbol.for("ValidateReissueTokenMiddleware"),
+  ValidateAccessRefreshTokenMiddleware: Symbol.for(
+    "ValidateAccessRefreshTokenMiddleware"
+  ),
   CheckLoginStatusMiddleware: Symbol.for("CheckLoginStatusMiddleware"),
   /* shared */
   IApiWebhookService: Symbol.for("IApiWebhookService"),

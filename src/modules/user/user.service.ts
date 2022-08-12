@@ -144,6 +144,33 @@ export class UserService implements IUserService {
     return new UserTokenResponseDto(updatedUser, accessToken, refreshToken);
   }
 
+  // 사용자 상태를 탈퇴 처리한다.
+  public async leave(
+    id: number,
+    refreshToken: string,
+    userAgent: string
+  ): Promise<void> {
+    this._log(`leave start`);
+
+    // redis에 있는 refresh 상태 삭제
+    this._log(`check refresh status`);
+    const key = `${id}-${userAgent}`;
+    const hasAuth = await this._authService.hasRefreshAuth(key, refreshToken);
+    if (!hasAuth) {
+      //TODO: 디스코드 알림
+      this._logger.warn(
+        `[UserService] warning! suspected token theft user: ${id}`
+      );
+      throw new UnauthorizedException("authentication error");
+    }
+    await this._authService.removeRefreshKey(key);
+
+    this._log(`user leave...`);
+    await this._userRepository.update(id, {
+      status: config.user.status.withdrawal,
+    });
+  }
+
   public async reissueAccessToken(
     user: User,
     refreshToken: string,
