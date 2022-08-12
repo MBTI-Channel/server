@@ -1,5 +1,5 @@
 "201":
-  description: 댓글 등록 성공. isSecret이 true라면 userNickname = ""
+  description: 댓글 등록 성공. 익명 등록(isSecret:true)이라면 userNickname = null
   content:
     application/json:
       schema:
@@ -14,6 +14,9 @@
           id:
             type: string
             example: 24
+          userId:
+            type: number
+            example: 1
           userMbti:
             type: string
             example: INFP
@@ -40,7 +43,7 @@
             example: "2022-07-14T04:16:42.150Z"
           updatedAt:
             type: string
-            example: "2022-07-14T04:16:42.150Z"
+            example: null
 
 "401":
   description: access token 유효하지 않음
