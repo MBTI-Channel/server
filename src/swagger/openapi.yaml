@@ -80,11 +80,6 @@ paths:
   /comments:
     $ref: "./paths/comments/index.yaml"
   /comments/{id}:
-    parameters:
-      - in: path
-        name: id
-        type: integer
-        description: Comment ID
     $ref: "./paths/comments/id.yaml"
   /comments/replies:
     $ref: "./paths/comments/replies.yaml"

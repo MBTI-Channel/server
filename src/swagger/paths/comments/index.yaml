@@ -1,7 +1,7 @@
 post:
   tags:
     - comments
-    description: 댓글을 등록합니다. <br>
+  description: 댓글을 등록합니다. <br>
     (필수)postId 댓글을 등록할 게시글 아이디 <br>
     (필수)content 댓글 내용. 최대 1000자 <br>
     (필수)isSecret 익명 여부
@@ -55,7 +55,7 @@ get:
       required: true
       type: integer
       example: 30
-    
+
     - name: order
       in: query
       escription: 댓글 정렬 방법

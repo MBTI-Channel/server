@@ -1,7 +1,15 @@
 patch:
   tags:
     - comments
-  description: 댓글 수정
+  description: 댓글 내용을 수정합니다. <br>
+    (필수)id 수정할 댓글 아이디 <br>
+    (필수)content 댓글 내용. 최대 1000자
+  parameters:
+    - in: path
+      name: id
+      type: integer
+      description: 댓글 아이디
+      required: true
   security:
     - bearerAuth: []
   requestBody:
@@ -13,6 +21,7 @@ patch:
             content:
               type: stirng
               example: 나는 뭐 먹지..?
+              required: true
   responses:
     $ref: "../../responses/comments/id.patch.yaml"
 
