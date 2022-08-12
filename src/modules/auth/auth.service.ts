@@ -103,4 +103,9 @@ export class AuthService implements IAuthService {
 
     await this._redisService.set(key, refreshToken);
   }
+
+  public async removeRefreshKey(key: string) {
+    this._log(`removeRefreshKey start`);
+    await this._redisService.del(key);
+  }
 }
