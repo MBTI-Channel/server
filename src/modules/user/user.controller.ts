@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { inject } from "inversify";
 import {
   controller,
+  httpDelete,
   httpGet,
   httpPatch,
   httpPost,
@@ -121,6 +122,20 @@ export class UserController {
     const data = req.user as User;
 
     return res.status(200).json(data);
+  }
+
+  //사용자 탈퇴
+  @httpDelete("/me", TYPES.ValidateAccessRefreshTokenMiddleware)
+  public async leave(req: Request, res: Response) {
+    const user = req.user as User;
+    const refreshToken = req.cookies.Refresh;
+    const userAgent = convertUserAgent(req.headers["user-agent"]);
+
+    await this._userService.leave(user.id, refreshToken, userAgent);
+
+    res.clearCookie("Refresh");
+
+    return res.status(204).end();
   }
 
   // 닉네임 업데이트
