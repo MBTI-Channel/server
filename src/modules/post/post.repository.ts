@@ -291,6 +291,7 @@ export class PostRepository implements IPostRepository {
 
   // 인기글 검색
   public async searchTrend(pageOptionsDto: GetTrendDto): Promise<Post[]> {
+    const { startId, maxResults } = pageOptionsDto;
     const repository = await this._database.getRepository(Post);
     const result = await repository.find({
       select: [
@@ -312,9 +313,8 @@ export class PostRepository implements IPostRepository {
         "createdAt",
         "updatedAt",
       ],
-      where: { isTrend: true },
-      take: pageOptionsDto.maxResults + 1,
-      skip: pageOptionsDto.skip,
+      where: { isTrend: true, id: LessThan(startId) },
+      take: maxResults,
       order: { id: "DESC" },
     });
     return result;
