@@ -27,8 +27,4 @@ export class SearchPostDto {
   @IsString()
   @IsOptional()
   searchWord: string = "";
-
-  get skip(): number {
-    return this.startId;
-  }
 }

@@ -30,8 +30,4 @@ export class GetAllPostDto {
   @IsEnum(PostOrder)
   @IsOptional()
   order: PostOrder = PostOrder.CREATED_AT;
-
-  get skip(): number {
-    return this.startId;
-  }
 }
