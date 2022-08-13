@@ -340,6 +340,17 @@ export class PostRepository implements IPostRepository {
   // 인기글 조회
   public async findAllTrends(pageOptionsDto: GetTrendDto): Promise<Post[]> {
     const { startId, maxResults } = pageOptionsDto;
+    let whereCondition;
+    if (startId > 1) {
+      whereCondition = {
+        isTrend: true,
+        id: LessThan(startId),
+      };
+    } else {
+      whereCondition = {
+        isTrend: true,
+      };
+    }
     const repository = await this._database.getRepository(Post);
     const result = await repository.find({
       select: [
@@ -361,7 +372,7 @@ export class PostRepository implements IPostRepository {
         "createdAt",
         "updatedAt",
       ],
-      where: { isTrend: true, id: LessThan(startId) },
+      where: whereCondition,
       take: maxResults,
       order: { id: "DESC" },
     });
