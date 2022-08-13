@@ -1,8 +1,11 @@
 delete:
   tags:
     - users
-  description: 로그아웃
+  description: 로그아웃을 진행합니다. <br>
+    access token, refresh token이 필요합니다.
+
   security:
+    - bearerAuth: []
     - cookieAuth: []
   responses:
     $ref: "../../responses/users/logout.delete.yaml"
