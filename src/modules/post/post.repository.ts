@@ -243,6 +243,21 @@ export class PostRepository implements IPostRepository {
     mbti: string
   ): Promise<Post[]> {
     const { startId, maxResults, searchWord } = pageOptionsDto;
+    let whereCondition;
+    if (startId > 1) {
+      whereCondition = {
+        categoryId,
+        userMbti: mbti,
+        title: Like(`%${searchWord}%`),
+        id: LessThan(startId),
+      };
+    } else {
+      whereCondition = {
+        categoryId,
+        userMbti: mbti,
+        title: Like(`%${searchWord}%`),
+      };
+    }
     const repository = await this._database.getRepository(Post);
     const result = await repository.find({
       select: [
@@ -263,12 +278,7 @@ export class PostRepository implements IPostRepository {
         "createdAt",
         "updatedAt",
       ],
-      where: {
-        categoryId,
-        userMbti: mbti,
-        title: Like(`%${searchWord}%`),
-        id: LessThan(startId),
-      },
+      where: whereCondition,
       take: maxResults,
       order: { id: "DESC" },
     });
