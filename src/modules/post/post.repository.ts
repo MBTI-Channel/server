@@ -289,8 +289,8 @@ export class PostRepository implements IPostRepository {
     return result;
   }
 
-  // 인기글 검색
-  public async searchTrend(pageOptionsDto: GetTrendDto): Promise<Post[]> {
+  // 인기글 조회
+  public async findAllTrends(pageOptionsDto: GetTrendDto): Promise<Post[]> {
     const { startId, maxResults } = pageOptionsDto;
     const repository = await this._database.getRepository(Post);
     const result = await repository.find({

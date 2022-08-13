@@ -249,7 +249,7 @@ export class PostService implements IPostService {
     this._log(`getTrends start`);
 
     let postArray;
-    postArray = await this._postRepository.searchTrend(pageOptionsDto);
+    postArray = await this._postRepository.findAllTrends(pageOptionsDto);
 
     // 배열 마지막 id를 nextId에 할당
     const nextId = postArray[postArray.length - 1].id;

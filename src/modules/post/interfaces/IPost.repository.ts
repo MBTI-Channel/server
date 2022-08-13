@@ -38,7 +38,7 @@ export interface IPostRepository {
     categoryId: number,
     mbti: string
   ): Promise<Post[]>;
-  searchTrend(pageOptionsDto: GetTrendDto): Promise<Post[]>;
+  findAllTrends(pageOptionsDto: GetTrendDto): Promise<Post[]>;
   searchAll(): Promise<Post[]>;
   searchWithoutMbtiCategory(pageOptionsDto: SearchPostDto): Promise<Post[]>;
 }
