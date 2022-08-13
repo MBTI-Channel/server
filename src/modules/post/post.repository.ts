@@ -1,5 +1,5 @@
 import { inject, injectable } from "inversify";
-import { In, Like } from "typeorm";
+import { In, LessThan, LessThanOrEqual, Like, MoreThan } from "typeorm";
 import { QueryDeepPartialEntity } from "typeorm/query-builder/QueryPartialEntity";
 import { TYPES } from "../../core/types.core";
 import { IDatabaseService } from "../../core/database/interfaces/IDatabase.service";
@@ -77,8 +77,9 @@ export class PostRepository implements IPostRepository {
     pageOptionsDto: GetAllPostDto,
     categoryId: number
   ): Promise<Post[]> {
+    const { startId, maxResults } = pageOptionsDto;
     const repository = await this._database.getRepository(Post);
-    const result = await repository.find({
+    return await repository.find({
       select: [
         "id",
         "categoryId",
@@ -97,12 +98,10 @@ export class PostRepository implements IPostRepository {
         "createdAt",
         "updatedAt",
       ],
-      where: { categoryId },
-      take: pageOptionsDto.maxResults + 1,
-      skip: pageOptionsDto.skip,
+      where: { categoryId, id: LessThan(startId) },
+      take: maxResults,
       order: { id: "DESC" },
     });
-    return result;
   }
 
   public async findAllPostsWithMbti(
