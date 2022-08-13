@@ -253,6 +253,7 @@ export class PostRepository implements IPostRepository {
   public async searchWithoutMbtiCategory(
     pageOptionsDto: SearchPostDto
   ): Promise<Post[]> {
+    const { startId, maxResults, searchWord } = pageOptionsDto;
     const repository = await this._database.getRepository(Post);
     const result = await repository.find({
       select: [
@@ -275,14 +276,14 @@ export class PostRepository implements IPostRepository {
       ],
       where: {
         categoryId: In([
-          Category.typeTo("game"),
+          Category.typeTo("game"), // TODO: transform 으로 수정
           Category.typeTo("trip"),
           Category.typeTo("love"),
         ]),
-        title: Like(`%${pageOptionsDto.searchWord}%`),
+        title: Like(`%${searchWord}%`),
+        id: LessThan(startId),
       },
-      take: pageOptionsDto.maxResults + 1,
-      skip: pageOptionsDto.skip,
+      take: maxResults,
       order: { id: "DESC" },
     });
     return result;
