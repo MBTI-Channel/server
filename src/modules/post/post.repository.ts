@@ -78,6 +78,15 @@ export class PostRepository implements IPostRepository {
     categoryId: number
   ): Promise<Post[]> {
     const { startId, maxResults } = pageOptionsDto;
+    let whereCondition;
+    if (startId > 1) {
+      whereCondition = {
+        categoryId,
+        id: LessThan(startId),
+      };
+    } else {
+      whereCondition = { categoryId };
+    }
     const repository = await this._database.getRepository(Post);
     return await repository.find({
       select: [
@@ -98,7 +107,7 @@ export class PostRepository implements IPostRepository {
         "createdAt",
         "updatedAt",
       ],
-      where: { categoryId, id: LessThan(startId) },
+      where: whereCondition,
       take: maxResults,
       order: { id: "DESC" },
     });
