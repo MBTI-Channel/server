@@ -107,6 +107,18 @@ export class UserController {
     return res.status(201).json(data);
   }
 
+  // 로그아웃
+  @httpDelete("/logout", TYPES.ValidateAccessRefreshTokenMiddleware)
+  public async logout(req: Request, res: Response) {
+    const { id } = req.user as User;
+    const refreshToken = req.cookies.Refresh;
+    const userAgent = convertUserAgent(req.headers["user-agent"]);
+
+    await this._userService.logout(id, refreshToken, userAgent);
+
+    return res.status(204).end();
+  }
+
   // access token 재발급
   @httpGet("/accessToken", TYPES.ValidateReissueTokenMiddleware)
   public async reissueAccessToken(req: Request, res: Response) {

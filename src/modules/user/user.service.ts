@@ -106,6 +106,23 @@ export class UserService implements IUserService {
     return new UserTokenResponseDto(user, accessToken, refreshToken);
   }
 
+  public async logout(id: number, refreshToken: string, userAgent: string) {
+    this._log(`logout start`);
+
+    // redis에 있는 refresh 상태 삭제
+    this._log(`check refresh status`);
+    const key = `${id}-${userAgent}`;
+    const hasAuth = await this._authService.hasRefreshAuth(key, refreshToken);
+    if (!hasAuth) {
+      //TODO: 디스코드 알림
+      this._logger.warn(
+        `[UserService] warning! suspected token theft user: ${id}`
+      );
+      throw new UnauthorizedException("authentication error");
+    }
+    await this._authService.removeRefreshKey(key);
+  }
+
   // 닉네임, mbti를 update하여 회원가입 처리한다.
   public async signUp(
     id: number,
