@@ -217,6 +217,7 @@ export class PostRepository implements IPostRepository {
     categoryId: number,
     mbti: string
   ): Promise<Post[]> {
+    const { startId, maxResults, searchWord } = pageOptionsDto;
     const repository = await this._database.getRepository(Post);
     const result = await repository.find({
       select: [
@@ -240,10 +241,10 @@ export class PostRepository implements IPostRepository {
       where: {
         categoryId,
         userMbti: mbti,
-        title: Like(`%${pageOptionsDto.searchWord}%`),
+        title: Like(`%${searchWord}%`),
+        id: LessThan(startId),
       },
-      take: pageOptionsDto.maxResults + 1,
-      skip: pageOptionsDto.skip,
+      take: maxResults,
       order: { id: "DESC" },
     });
     return result;
