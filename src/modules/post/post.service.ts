@@ -249,16 +249,12 @@ export class PostService implements IPostService {
     this._log(`getTrends start`);
 
     let postArray;
-    postArray = await this._postRepository.searchTrend(pageOptionsDto);
+    postArray = await this._postRepository.findAllTrends(pageOptionsDto);
 
-    let nextId = null;
-    if (postArray.length === pageOptionsDto.maxResults + 1) {
-      nextId = postArray[postArray.length - 1].id;
-      postArray.pop();
-    }
-    let itemsPerPage = postArray.length;
+    // 배열 마지막 id를 nextId에 할당
+    const nextId = postArray[postArray.length - 1].id;
 
-    const pageInfoDto = new PageInfiniteScrollInfoDto(itemsPerPage, nextId);
+    const pageInfoDto = new PageInfiniteScrollInfoDto(postArray.length, nextId);
 
     return new PageResponseDto(
       pageInfoDto,
@@ -272,6 +268,8 @@ export class PostService implements IPostService {
   ): Promise<PageResponseDto<PageInfiniteScrollInfoDto, PostResponseDto>> {
     this._log(`getAll start`);
     this._log(`check category name ${pageOptionsDto.category}`);
+
+    // startId에 대한 처리 필요 (1 이하일 경우, 처리)
 
     const category = await this._categoryRepository.findOneByName(
       pageOptionsDto.category
@@ -298,14 +296,10 @@ export class PostService implements IPostService {
       );
     }
 
-    let nextId = null;
-    if (postArray.length === pageOptionsDto.maxResults + 1) {
-      nextId = postArray[postArray.length - 1].id;
-      postArray.pop();
-    }
-    let itemsPerPage = postArray.length;
+    // 배열 마지막 id를 nextId에 할당
+    const nextId = postArray[postArray.length - 1].id;
 
-    const pageInfoDto = new PageInfiniteScrollInfoDto(itemsPerPage, nextId);
+    const pageInfoDto = new PageInfiniteScrollInfoDto(postArray.length, nextId);
 
     return new PageResponseDto(
       pageInfoDto,
@@ -386,14 +380,10 @@ export class PostService implements IPostService {
       }
     }
 
-    let nextId = null;
-    if (postArray.length === pageOptionsDto.maxResults + 1) {
-      nextId = postArray[postArray.length - 1].id;
-      postArray.pop();
-    }
-    let itemsPerPage = postArray.length;
+    // 배열 마지막 id를 nextId에 할당
+    const nextId = postArray[postArray.length - 1].id;
 
-    const pageInfoDto = new PageInfiniteScrollInfoDto(itemsPerPage, nextId);
+    const pageInfoDto = new PageInfiniteScrollInfoDto(postArray.length, nextId);
 
     return new PageResponseDto(
       pageInfoDto,
