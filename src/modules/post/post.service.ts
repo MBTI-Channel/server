@@ -384,14 +384,10 @@ export class PostService implements IPostService {
       }
     }
 
-    let nextId = null;
-    if (postArray.length === pageOptionsDto.maxResults + 1) {
-      nextId = postArray[postArray.length - 1].id;
-      postArray.pop();
-    }
-    let itemsPerPage = postArray.length;
+    // 배열 마지막 id를 nextId에 할당
+    const nextId = postArray[postArray.length - 1].id;
 
-    const pageInfoDto = new PageInfiniteScrollInfoDto(itemsPerPage, nextId);
+    const pageInfoDto = new PageInfiniteScrollInfoDto(postArray.length, nextId);
 
     return new PageResponseDto(
       pageInfoDto,
