@@ -110,7 +110,7 @@ export class PostController {
   }
 
   // 게시글 상세 조회
-  @httpGet("/:id", TYPES.CheckLoginStatusMiddleware, paramsValidator(IdDto))
+  @httpGet("/:id", TYPES.ValidateAccessTokenMiddleware, paramsValidator(IdDto))
   public async getDetailPost(
     @requestParam() param: IdDto,
     req: Request,
