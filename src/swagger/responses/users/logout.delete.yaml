@@ -1,16 +1,8 @@
-"200":
+"204":
   description: 로그아웃 성공
-  content:
-    application/json:
-      schema:
-        type: object
-        properties:
-          message:
-            type: string
-            example: logout done
 
 "401":
-  description: refresh token 유효하지 않음
+  description: access token 또는 refresh token이 유효하지 않음
   content:
     application/json:
       schema:
