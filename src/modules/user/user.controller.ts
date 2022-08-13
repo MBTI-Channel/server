@@ -58,6 +58,13 @@ export class UserController {
       mbti,
       userAgent
     );
+
+    res.cookie("Refresh", data.refreshToken, {
+      httpOnly: true,
+      secure: false, // true
+      maxAge: config.cookie.refreshTokenMaxAge,
+    });
+
     return res.status(201).json(data);
   }
 
