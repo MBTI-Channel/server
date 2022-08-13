@@ -19,6 +19,7 @@ export interface IUserService {
     providerId: string,
     userAgent: string
   ): Promise<UserTokenResponseDto>;
+  logout(id: number, refreshToken: string, userAgent: string): Promise<void>;
   signUp(
     id: number,
     uuid: string,
