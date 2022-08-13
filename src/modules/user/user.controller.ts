@@ -61,7 +61,7 @@ export class UserController {
 
     res.cookie("Refresh", data.refreshToken, {
       httpOnly: true,
-      secure: false, // true
+      secure: process.env.NODE_ENV === "production" ? true : false,
       maxAge: config.cookie.refreshTokenMaxAge,
     });
 
@@ -98,7 +98,7 @@ export class UserController {
 
     res.cookie("Refresh", data.refreshToken, {
       httpOnly: true,
-      secure: false, // true
+      secure: process.env.NODE_ENV === "production" ? true : false,
       maxAge: config.cookie.refreshTokenMaxAge,
     });
 
