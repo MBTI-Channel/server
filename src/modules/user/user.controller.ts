@@ -58,6 +58,13 @@ export class UserController {
       mbti,
       userAgent
     );
+
+    res.cookie("Refresh", data.refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production" ? true : false,
+      maxAge: config.cookie.refreshTokenMaxAge,
+    });
+
     return res.status(201).json(data);
   }
 
@@ -91,7 +98,7 @@ export class UserController {
 
     res.cookie("Refresh", data.refreshToken, {
       httpOnly: true,
-      secure: false, // true
+      secure: process.env.NODE_ENV === "production" ? true : false,
       maxAge: config.cookie.refreshTokenMaxAge,
     });
 
