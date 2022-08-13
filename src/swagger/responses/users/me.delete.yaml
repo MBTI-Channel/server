@@ -1,0 +1,16 @@
+"204":
+  description: 회원 탈퇴 성공
+
+"401":
+  description: access token 또는 refresh token이 유효하지 않음
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          message:
+            type: string
+            #example: authentication error || access token expired
+            example:
+              ex1: authentication error
+              ex2: access token expired
