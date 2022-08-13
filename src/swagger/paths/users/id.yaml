@@ -30,13 +30,3 @@ patch:
               example: ENFP
   responses:
     $ref: "../../responses/users/id.patch.yaml"
-
-delete:
-  tags:
-    - users
-  description: 회원 탈퇴
-  security:
-    - bearerAuth: []
-    - cookieAuth: []
-  responses:
-    $ref: "../../responses/users/id.delete.yaml"

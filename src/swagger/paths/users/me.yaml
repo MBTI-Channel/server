@@ -6,3 +6,14 @@ get:
     - bearerAuth: []
   responses:
     $ref: "../../responses/users/me.get.yaml"
+
+delete:
+  tags:
+    - users
+  description: mbti channel 탈퇴를 진행합니다.<br>
+    access token, refresh token이 필요합니다.<br>
+  security:
+    - bearerAuth: []
+    - cookieAuth: []
+  responses:
+    $ref: "../../responses/users/me.delete.yaml"
