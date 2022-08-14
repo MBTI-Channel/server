@@ -286,6 +286,7 @@ export class PostRepository implements IPostRepository {
     return result;
   }
 
+  // mbti 카테고리 제외 전체 검색
   public async searchWithoutMbtiCategory(
     pageOptionsDto: SearchPostDto
   ): Promise<Post[]> {
