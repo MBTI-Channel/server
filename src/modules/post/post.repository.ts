@@ -78,6 +78,15 @@ export class PostRepository implements IPostRepository {
     categoryId: number
   ): Promise<Post[]> {
     const { startId, maxResults } = pageOptionsDto;
+    let whereCondition;
+    if (startId > 1) {
+      whereCondition = {
+        categoryId,
+        id: LessThan(startId),
+      };
+    } else {
+      whereCondition = { categoryId };
+    }
     const repository = await this._database.getRepository(Post);
     return await repository.find({
       select: [
@@ -98,7 +107,7 @@ export class PostRepository implements IPostRepository {
         "createdAt",
         "updatedAt",
       ],
-      where: { categoryId, id: LessThan(startId) },
+      where: whereCondition,
       take: maxResults,
       order: { id: "DESC" },
     });
@@ -110,6 +119,16 @@ export class PostRepository implements IPostRepository {
     mbti: string
   ): Promise<Post[]> {
     const { startId, maxResults } = pageOptionsDto;
+    let whereCondition;
+    if (startId > 1) {
+      whereCondition = {
+        categoryId,
+        userMbti: mbti,
+        id: LessThan(startId),
+      };
+    } else {
+      whereCondition = { categoryId, userMbti: mbti };
+    }
     const repository = await this._database.getRepository(Post);
     const result = await repository.find({
       select: [
@@ -130,7 +149,7 @@ export class PostRepository implements IPostRepository {
         "createdAt",
         "updatedAt",
       ],
-      where: { categoryId, userMbti: mbti, id: LessThan(startId) },
+      where: whereCondition,
       take: maxResults,
       order: { id: "DESC" },
     });
@@ -181,6 +200,16 @@ export class PostRepository implements IPostRepository {
     categoryId: number
   ): Promise<Post[]> {
     const { startId, maxResults, searchWord } = pageOptionsDto;
+    let whereCondition;
+    if (startId > 1) {
+      whereCondition = {
+        categoryId,
+        title: Like(`%${searchWord}%`),
+        id: LessThan(startId),
+      };
+    } else {
+      whereCondition = { categoryId, title: Like(`%${searchWord}%`) };
+    }
     const repository = await this._database.getRepository(Post);
     const result = await repository.find({
       select: [
@@ -201,11 +230,7 @@ export class PostRepository implements IPostRepository {
         "createdAt",
         "updatedAt",
       ],
-      where: {
-        categoryId,
-        title: Like(`%${searchWord}%`),
-        id: LessThan(startId),
-      },
+      where: whereCondition,
       take: maxResults,
       order: { id: "DESC" },
     });
@@ -218,6 +243,21 @@ export class PostRepository implements IPostRepository {
     mbti: string
   ): Promise<Post[]> {
     const { startId, maxResults, searchWord } = pageOptionsDto;
+    let whereCondition;
+    if (startId > 1) {
+      whereCondition = {
+        categoryId,
+        userMbti: mbti,
+        title: Like(`%${searchWord}%`),
+        id: LessThan(startId),
+      };
+    } else {
+      whereCondition = {
+        categoryId,
+        userMbti: mbti,
+        title: Like(`%${searchWord}%`),
+      };
+    }
     const repository = await this._database.getRepository(Post);
     const result = await repository.find({
       select: [
@@ -238,12 +278,7 @@ export class PostRepository implements IPostRepository {
         "createdAt",
         "updatedAt",
       ],
-      where: {
-        categoryId,
-        userMbti: mbti,
-        title: Like(`%${searchWord}%`),
-        id: LessThan(startId),
-      },
+      where: whereCondition,
       take: maxResults,
       order: { id: "DESC" },
     });
@@ -254,6 +289,27 @@ export class PostRepository implements IPostRepository {
     pageOptionsDto: SearchPostDto
   ): Promise<Post[]> {
     const { startId, maxResults, searchWord } = pageOptionsDto;
+    let whereCondition;
+    if (startId > 1) {
+      whereCondition = {
+        categoryId: In([
+          Category.typeTo("game"), // TODO: transform 으로 수정
+          Category.typeTo("trip"),
+          Category.typeTo("love"),
+        ]),
+        title: Like(`%${searchWord}%`),
+        id: LessThan(startId),
+      };
+    } else {
+      whereCondition = {
+        categoryId: In([
+          Category.typeTo("game"), // TODO: transform 으로 수정
+          Category.typeTo("trip"),
+          Category.typeTo("love"),
+        ]),
+        title: Like(`%${searchWord}%`),
+      };
+    }
     const repository = await this._database.getRepository(Post);
     const result = await repository.find({
       select: [
@@ -274,15 +330,7 @@ export class PostRepository implements IPostRepository {
         "createdAt",
         "updatedAt",
       ],
-      where: {
-        categoryId: In([
-          Category.typeTo("game"), // TODO: transform 으로 수정
-          Category.typeTo("trip"),
-          Category.typeTo("love"),
-        ]),
-        title: Like(`%${searchWord}%`),
-        id: LessThan(startId),
-      },
+      where: whereCondition,
       take: maxResults,
       order: { id: "DESC" },
     });
@@ -292,6 +340,17 @@ export class PostRepository implements IPostRepository {
   // 인기글 조회
   public async findAllTrends(pageOptionsDto: GetTrendDto): Promise<Post[]> {
     const { startId, maxResults } = pageOptionsDto;
+    let whereCondition;
+    if (startId > 1) {
+      whereCondition = {
+        isTrend: true,
+        id: LessThan(startId),
+      };
+    } else {
+      whereCondition = {
+        isTrend: true,
+      };
+    }
     const repository = await this._database.getRepository(Post);
     const result = await repository.find({
       select: [
@@ -313,7 +372,7 @@ export class PostRepository implements IPostRepository {
         "createdAt",
         "updatedAt",
       ],
-      where: { isTrend: true, id: LessThan(startId) },
+      where: whereCondition,
       take: maxResults,
       order: { id: "DESC" },
     });
