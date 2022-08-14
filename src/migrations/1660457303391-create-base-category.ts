@@ -22,10 +22,10 @@ export class createBaseCategory1660457303391 implements MigrationInterface {
     });
 
     // 2. BASE_CATEGORIES 배열 돌면서 없는 low INSERT
-    BASE_CATEGORIES.forEach(async (e) => {
-      const foundCategory = categories.find((c) => c.name === e);
-      if (!foundCategory) await repository.insert({ name: e });
-    });
+    for (const categoryName of BASE_CATEGORIES) {
+      const foundCategory = categories.find((c) => c.name === categoryName);
+      if (!foundCategory) await repository.insert({ name: categoryName });
+    }
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {}
