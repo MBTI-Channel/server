@@ -22,10 +22,14 @@ export enum PostType {
 }
 
 export enum CategoryName {
-  TRIP = "trip",
   MBTI = "mbti",
-  GAME = "game",
   LOVE = "love",
+  SCHOOL = "school",
+  WORKLIFE = "workLife",
+  MUSIC = "music",
+  MOVIE = "movie",
+  TRIP = "trip",
+  HOBBY = "hobby",
 }
 
 export enum LikeTargetType {
