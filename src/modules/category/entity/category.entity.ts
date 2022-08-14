@@ -16,27 +16,43 @@ export class Category extends BaseEntity {
 
   static typeTo(type: string) {
     switch (type) {
-      case "game":
-        return 1;
       case "mbti":
-        return 2;
-      case "trip":
-        return 3;
+        return 1;
       case "love":
+        return 2;
+      case "school":
+        return 3;
+      case "workLife":
         return 4;
+      case "music":
+        return 5;
+      case "movie":
+        return 6;
+      case "trip":
+        return 7;
+      case "hobby":
+        return 8;
     }
   }
 
   static typeFrom(type: number) {
     switch (type) {
       case 1:
-        return "game";
-      case 2:
         return "mbti";
-      case 3:
-        return "trip";
-      case 4:
+      case 2:
         return "love";
+      case 3:
+        return "school";
+      case 4:
+        return "workLife";
+      case 5:
+        return "music";
+      case 6:
+        return "movie";
+      case 7:
+        return "trip";
+      case 8:
+        return "hobby";
     }
   }
 }
