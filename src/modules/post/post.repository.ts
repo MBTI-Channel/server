@@ -1,5 +1,5 @@
 import { inject, injectable } from "inversify";
-import { In, LessThan, LessThanOrEqual, Like, MoreThan } from "typeorm";
+import { In, LessThan, Like, Not } from "typeorm";
 import { QueryDeepPartialEntity } from "typeorm/query-builder/QueryPartialEntity";
 import { TYPES } from "../../core/types.core";
 import { IDatabaseService } from "../../core/database/interfaces/IDatabase.service";
@@ -288,25 +288,18 @@ export class PostRepository implements IPostRepository {
   public async searchWithoutMbtiCategory(
     pageOptionsDto: SearchPostDto
   ): Promise<Post[]> {
+    console.log("HAHAAH");
     const { startId, maxResults, searchWord } = pageOptionsDto;
     let whereCondition;
     if (startId > 1) {
       whereCondition = {
-        categoryId: In([
-          Category.typeTo("game"), // TODO: transform 으로 수정
-          Category.typeTo("trip"),
-          Category.typeTo("love"),
-        ]),
+        categoryId: Not(In([Category.typeTo("mbti")])),
         title: Like(`%${searchWord}%`),
         id: LessThan(startId),
       };
     } else {
       whereCondition = {
-        categoryId: In([
-          Category.typeTo("game"), // TODO: transform 으로 수정
-          Category.typeTo("trip"),
-          Category.typeTo("love"),
-        ]),
+        categoryId: Not(In([Category.typeTo("mbti")])),
         title: Like(`%${searchWord}%`),
       };
     }
