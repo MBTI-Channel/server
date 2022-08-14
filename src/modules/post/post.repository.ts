@@ -12,6 +12,7 @@ import {
   GetAllPostDto,
   SearchPostDto,
 } from "./dto";
+import { CategoryName } from "../../shared/enum.shared";
 
 @injectable()
 export class PostRepository implements IPostRepository {
@@ -237,23 +238,23 @@ export class PostRepository implements IPostRepository {
     return result;
   }
 
+  // 내 MBTI 게시판에서 search
   public async searchInMbtiCategory(
     pageOptionsDto: SearchPostDto,
-    categoryId: number,
     mbti: string
   ): Promise<Post[]> {
     const { startId, maxResults, searchWord } = pageOptionsDto;
     let whereCondition;
     if (startId > 1) {
       whereCondition = {
-        categoryId,
+        categoryId: Category.typeTo("mbti"),
         userMbti: mbti,
         title: Like(`%${searchWord}%`),
         id: LessThan(startId),
       };
     } else {
       whereCondition = {
-        categoryId,
+        categoryId: Category.typeTo("mbti"),
         userMbti: mbti,
         title: Like(`%${searchWord}%`),
       };
@@ -288,7 +289,6 @@ export class PostRepository implements IPostRepository {
   public async searchWithoutMbtiCategory(
     pageOptionsDto: SearchPostDto
   ): Promise<Post[]> {
-    console.log("HAHAAH");
     const { startId, maxResults, searchWord } = pageOptionsDto;
     let whereCondition;
     if (startId > 1) {
