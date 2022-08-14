@@ -12,10 +12,10 @@ const appDataSource = new DataSource({
   password: mysql.password,
   database: mysql.database,
   entities: [__dirname + "/modules/**/*.entity{.ts,.js}"],
-  // migrations: [__dirname + "/migrations/**/*{.ts,.js}"],
-  // migrationsTableName: "food_app_migrations",
+  migrations: [__dirname + "/migrations/**/*{.ts,.js}"],
+  migrationsTableName: "migrations",
   logging: process.env.NODE_ENV === "production" ? false : true,
-  synchronize: process.env.NODE_ENV === "production" ? false : true,
+  //synchronize: process.env.NODE_ENV === "production" ? false : true,
   namingStrategy: new SnakeNamingStrategy(),
 });
 

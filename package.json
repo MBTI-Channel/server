@@ -4,13 +4,18 @@
   "description": "",
   "main": "main.js",
   "scripts": {
-    "start": "NODE_ENV=production node dist/main.js",
-    "dev": "npm run api-docs && NODE_ENV=development nodemon src/main.ts",
+    "start": "npm run typeorm:run && NODE_ENV=production node dist/main.js",
+    "dev": "npm run typeorm:run && npm run api-docs && NODE_ENV=development nodemon src/main.ts",
     "build": "tsc",
     "lint": "eslint . --ext .js,.ts",
     "test": "jest",
     "test:c": "jest --coverage",
-    "api-docs": "swagger-cli bundle ./src/swagger/openapi.yaml --outfile src/swagger.yaml --type yaml"
+    "api-docs": "swagger-cli bundle ./src/swagger/openapi.yaml --outfile src/swagger.yaml --type yaml",
+    "typeorm": "ts-node ./node_modules/typeorm/cli -d src/datasource.ts",
+    "typeorm:create": "npm run typeorm migration:create",
+    "typeorm:generate": "npm run typeorm migration:generate",
+    "typeorm:run": "npm run typeorm migration:run",
+    "typeorm:revert": "npm run typeorm migration:revert"
   },
   "repository": {
     "type": "git",
