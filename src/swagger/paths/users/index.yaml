@@ -1,7 +1,11 @@
 post:
   tags:
     - users
-  description: 회원가입, 닉네임, mbti를 입력하여 회원가입을 완료
+  description: 회원가입을 진행합니다. <br>
+    (필수) id 회원 아이디
+    (필수) uuid 회원 UUID
+    (필수) nickname 회원 닉네임
+    (필수) mbti 회원 MBTI
   requestBody:
     content:
       application/json:
