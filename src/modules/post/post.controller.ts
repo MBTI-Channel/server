@@ -18,7 +18,6 @@ import {
 } from "../../middlewares/validator.middleware";
 import { User } from "../user/entity/user.entity";
 import {
-  IdDto,
   CreatePostDto,
   GetAllPostDto,
   SearchPostDto,
@@ -26,6 +25,7 @@ import {
   GetTrendDto,
 } from "./dto";
 import { IPostService } from "./interfaces/IPost.service";
+import { IdDto } from "../../shared/dto/id.dto";
 
 @controller("/posts")
 export class PostController {

@@ -23,10 +23,9 @@ import {
   GetAllCommentDto,
   GetAllRepliesDto,
   UpdateCommentDto,
-  DeleteCommentDto,
-  IdDto,
 } from "./dto";
 import { ICommentService } from "./interfaces/IComment.service";
+import { IdDto } from "../../shared/dto/id.dto";
 
 @controller("/comments")
 export class CommentController {
@@ -139,10 +138,10 @@ export class CommentController {
   @httpDelete(
     "/:id",
     TYPES.ValidateAccessTokenMiddleware,
-    paramsValidator(DeleteCommentDto)
+    paramsValidator(IdDto)
   )
   public async delete(
-    @requestParam() param: DeleteCommentDto,
+    @requestParam() param: IdDto,
     req: Request,
     res: Response
   ) {
