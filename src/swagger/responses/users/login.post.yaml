@@ -1,5 +1,5 @@
 "200":
-  description: 소셜 로그인은 성공했으나 회원가입 해야함
+  description: 소셜 로그인은 성공했으나 회원가입을 진행해야합니다.
   content:
     application/json:
       schema:
@@ -22,6 +22,9 @@
       schema:
         type: object
         properties:
+          id:
+            type: number
+            example: 1
           nickname:
             type: string
             example: 지나가는 나그네
@@ -30,7 +33,13 @@
             example: ENFP
           isAdmin:
             type: boolean
-            example: 1
+            example: false
+          isActive:
+            type: boolean
+            example: true
+          createdAt:
+            type: string
+            example: "2022-08-15T03:46:49.474Z"
           accessToken:
             type: string
             example: asduehfinnncudI1NiIsInR5csdwd665s88db

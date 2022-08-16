@@ -1,7 +1,9 @@
 post:
   tags:
     - users
-  description: 클라이언트한테 인증서비스 종류, 인증코드 받아 소셜 로그인
+  description: Oauth2.0 소셜로그인을 진행합니다. <br>
+    (필수) provider 서비스 제공자 종류 kakao, naver
+    (필수) authCode Oauth 인증 서비스로부터 받은 인증 코드
   requestBody:
     required: true
     content:

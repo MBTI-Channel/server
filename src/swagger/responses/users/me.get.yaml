@@ -5,6 +5,9 @@
       schema:
         type: object
         properties:
+          id:
+            type: number
+            example: 1
           nickname:
             type: string
             example: 루피
@@ -13,7 +16,7 @@
             example: INFP
           isAdmin:
             type: boolean
-            example: 0
+            example: false
           createdAt:
             type: string
             example: 2022-07-21T17:32:28Z
