@@ -2,6 +2,7 @@ get:
   tags:
     - posts
   description: 게시글을 상세히 봅니다. <br>
+    (필수)id 수정할 게시글 아이디
   security:
     - bearerAuth: []
   responses:
@@ -11,6 +12,7 @@ patch:
   tags:
     - posts
   description: 게시글 수정 <br>
+    (필수)id 수정할 게시글 아이디 <br>
     title 수정하고자 하는 게시글 제목 <br>
     content 수정하고자 하는 게시글 내용 <br>
     isSecret 익명 여부 default - false
@@ -22,7 +24,8 @@ patch:
 delete:
   tags:
     - posts
-  description: 게시글을 삭제 합니다.
+  description: 게시글을 삭제 합니다. <br>
+    (필수)id 수정할 게시글 아이디 <br>
 
   security:
     - bearerAuth: []
