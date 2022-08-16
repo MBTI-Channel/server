@@ -29,10 +29,6 @@ export interface IPostRepository {
     pageOptionsDto: GetMyPostsDto,
     userId: number
   ): Promise<[Post[], number]>;
-  searchInCategory(
-    pageOptionsDto: SearchPostDto,
-    categoryId: number
-  ): Promise<Post[]>;
   searchInMbtiCategory(
     pageOptionsDto: SearchPostDto,
     mbti: string

@@ -196,48 +196,6 @@ export class PostRepository implements IPostRepository {
       .then(async () => await repository.findOne({ where: { id } }));
   }
 
-  public async searchInCategory(
-    pageOptionsDto: SearchPostDto,
-    categoryId: number
-  ): Promise<Post[]> {
-    const { startId, maxResults, searchWord } = pageOptionsDto;
-    let whereCondition;
-    if (startId > 1) {
-      whereCondition = {
-        categoryId,
-        title: Like(`%${searchWord}%`),
-        id: LessThan(startId),
-      };
-    } else {
-      whereCondition = { categoryId, title: Like(`%${searchWord}%`) };
-    }
-    const repository = await this._database.getRepository(Post);
-    const result = await repository.find({
-      select: [
-        "id",
-        "categoryId",
-        "type",
-        "isActive",
-        "userId",
-        "userNickname",
-        "userMbti",
-        "isSecret",
-        "title",
-        "content",
-        "viewCount",
-        "commentCount",
-        "likesCount",
-        "reportCount",
-        "createdAt",
-        "updatedAt",
-      ],
-      where: whereCondition,
-      take: maxResults,
-      order: { id: "DESC" },
-    });
-    return result;
-  }
-
   // 내 MBTI 게시판에서 search
   public async searchInMbtiCategory(
     pageOptionsDto: SearchPostDto,
