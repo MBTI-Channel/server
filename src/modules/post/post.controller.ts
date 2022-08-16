@@ -72,7 +72,7 @@ export class PostController {
 
     await this._postService.delete(user, id);
 
-    return res.status(200).json({ id });
+    return res.status(204).json();
   }
 
   // 게시글 검색
