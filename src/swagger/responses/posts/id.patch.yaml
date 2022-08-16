@@ -1,5 +1,5 @@
 "200":
-  description: 게시글 상세 보기 성공
+  description: 게시글 수정하기 성공
   content:
     application/json:
       schema:
@@ -8,12 +8,21 @@
           id:
             type: integer
             example: 23
+          type:
+            type: integer
+            example: 1
           categoryId:
             type: integer
-            example: 2
-          type:
-            type: string
-            example: survey
+            example: 3
+          isActive:
+            type: boolean
+            example: true
+          isActiveUser:
+            type: boolean
+            example: true
+          isMy:
+            type: boolean
+            example: true
           userId:
             type: integer
             example: 42
@@ -23,9 +32,6 @@
           userNickname:
             type: string
             example: 지나가는 나그네
-          isDisabledUser:
-            type: boolean
-            example: true
           isSecret:
             type: boolean
             example: false
@@ -44,18 +50,15 @@
           likesCount:
             type: integer
             example: 6
-          isDisabled:
-            type: boolean
-            example: true
-          datetime:
-            type: string
+          reportCount:
+            type: integer
+            example: 2
+          createdAt:
+            type: Date
             example: 2022-07-21T17:32:28Z
-          updateDatetime:
-            type: string
-            example: 2022-07-21T17:32:28Z
-          isMy:
-            type: boolean
-            example: true
+          updatedAt:
+            type: Date | null
+            example: null
 
 "401":
   description: access token 유효하지 않음
@@ -78,7 +81,6 @@
           message:
             type: string
             example: authorization error
-
 
 "404":
   description: 존재하지 않는 게시글

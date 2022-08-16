@@ -66,7 +66,7 @@ paths:
       - in: path
         name: id
         type: integer
-        description: Post ID
+        description: 상세히 보고 싶은 게시글 아이디
     $ref: "./paths/posts/id.yaml"
 
   # comments

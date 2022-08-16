@@ -1,31 +1,38 @@
 "200":
-  description: 게시글 리스트 조회 성공
+  description: 게시글 리스트 조회 성공. 익명 등록(isSecret:true)이라면 userNickname = null
   content:
     application/json:
       schema:
         type: object
         properties:
-          totalComments:
-            type: integer
-          commentsPerPage:
-            type: integer
-          currentPage:
-            type: integer
-          maxPage:
-            type: integer
-
+          pageInfo:
+            type: object
+            properties:
+              itemsPerPage:
+                type: integer
+              nextId:
+                type: integer
           items:
             type: object
             properties:
               id:
                 type: integer
                 example: 23
+              type:
+                type: string
+                example: post
               categoryId:
                 type: integer
                 example: 2
-              type:
-                type: string
-                example: survey
+              isActive:
+                type: boolean
+                example: true
+              isActiveUser:
+                type: boolean
+                example: true
+              isMy:
+                type: boolean
+                example: true
               userId:
                 type: integer
                 example: 42
@@ -35,9 +42,6 @@
               userNickname:
                 type: string
                 example: 지나가는 나그네
-              isDisabledUser:
-                type: boolean
-                example: true
               isSecret:
                 type: boolean
                 example: false
@@ -56,15 +60,12 @@
               likesCount:
                 type: integer
                 example: 6
-              isDisabled:
-                type: boolean
-                example: true
-              datetime:
-                type: string
+              reportCount:
+                type: integer
+                example: 2
+              createdAt:
+                type: Date
                 example: 2022-07-21T17:32:28Z
-              updateDatetime:
-                type: string
-                example: 2022-07-21T17:32:28Z
-              isMy:
-                type: boolean
-                example: true
+              updatedAt:
+                type: Date | null
+                example: null
