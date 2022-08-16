@@ -22,7 +22,8 @@ patch:
 delete:
   tags:
     - posts
-  description: 게시물 삭제
+  description: 게시글을 삭제 합니다.
+
   security:
     - bearerAuth: []
   responses:
