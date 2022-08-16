@@ -351,7 +351,10 @@ export class PostService implements IPostService {
       }
       // 로그인 한 경우 (본인의 mbti 게시판 포함 전체 검색)
       else {
-        // TODO: searchAllWithMbti (보류)
+        postArray = await this._postRepository.searchAllWithMbti(
+          pageOptionsDto,
+          user.mbti
+        );
       }
     }
     // 카테고리를 지정한 경우

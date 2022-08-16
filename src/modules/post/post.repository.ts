@@ -373,9 +373,64 @@ export class PostRepository implements IPostRepository {
     return result;
   }
 
-  public async searchAll(): Promise<Post[]> {
+  public async searchAllWithMbti(
+    pageOptionsDto: SearchPostDto,
+    mbti: string
+  ): Promise<Post[]> {
     const repository = await this._database.getRepository(Post);
-    // 수정 필요
-    return [];
+    const { startId, maxResults, searchWord } = pageOptionsDto;
+    let whereCondition;
+    if (startId > 1) {
+      whereCondition = [
+        {
+          categoryId: Not(In([Category.typeTo("mbti")])),
+          id: LessThan(startId),
+          title: Like(`%${searchWord}%`),
+        },
+        {
+          categoryId: Category.typeTo("mbti"),
+          userMbti: mbti,
+          id: LessThan(startId),
+          title: Like(`%${searchWord}%`),
+        },
+      ];
+    } else {
+      whereCondition = [
+        {
+          categoryId: Not(In([Category.typeTo("mbti")])),
+          title: Like(`%${searchWord}%`),
+        },
+        {
+          categoryId: Category.typeTo("mbti"),
+          userMbti: mbti,
+          title: Like(`%${searchWord}%`),
+        },
+      ];
+    }
+    const result = await repository.find({
+      select: [
+        "id",
+        "categoryId",
+        "type",
+        "isActive",
+        "userId",
+        "userNickname",
+        "userMbti",
+        "isSecret",
+        "isTrend",
+        "title",
+        "content",
+        "viewCount",
+        "commentCount",
+        "likesCount",
+        "reportCount",
+        "createdAt",
+        "updatedAt",
+      ],
+      where: whereCondition,
+      take: maxResults,
+      order: { id: "DESC" },
+    });
+    return result;
   }
 }
