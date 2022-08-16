@@ -29,16 +29,14 @@ export interface IPostRepository {
     pageOptionsDto: GetMyPostsDto,
     userId: number
   ): Promise<[Post[], number]>;
-  searchInCategory(
-    pageOptionsDto: SearchPostDto,
-    categoryId: number
-  ): Promise<Post[]>;
   searchInMbtiCategory(
     pageOptionsDto: SearchPostDto,
-    categoryId: number,
     mbti: string
   ): Promise<Post[]>;
   findAllTrends(pageOptionsDto: GetTrendDto): Promise<Post[]>;
-  searchAll(): Promise<Post[]>;
+  searchAllWithMbti(
+    pageOptionsDto: SearchPostDto,
+    mbti: string
+  ): Promise<Post[]>;
   searchWithoutMbtiCategory(pageOptionsDto: SearchPostDto): Promise<Post[]>;
 }

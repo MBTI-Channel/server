@@ -341,42 +341,43 @@ export class PostService implements IPostService {
 
     let postArray: Post[] = [];
 
+    // 카테고리를 지정하지 않은 경우
     if (!pageOptionsDto.category) {
-      // category가 없을 경우 게시글 전체 검색
-      this._log(`search all posts`);
+      // 로그인 하지 않은 경우 (mbti카테고리 제외 전체 검색)
       if (!user) {
-        // user가 없으므로 mbti 카테고리는 제외
         postArray = await this._postRepository.searchWithoutMbtiCategory(
           pageOptionsDto
         );
-      } else {
-        // TODO: user가 있으므로 user에 맞는 mbti 게시글 포함
       }
-    } else {
-      // 카테고리가 있을 경우 유효성 검사 후 카테고리에 따라 검색
-      this._log(`check category name ${pageOptionsDto.category}`);
-      const category = await this._categoryRepository.findOneByName(
-        pageOptionsDto.category
-      );
-      if (!category || !category.isActive) {
-        throw new NotFoundException("not exists category");
-      }
-
-      if (!user && pageOptionsDto.category === CategoryName.MBTI) {
-        throw new ForbiddenException("not authorizatie");
-      }
-      this._log(`search posts in category: ${pageOptionsDto.category}`);
-      if (pageOptionsDto.category === CategoryName.MBTI) {
-        postArray = await this._postRepository.searchInMbtiCategory(
+      // 로그인 한 경우 (본인의 mbti 게시판 포함 전체 검색)
+      else {
+        postArray = await this._postRepository.searchAllWithMbti(
           pageOptionsDto,
-          category.id,
           user.mbti
         );
-      } else {
-        postArray = await this._postRepository.searchInCategory(
-          pageOptionsDto,
-          category.id
+      }
+    }
+    // 카테고리를 지정한 경우
+    else {
+      // 카테고리가 mbti가 아닌 경우
+      if (pageOptionsDto.category !== CategoryName.MBTI) {
+        postArray = await this._postRepository.searchWithoutMbtiCategory(
+          pageOptionsDto
         );
+      }
+      // 카테고리가 mbti인 경우
+      else {
+        // 로그인 하지 않은 경우
+        if (!user) {
+          throw new ForbiddenException("not authorizatie");
+        }
+        // 로그인 한 경우
+        else {
+          postArray = await this._postRepository.searchInMbtiCategory(
+            pageOptionsDto,
+            user.mbti
+          );
+        }
       }
     }
 

@@ -12,6 +12,7 @@ import {
   GetAllPostDto,
   SearchPostDto,
 } from "./dto";
+import { CategoryName } from "../../shared/enum.shared";
 
 @injectable()
 export class PostRepository implements IPostRepository {
@@ -195,65 +196,23 @@ export class PostRepository implements IPostRepository {
       .then(async () => await repository.findOne({ where: { id } }));
   }
 
-  public async searchInCategory(
-    pageOptionsDto: SearchPostDto,
-    categoryId: number
-  ): Promise<Post[]> {
-    const { startId, maxResults, searchWord } = pageOptionsDto;
-    let whereCondition;
-    if (startId > 1) {
-      whereCondition = {
-        categoryId,
-        title: Like(`%${searchWord}%`),
-        id: LessThan(startId),
-      };
-    } else {
-      whereCondition = { categoryId, title: Like(`%${searchWord}%`) };
-    }
-    const repository = await this._database.getRepository(Post);
-    const result = await repository.find({
-      select: [
-        "id",
-        "categoryId",
-        "type",
-        "isActive",
-        "userId",
-        "userNickname",
-        "userMbti",
-        "isSecret",
-        "title",
-        "content",
-        "viewCount",
-        "commentCount",
-        "likesCount",
-        "reportCount",
-        "createdAt",
-        "updatedAt",
-      ],
-      where: whereCondition,
-      take: maxResults,
-      order: { id: "DESC" },
-    });
-    return result;
-  }
-
+  // 내 MBTI 게시판에서 search
   public async searchInMbtiCategory(
     pageOptionsDto: SearchPostDto,
-    categoryId: number,
     mbti: string
   ): Promise<Post[]> {
     const { startId, maxResults, searchWord } = pageOptionsDto;
     let whereCondition;
     if (startId > 1) {
       whereCondition = {
-        categoryId,
+        categoryId: Category.typeTo("mbti"),
         userMbti: mbti,
         title: Like(`%${searchWord}%`),
         id: LessThan(startId),
       };
     } else {
       whereCondition = {
-        categoryId,
+        categoryId: Category.typeTo("mbti"),
         userMbti: mbti,
         title: Like(`%${searchWord}%`),
       };
@@ -285,10 +244,10 @@ export class PostRepository implements IPostRepository {
     return result;
   }
 
+  // mbti 카테고리 제외 전체 검색
   public async searchWithoutMbtiCategory(
     pageOptionsDto: SearchPostDto
   ): Promise<Post[]> {
-    console.log("HAHAAH");
     const { startId, maxResults, searchWord } = pageOptionsDto;
     let whereCondition;
     if (startId > 1) {
@@ -372,9 +331,64 @@ export class PostRepository implements IPostRepository {
     return result;
   }
 
-  public async searchAll(): Promise<Post[]> {
+  public async searchAllWithMbti(
+    pageOptionsDto: SearchPostDto,
+    mbti: string
+  ): Promise<Post[]> {
     const repository = await this._database.getRepository(Post);
-    // 수정 필요
-    return [];
+    const { startId, maxResults, searchWord } = pageOptionsDto;
+    let whereCondition;
+    if (startId > 1) {
+      whereCondition = [
+        {
+          categoryId: Not(In([Category.typeTo("mbti")])),
+          id: LessThan(startId),
+          title: Like(`%${searchWord}%`),
+        },
+        {
+          categoryId: Category.typeTo("mbti"),
+          userMbti: mbti,
+          id: LessThan(startId),
+          title: Like(`%${searchWord}%`),
+        },
+      ];
+    } else {
+      whereCondition = [
+        {
+          categoryId: Not(In([Category.typeTo("mbti")])),
+          title: Like(`%${searchWord}%`),
+        },
+        {
+          categoryId: Category.typeTo("mbti"),
+          userMbti: mbti,
+          title: Like(`%${searchWord}%`),
+        },
+      ];
+    }
+    const result = await repository.find({
+      select: [
+        "id",
+        "categoryId",
+        "type",
+        "isActive",
+        "userId",
+        "userNickname",
+        "userMbti",
+        "isSecret",
+        "isTrend",
+        "title",
+        "content",
+        "viewCount",
+        "commentCount",
+        "likesCount",
+        "reportCount",
+        "createdAt",
+        "updatedAt",
+      ],
+      where: whereCondition,
+      take: maxResults,
+      order: { id: "DESC" },
+    });
+    return result;
   }
 }
