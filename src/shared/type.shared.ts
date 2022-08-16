@@ -5,3 +5,5 @@ export type NotificationType =
   | "likes"
   | "trend"
   | "notice";
+
+export type UpdateLogType = "nickname" | "mbti";
