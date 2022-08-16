@@ -14,8 +14,8 @@ import {
 } from "../../middlewares/validator.middleware";
 import { User } from "../user/entity/user.entity";
 import { CreateBookmarkDto } from "./dto/create-bookmark.dto";
-import { IdDto } from "./dto/id.dto";
 import { IBookmarkService } from "./interfaces/IBookmark.service";
+import { IdDto } from "../../shared/dto/id.dto";
 
 @controller("/bookmarks")
 export class BookmarkController {
