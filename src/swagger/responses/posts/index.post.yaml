@@ -1,5 +1,63 @@
 "201":
-  description: 게시글 등록 성공
+  description: 게시글 등록 성공. 익명 등록(isSecret:true)이라면 userNickname = null
+  content:
+    application/json:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 23
+        type:
+          type: integer
+          example: 1
+        categoryId:
+          type: integer
+          example: 3
+        isActive:
+          type: boolean
+          example: true
+        isActiveUser:
+          type: boolean
+          example: true
+        isMy:
+          type: boolean
+          example: true
+        userId:
+          type: integer
+          example: 42
+        userMbti:
+          type: string
+          example: ENFP
+        userNickname:
+          type: string
+          example: 지나가는 나그네
+        isSecret:
+          type: boolean
+          example: false
+        title:
+          type: string
+          example: 고민이 있어요
+        content:
+          type: string
+          example: 오늘 저녁 뭐먹지..?
+        viewCount:
+          type: integer
+          example: 333
+        commentCount:
+          type: integer
+          example: 5
+        likesCount:
+          type: integer
+          example: 6
+        reportCount:
+          type: integer
+          example: 2
+        createdAt:
+          type: Date
+          example: 2022-07-21T17:32:28Z
+        updatedAt:
+          type: Date | null
+          example: null
 
 "401":
   description: access token 유효하지 않음
@@ -13,7 +71,7 @@
             example: authentication error
 
 "404":
-  description: 존재하지 않는 (삭제된) 게시글
+  description: 존재하지 않는 카테고리
   content:
     application/json:
       schema:
@@ -21,4 +79,4 @@
         properties:
           message:
             type: string
-            example: not exists post
+            example: category id error
