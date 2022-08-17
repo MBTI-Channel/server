@@ -42,14 +42,14 @@ export class PostController {
     req: Request,
     res: Response
   ) {
-    const { categoryId, isSecret, title, content } = body;
+    const { category, isSecret, title, content } = body;
     const user = req.user as User;
 
     const data = await this._postService.create(
       isSecret,
       title,
       content,
-      categoryId,
+      category,
       user
     );
 

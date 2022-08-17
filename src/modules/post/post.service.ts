@@ -50,14 +50,15 @@ export class PostService implements IPostService {
     isSecret: boolean,
     title: string,
     content: string,
-    categoryId: number,
+    categoryName: CategoryName,
     user: User
   ): Promise<PostResponseDto> {
     this._log(`create start`);
-    const category = await this._categoryRepository.findOneById(categoryId);
+
+    const category = await this._categoryRepository.findOneByName(categoryName);
 
     if (!category || !category.isActive) {
-      throw new NotFoundException("category id error");
+      throw new NotFoundException("category name error");
     }
 
     let postType = PostType.POST;
