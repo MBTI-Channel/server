@@ -13,6 +13,7 @@ import {
   SearchPostDto,
 } from "./dto";
 import { SearchOption } from "../../shared/enum.shared";
+import { CategoryName } from "aws-sdk/clients/support";
 
 @injectable()
 export class PostRepository implements IPostRepository {
@@ -231,6 +232,50 @@ export class PostRepository implements IPostRepository {
       whereCondition = {
         categoryId: Category.typeTo("mbti"),
         userMbti: mbti,
+      };
+    }
+    const repository = await this._database.getRepository(Post);
+    const result = await repository.find({
+      select: [
+        "id",
+        "categoryId",
+        "type",
+        "isActive",
+        "userId",
+        "userNickname",
+        "userMbti",
+        "isSecret",
+        "title",
+        "content",
+        "viewCount",
+        "commentCount",
+        "likesCount",
+        "reportCount",
+        "createdAt",
+        "updatedAt",
+      ],
+      where: this._searchOption(whereCondition, searchOption, searchWord),
+      take: maxResults,
+      order: { id: "DESC" },
+    });
+    return result;
+  }
+
+  // 특정 카테고리에서 검색 (mbti 카테고리 제외)
+  public async searchInCategory(
+    pageOptionsDto: SearchPostDto,
+    categoryId: number
+  ): Promise<Post[]> {
+    const { startId, maxResults, searchWord, searchOption } = pageOptionsDto;
+    let whereCondition;
+    if (startId > 1) {
+      whereCondition = {
+        categoryId,
+        id: LessThan(startId),
+      };
+    } else {
+      whereCondition = {
+        categoryId,
       };
     }
     const repository = await this._database.getRepository(Post);

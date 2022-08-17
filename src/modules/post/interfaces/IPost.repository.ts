@@ -1,3 +1,4 @@
+import { CategoryName } from "../../../shared/enum.shared";
 import {
   GetMyPostsDto,
   GetAllPostDto,
@@ -32,6 +33,10 @@ export interface IPostRepository {
   searchInMbtiCategory(
     pageOptionsDto: SearchPostDto,
     mbti: string
+  ): Promise<Post[]>;
+  searchInCategory(
+    pageOptionsDto: SearchPostDto,
+    category: number
   ): Promise<Post[]>;
   findAllTrends(pageOptionsDto: GetTrendDto): Promise<Post[]>;
   searchAllWithMbti(
