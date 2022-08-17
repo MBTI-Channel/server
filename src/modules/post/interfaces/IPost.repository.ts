@@ -38,5 +38,5 @@ export interface IPostRepository {
     pageOptionsDto: SearchPostDto,
     mbti: string
   ): Promise<Post[]>;
-  searchWithoutMbtiCategory(pageOptionsDto: SearchPostDto): Promise<Post[]>;
+  searchAllWithoutMbtiCategory(pageOptionsDto: SearchPostDto): Promise<Post[]>;
 }
