@@ -1,16 +1,17 @@
 import {
   IsBoolean,
-  IsInt,
+  IsEnum,
   IsNotEmpty,
   IsOptional,
   IsString,
   Length,
 } from "class-validator";
+import { CategoryName } from "../../../shared/enum.shared";
 
 export class CreatePostDto {
-  @IsInt()
+  @IsEnum(CategoryName)
   @IsNotEmpty()
-  categoryId: number;
+  category: CategoryName;
 
   @IsBoolean()
   @IsOptional()
