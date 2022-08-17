@@ -446,7 +446,7 @@ export class PostRepository implements IPostRepository {
         "createdAt",
         "updatedAt",
       ],
-      where: where[0],
+      where,
       take: maxResults,
       order: { id: "DESC" },
     });
