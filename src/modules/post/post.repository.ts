@@ -397,9 +397,9 @@ export class PostRepository implements IPostRepository {
   ): Promise<Post[]> {
     const repository = await this._database.getRepository(Post);
     const { startId, maxResults, searchWord, searchOption } = pageOptionsDto;
-    let whereCondition;
+    let whereConditions;
     if (startId > 1) {
-      whereCondition = [
+      whereConditions = [
         {
           categoryId: Not(In([Category.typeTo("mbti")])),
           id: LessThan(startId),
@@ -411,7 +411,7 @@ export class PostRepository implements IPostRepository {
         },
       ];
     } else {
-      whereCondition = [
+      whereConditions = [
         {
           categoryId: Not(In([Category.typeTo("mbti")])),
         },
@@ -423,8 +423,8 @@ export class PostRepository implements IPostRepository {
     }
 
     let where = [];
-    for (let x of whereCondition) {
-      where.push(this._searchOption(x, searchOption, searchWord));
+    for (let whereCondition of whereConditions) {
+      where.push(this._searchOption(whereCondition, searchOption, searchWord));
     }
     const result = await repository.find({
       select: [
