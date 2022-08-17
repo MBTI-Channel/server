@@ -26,7 +26,6 @@ export class PostResponseDto {
     this.type = post.type as PostType;
     this.categoryId = post.categoryId;
     this.isActive = post.isActive;
-    this.isActiveUser = user ? user.isActive() : false;
     this.isMy = user ? user.isMy(post) : false;
     this.userId = post.userId;
     this.userMbti = post.userMbti;
