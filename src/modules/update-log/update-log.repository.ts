@@ -10,7 +10,10 @@ export class UdpateLogRepository implements IUpdateLogRepository {
     @inject(TYPES.IDatabaseService) private readonly _database: IDatabaseService
   ) {}
 
-  //TODO: create
+  public async create(entity: UpdateLog): Promise<UpdateLog> {
+    const repository = await this._database.getRepository(UpdateLog);
+    return await repository.save(entity);
+  }
 
   public async findLastOfTypeMbtiByUserId(userId: number) {
     const repository = await this._database.getRepository(UpdateLog);
