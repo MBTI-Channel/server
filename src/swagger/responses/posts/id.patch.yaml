@@ -17,9 +17,6 @@
           isActive:
             type: boolean
             example: true
-          isActiveUser:
-            type: boolean
-            example: true
           isMy:
             type: boolean
             example: true
