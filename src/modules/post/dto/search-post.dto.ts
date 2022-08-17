@@ -1,6 +1,18 @@
 import { Type } from "class-transformer";
-import { IsEnum, IsInt, IsOptional, IsString, Max, Min } from "class-validator";
-import { CategoryName, PostOrder } from "../../../shared/enum.shared";
+import {
+  IsEnum,
+  IsInt,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  Max,
+  Min,
+} from "class-validator";
+import {
+  CategoryName,
+  PostOrder,
+  SearchOption,
+} from "../../../shared/enum.shared";
 
 export class SearchPostDto {
   @IsEnum(CategoryName)
@@ -23,6 +35,10 @@ export class SearchPostDto {
   @IsEnum(PostOrder)
   @IsOptional()
   order: PostOrder = PostOrder.CREATED_AT;
+
+  @IsEnum(SearchOption)
+  @IsNotEmpty()
+  searchOption: SearchOption;
 
   @IsString()
   @IsOptional()

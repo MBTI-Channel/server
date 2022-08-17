@@ -12,13 +12,32 @@ import {
   GetAllPostDto,
   SearchPostDto,
 } from "./dto";
-import { CategoryName } from "../../shared/enum.shared";
+import { SearchOption } from "../../shared/enum.shared";
+import { CategoryName } from "aws-sdk/clients/support";
 
 @injectable()
 export class PostRepository implements IPostRepository {
   constructor(
     @inject(TYPES.IDatabaseService) private readonly _database: IDatabaseService
   ) {}
+
+  private _searchOption(
+    whereCondition: any,
+    option: SearchOption,
+    searchWord: string
+  ) {
+    switch (option) {
+      case SearchOption.TITLE:
+        return { ...whereCondition, title: Like(`%${searchWord}%`) };
+      case SearchOption.CONTENT:
+        return { ...whereCondition, content: Like(`%${searchWord}%`) };
+      case SearchOption.ALL:
+        return [
+          { ...whereCondition, title: Like(`%${searchWord}%`) },
+          { ...whereCondition, content: Like(`%${searchWord}%`) },
+        ];
+    }
+  }
 
   public async create(postEntity: Post) {
     const repository = await this._database.getRepository(Post);
@@ -201,20 +220,18 @@ export class PostRepository implements IPostRepository {
     pageOptionsDto: SearchPostDto,
     mbti: string
   ): Promise<Post[]> {
-    const { startId, maxResults, searchWord } = pageOptionsDto;
+    const { startId, maxResults, searchWord, searchOption } = pageOptionsDto;
     let whereCondition;
     if (startId > 1) {
       whereCondition = {
         categoryId: Category.typeTo("mbti"),
         userMbti: mbti,
-        title: Like(`%${searchWord}%`),
         id: LessThan(startId),
       };
     } else {
       whereCondition = {
         categoryId: Category.typeTo("mbti"),
         userMbti: mbti,
-        title: Like(`%${searchWord}%`),
       };
     }
     const repository = await this._database.getRepository(Post);
@@ -237,7 +254,51 @@ export class PostRepository implements IPostRepository {
         "createdAt",
         "updatedAt",
       ],
-      where: whereCondition,
+      where: this._searchOption(whereCondition, searchOption, searchWord),
+      take: maxResults,
+      order: { id: "DESC" },
+    });
+    return result;
+  }
+
+  // 특정 카테고리에서 검색 (mbti 카테고리 제외)
+  public async searchInCategory(
+    pageOptionsDto: SearchPostDto,
+    categoryId: number
+  ): Promise<Post[]> {
+    const { startId, maxResults, searchWord, searchOption } = pageOptionsDto;
+    let whereCondition;
+    if (startId > 1) {
+      whereCondition = {
+        categoryId,
+        id: LessThan(startId),
+      };
+    } else {
+      whereCondition = {
+        categoryId,
+      };
+    }
+    const repository = await this._database.getRepository(Post);
+    const result = await repository.find({
+      select: [
+        "id",
+        "categoryId",
+        "type",
+        "isActive",
+        "userId",
+        "userNickname",
+        "userMbti",
+        "isSecret",
+        "title",
+        "content",
+        "viewCount",
+        "commentCount",
+        "likesCount",
+        "reportCount",
+        "createdAt",
+        "updatedAt",
+      ],
+      where: this._searchOption(whereCondition, searchOption, searchWord),
       take: maxResults,
       order: { id: "DESC" },
     });
@@ -245,21 +306,19 @@ export class PostRepository implements IPostRepository {
   }
 
   // mbti 카테고리 제외 전체 검색
-  public async searchWithoutMbtiCategory(
+  public async searchAllWithoutMbtiCategory(
     pageOptionsDto: SearchPostDto
   ): Promise<Post[]> {
-    const { startId, maxResults, searchWord } = pageOptionsDto;
+    const { startId, maxResults, searchWord, searchOption } = pageOptionsDto;
     let whereCondition;
     if (startId > 1) {
       whereCondition = {
         categoryId: Not(In([Category.typeTo("mbti")])),
-        title: Like(`%${searchWord}%`),
         id: LessThan(startId),
       };
     } else {
       whereCondition = {
         categoryId: Not(In([Category.typeTo("mbti")])),
-        title: Like(`%${searchWord}%`),
       };
     }
     const repository = await this._database.getRepository(Post);
@@ -282,7 +341,7 @@ export class PostRepository implements IPostRepository {
         "createdAt",
         "updatedAt",
       ],
-      where: whereCondition,
+      where: this._searchOption(whereCondition, searchOption, searchWord),
       take: maxResults,
       order: { id: "DESC" },
     });
@@ -331,39 +390,41 @@ export class PostRepository implements IPostRepository {
     return result;
   }
 
+  // 전체 검색 (본인의 mbti게시판 포함)
   public async searchAllWithMbti(
     pageOptionsDto: SearchPostDto,
     mbti: string
   ): Promise<Post[]> {
     const repository = await this._database.getRepository(Post);
-    const { startId, maxResults, searchWord } = pageOptionsDto;
-    let whereCondition;
+    const { startId, maxResults, searchWord, searchOption } = pageOptionsDto;
+    let whereConditions;
     if (startId > 1) {
-      whereCondition = [
+      whereConditions = [
         {
           categoryId: Not(In([Category.typeTo("mbti")])),
           id: LessThan(startId),
-          title: Like(`%${searchWord}%`),
         },
         {
           categoryId: Category.typeTo("mbti"),
           userMbti: mbti,
           id: LessThan(startId),
-          title: Like(`%${searchWord}%`),
         },
       ];
     } else {
-      whereCondition = [
+      whereConditions = [
         {
           categoryId: Not(In([Category.typeTo("mbti")])),
-          title: Like(`%${searchWord}%`),
         },
         {
           categoryId: Category.typeTo("mbti"),
           userMbti: mbti,
-          title: Like(`%${searchWord}%`),
         },
       ];
+    }
+
+    let where = [];
+    for (let whereCondition of whereConditions) {
+      where.push(this._searchOption(whereCondition, searchOption, searchWord));
     }
     const result = await repository.find({
       select: [
@@ -385,7 +446,7 @@ export class PostRepository implements IPostRepository {
         "createdAt",
         "updatedAt",
       ],
-      where: whereCondition,
+      where,
       take: maxResults,
       order: { id: "DESC" },
     });

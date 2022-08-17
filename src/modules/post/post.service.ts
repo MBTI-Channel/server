@@ -14,6 +14,7 @@ import {
   PageInfoDto,
 } from "../../shared/page";
 import { Logger } from "../../shared/utils/logger.util";
+import { Category } from "../category/entity/category.entity";
 import { ICategoryRepository } from "../category/interfaces/ICategory.repository";
 import { INotificationService } from "../notifications/interfaces/INotification.service";
 import { User } from "../user/entity/user.entity";
@@ -346,7 +347,7 @@ export class PostService implements IPostService {
     if (!pageOptionsDto.category) {
       // 로그인 하지 않은 경우 (mbti카테고리 제외 전체 검색)
       if (!user) {
-        postArray = await this._postRepository.searchWithoutMbtiCategory(
+        postArray = await this._postRepository.searchAllWithoutMbtiCategory(
           pageOptionsDto
         );
       }
@@ -362,8 +363,9 @@ export class PostService implements IPostService {
     else {
       // 카테고리가 mbti가 아닌 경우
       if (pageOptionsDto.category !== CategoryName.MBTI) {
-        postArray = await this._postRepository.searchWithoutMbtiCategory(
-          pageOptionsDto
+        postArray = await this._postRepository.searchInCategory(
+          pageOptionsDto,
+          Category.typeTo(pageOptionsDto.category)
         );
       }
       // 카테고리가 mbti인 경우
@@ -382,8 +384,13 @@ export class PostService implements IPostService {
       }
     }
 
-    // 배열 마지막 id를 nextId에 할당
-    const nextId = postArray[postArray.length - 1].id;
+    let nextId;
+    if (postArray.length === 0) {
+      nextId = null;
+    } else {
+      // 배열 마지막 id를 nextId에 할당
+      nextId = postArray[postArray.length - 1].id;
+    }
 
     const pageInfoDto = new PageInfiniteScrollInfoDto(postArray.length, nextId);
 

@@ -32,6 +32,8 @@ export class Category extends BaseEntity {
         return 7;
       case "hobby":
         return 8;
+      default:
+        return 0;
     }
   }
 
