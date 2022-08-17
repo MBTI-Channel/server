@@ -21,6 +21,12 @@ export enum PostType {
   NOTICE = "notice",
 }
 
+export enum SearchOption {
+  TITLE = "title",
+  CONTENT = "content",
+  ALL = "all",
+}
+
 export enum CategoryName {
   MBTI = "mbti",
   LOVE = "love",
