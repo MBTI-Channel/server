@@ -31,6 +31,13 @@ get:
       type: string
       example: viewCount
 
+    - name: searchOption
+      in: query
+      description: 검색 방법 (제목, 내용, 제목+내용)
+      required: true
+      type: string
+      example: title
+
     - name: searchWord
       in: query
       description: 검색 키워드
