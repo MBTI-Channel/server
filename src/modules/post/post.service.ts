@@ -383,6 +383,8 @@ export class PostService implements IPostService {
       }
     }
 
+    // TODO: 아무것도 검색되지 않았을 때 예외처리 해주기
+
     // 배열 마지막 id를 nextId에 할당
     const nextId = postArray[postArray.length - 1].id;
 
