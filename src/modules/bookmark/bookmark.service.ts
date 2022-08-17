@@ -5,12 +5,13 @@ import {
   BadReqeustException,
   ForbiddenException,
   NotFoundException,
-  UnauthorizedException,
 } from "../../shared/errors/all.exception";
+import { PageInfoDto, PageResponseDto } from "../../shared/page";
+import { PageOptionsDto } from "../../shared/page/dto/page-options.dto";
 import { Logger } from "../../shared/utils/logger.util";
-import { Post } from "../post/entity/post.entity";
 import { IPostRepository } from "../post/interfaces/IPost.repository";
 import { User } from "../user/entity/user.entity";
+import { BookmarkPostResponseDto } from "./dto/bookmark-post-response.dto";
 import { BookmarkResponseDto } from "./dto/bookmark-response.dto";
 import { Bookmark } from "./entity/bookmark.entity";
 import { IBookmarkRepository } from "./interfaces/IBookmark.repository";
@@ -58,6 +59,30 @@ export class BookmarkService implements IBookmarkService {
     );
 
     return new BookmarkResponseDto(bookmark, post);
+  }
+
+  public async getAllByUser(user: User, pageOptionsDto: PageOptionsDto) {
+    this._log(`getAllByUser start`);
+    const { page, maxResults } = pageOptionsDto;
+
+    const [bookmarksArray, count] =
+      await this._bookmarkRepository.findAllByUserId(user.id, pageOptionsDto);
+
+    // 페이지 정보
+    const pageInfoDto = new PageInfoDto(
+      count,
+      bookmarksArray.length,
+      page,
+      maxResults
+    );
+
+    return new PageResponseDto(
+      pageInfoDto,
+      bookmarksArray.map((e) => {
+        const post = e.post;
+        return new BookmarkPostResponseDto(e, post, user);
+      })
+    );
   }
 
   public async delete(user: User, id: number): Promise<void> {
