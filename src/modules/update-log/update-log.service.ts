@@ -30,7 +30,9 @@ export class UpdateLogService implements IUpdateLogService {
     type: UpdateLogType
   ): Promise<UpdateLog | null> {
     if (type === "mbti")
-      return await this._updateLogRepository.findLastOfTypeMbtiByUserId(userId);
+      return await this._updateLogRepository.findLastOfTypeMbtiByUserId(
+        userId
+      ); //TODO: 두 메서드 하나로 !
     // UpdateLogType === nickname
     else
       return await this._updateLogRepository.findLastOfTypeNicknameByUserId(
