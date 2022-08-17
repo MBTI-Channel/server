@@ -2,7 +2,7 @@ post:
   tags:
     - posts
   description: 게시글을 등록합니다. <br>
-    (필수) 게시글이 등록될 카테고리 아이디 <br>
+    (필수) 게시글이 등록될 카테고리 이름 <br>
     isSecret 익명 여부 default - false <br>
     (필수) post 제목 (1~30자) <br>
     (필수) post 내용
@@ -14,9 +14,9 @@ post:
         schema:
           type: object
           properties:
-            categoryId:
-              type: integer
-              example: 2
+            category:
+              type: string
+              example: trip
             isSecret:
               type: boolean
               example: false

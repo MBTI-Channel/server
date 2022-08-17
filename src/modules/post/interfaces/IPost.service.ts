@@ -1,3 +1,4 @@
+import { CategoryName } from "../../../shared/enum.shared";
 import {
   PageInfiniteScrollInfoDto,
   PageResponseDto,
@@ -16,7 +17,7 @@ export interface IPostService {
     isSecret: boolean,
     title: string,
     content: string,
-    categoryId: number,
+    category: CategoryName,
     user: User
   ): Promise<PostResponseDto>;
   increaseReportCount(id: number): Promise<void>;
