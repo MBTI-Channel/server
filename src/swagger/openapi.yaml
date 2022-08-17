@@ -29,6 +29,8 @@ paths:
     $ref: "./paths/users/check.yaml"
   /users/me:
     $ref: "./paths/users/me.yaml"
+  /users/me/nickname:
+    $ref: "./paths/users/me/nickname.yaml"
   /users/accessToken:
     $ref: "./paths/users/access-token.yaml"
   /users/logout:

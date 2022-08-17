@@ -1,0 +1,35 @@
+"200":
+  description: 닉네임 업데이트 성공
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          accessToken:
+            type: string
+            example: eyJhbGciOiJIUzI1...
+
+"401":
+  description: access token 유효하지 않음 또는 만료됨
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          message:
+            type: string
+            #example: authentication error || access token expired
+            example:
+              ex1: authentication error
+              ex2: access token expired
+
+"409":
+  description: 이미 존재하는 닉네임
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          message:
+            type: string
+            example: already exists nickname
