@@ -1,9 +1,0 @@
-get:
-  tags:
-    - users
-  description: 내가 참여한 공식 질문 조회
-  security:
-    - bearerAuth: []
-    - cookieAuth: []
-  responses:
-    $ref: "../../responses/users/id.survey.get.yaml"

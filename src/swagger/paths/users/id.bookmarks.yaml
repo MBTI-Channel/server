@@ -1,8 +1,0 @@
-get:
-  tags:
-    - users
-  description: 내가 북마크한 글 조회
-  security:
-    - bearerAuth: []
-  responses:
-    $ref: "../../responses/users/id.bookmarks.get.yaml"

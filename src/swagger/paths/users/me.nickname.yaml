@@ -1,0 +1,21 @@
+patch:
+  tags:
+    - users
+  description:
+    닉네임을 수정합니다. 업데이트 후 새 access token을 응답합니다.<br>
+    (필수) nickname 수정할 닉네임
+  security:
+    - bearerAuth: []
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            nickname:
+              type: string
+              example: 돈까스만들기3년째
+
+  responses:
+    $ref: "../../responses/users/me.nickname.patch.yaml"

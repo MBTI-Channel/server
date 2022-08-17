@@ -29,6 +29,8 @@ paths:
     $ref: "./paths/users/check.yaml"
   /users/me:
     $ref: "./paths/users/me.yaml"
+  /users/me/nickname:
+    $ref: "./paths/users/me.nickname.yaml"
   /users/accessToken:
     $ref: "./paths/users/access-token.yaml"
   /users/logout:
@@ -39,20 +41,6 @@ paths:
     $ref: "./paths/users/posts.yaml"
   /users/comments:
     $ref: "./paths/users/comments.yaml"
-  /users/{id}/survey:
-    parameters:
-      - in: path
-        name: id
-        type: integer
-        description: User ID
-    $ref: "./paths/users/id.survey.yaml"
-  /users/{id}/bookmarks:
-    parameters:
-      - in: path
-        name: id
-        type: integer
-        description: User ID
-    $ref: "./paths/users/id.bookmarks.yaml"
 
   # posts
   /posts:
