@@ -1,3 +1,4 @@
+import { Mbti } from "../../../shared/enum.shared";
 import { Provider } from "../../../shared/type.shared";
 import {
   UserTokenResponseDto,
@@ -14,6 +15,7 @@ export interface IUserService {
     ageRange?: string
   ): Promise<NeedSignUpResponseDto>;
   updateNickname(user: User, nickname: string): Promise<AccessTokenResponseDto>;
+  updateMbti(user: User, mbti: Mbti): Promise<any>;
   login(
     id: number,
     providerId: string,

@@ -3,6 +3,7 @@ import { Bookmark } from "../../bookmark/entity/bookmark.entity";
 import { Comment } from "../../comment/entity/comment.entity";
 import { Like } from "../../like/entity/like.entity";
 import { LoginLog } from "../../login-log/entity/login-log.entity";
+import { UpdateLog } from "../../update-log/entity/update-log.entity";
 import { Notification } from "../../notifications/entity/notification.entity";
 import { Post } from "../../post/entity/post.entity";
 import { Report } from "../../report/entity/report.entity";
@@ -69,6 +70,12 @@ export class User extends UserBase {
     cascade: true,
   })
   loginLogId: LoginLog[];
+
+  // User (1) <-> UpdateLog(*)
+  @OneToMany(() => UpdateLog, (updateLog) => updateLog.user, {
+    cascade: true,
+  })
+  updateLogId: UpdateLog[];
 
   // User (1) <-> Notification(*)
   @OneToMany(() => Notification, (notification) => notification.user, {

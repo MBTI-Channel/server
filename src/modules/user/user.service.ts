@@ -22,6 +22,8 @@ import {
 } from "../../shared/errors/all.exception";
 import { Provider } from "../../shared/type.shared";
 import config from "../../config";
+import { Mbti } from "../../shared/enum.shared";
+import { IUpdateLogService } from "../update-log/interfaces/IUpdate-log.service";
 
 @injectable()
 export class UserService implements IUserService {
@@ -35,7 +37,9 @@ export class UserService implements IUserService {
     @inject(TYPES.IApiWebhookService)
     private readonly _apiWebhookService: IApiWebhookService,
     @inject(TYPES.IPostRepository)
-    private readonly _postRepository: IPostRepository
+    private readonly _postRepository: IPostRepository,
+    @inject(TYPES.IUpdateLogService)
+    private readonly _updateLogService: IUpdateLogService
   ) {}
 
   private _log(message: string) {
@@ -74,6 +78,47 @@ export class UserService implements IUserService {
       updatedUser
     );
     return new AccessTokenResponseDto(accessToken);
+  }
+
+  public async updateMbti(user: User, mbti: Mbti) {
+    this._log("updateMbti start");
+    // 수정 mbti가 지금 mbti랑 같다면 에러
+    if (user.mbti === mbti) throw new ConflictException("same mbti as now");
+
+    // mbti 업데이트 기록이 2주 이내라면 수정할 수 없다
+    this._log("is mbti update available?");
+    const updateLog = await this._updateLogService.findLastOneByType(
+      user.id,
+      "mbti"
+    );
+    if (updateLog && !this._isMbtiUpdateAvailable(updateLog.createdAt))
+      throw new BadReqeustException(
+        `mbti update available date has not passed. last updated at :${updateLog.createdAt.toISOString()}`
+      );
+
+    // mbti 업데이트 후 업데이트된 accessToken 리턴
+    this._log("mbti update");
+    const updatedUser = await this._userRepository.update(user.id, {
+      mbti,
+    });
+
+    // 업데이트 로그 생성
+    await this._updateLogService.create(user, "mbti", user.mbti, mbti);
+
+    const accessToken = await this._authService.generateAccessToken(
+      updatedUser
+    );
+    return new AccessTokenResponseDto(accessToken);
+  }
+
+  // mbti 업데이트 기록이 2주 이내라면 false, 아니라면 true 리턴
+  private _isMbtiUpdateAvailable(updateLogCreatedAt: Date) {
+    const msNow = new Date().getTime();
+    const msCreatedAt = updateLogCreatedAt.getTime();
+    const msDifferenceFromNow = msNow - msCreatedAt;
+    const twoWeeks = 1000 * 60 * 60 * 24 * 14;
+
+    return twoWeeks < msDifferenceFromNow ? true : false;
   }
 
   // 로그인

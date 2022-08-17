@@ -25,6 +25,7 @@ import {
   SignUpDto,
   CheckDuplicateNicknameDto,
   UpdateUserNicknameDto,
+  UpdateUserMbtiDto,
 } from "./dto";
 import { convertUserAgent } from "../../shared/utils/user-agent.util";
 import config from "../../config";
@@ -172,6 +173,25 @@ export class UserController {
     const { nickname } = body;
 
     const data = await this._userService.updateNickname(user, nickname);
+
+    return res.status(200).json(data);
+  }
+
+  // mbti 업데이트
+  @httpPatch(
+    "/me/mbti",
+    TYPES.ValidateAccessTokenMiddleware,
+    bodyValidator(UpdateUserMbtiDto)
+  )
+  public async updateMbti(
+    @requestBody() body: UpdateUserMbtiDto,
+    req: Request,
+    res: Response
+  ) {
+    const user = req.user as User;
+    const { mbti } = body;
+
+    const data = await this._userService.updateMbti(user, mbti);
 
     return res.status(200).json(data);
   }
