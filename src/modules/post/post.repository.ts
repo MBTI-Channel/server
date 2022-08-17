@@ -219,20 +219,18 @@ export class PostRepository implements IPostRepository {
     pageOptionsDto: SearchPostDto,
     mbti: string
   ): Promise<Post[]> {
-    const { startId, maxResults, searchWord } = pageOptionsDto;
+    const { startId, maxResults, searchWord, searchOption } = pageOptionsDto;
     let whereCondition;
     if (startId > 1) {
       whereCondition = {
         categoryId: Category.typeTo("mbti"),
         userMbti: mbti,
-        title: Like(`%${searchWord}%`),
         id: LessThan(startId),
       };
     } else {
       whereCondition = {
         categoryId: Category.typeTo("mbti"),
         userMbti: mbti,
-        title: Like(`%${searchWord}%`),
       };
     }
     const repository = await this._database.getRepository(Post);
@@ -255,7 +253,7 @@ export class PostRepository implements IPostRepository {
         "createdAt",
         "updatedAt",
       ],
-      where: whereCondition,
+      where: this._searchOption(whereCondition, searchOption, searchWord),
       take: maxResults,
       order: { id: "DESC" },
     });
