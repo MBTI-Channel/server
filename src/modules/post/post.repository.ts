@@ -345,39 +345,41 @@ export class PostRepository implements IPostRepository {
     return result;
   }
 
+  // 전체 검색 (본인의 mbti게시판 포함)
   public async searchAllWithMbti(
     pageOptionsDto: SearchPostDto,
     mbti: string
   ): Promise<Post[]> {
     const repository = await this._database.getRepository(Post);
-    const { startId, maxResults, searchWord } = pageOptionsDto;
+    const { startId, maxResults, searchWord, searchOption } = pageOptionsDto;
     let whereCondition;
     if (startId > 1) {
       whereCondition = [
         {
           categoryId: Not(In([Category.typeTo("mbti")])),
           id: LessThan(startId),
-          title: Like(`%${searchWord}%`),
         },
         {
           categoryId: Category.typeTo("mbti"),
           userMbti: mbti,
           id: LessThan(startId),
-          title: Like(`%${searchWord}%`),
         },
       ];
     } else {
       whereCondition = [
         {
           categoryId: Not(In([Category.typeTo("mbti")])),
-          title: Like(`%${searchWord}%`),
         },
         {
           categoryId: Category.typeTo("mbti"),
           userMbti: mbti,
-          title: Like(`%${searchWord}%`),
         },
       ];
+    }
+
+    let where = [];
+    for (let x of whereCondition) {
+      where.push(this._searchOption(x, searchOption, searchWord));
     }
     const result = await repository.find({
       select: [
@@ -399,7 +401,7 @@ export class PostRepository implements IPostRepository {
         "createdAt",
         "updatedAt",
       ],
-      where: whereCondition,
+      where: where[0],
       take: maxResults,
       order: { id: "DESC" },
     });
