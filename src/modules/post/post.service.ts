@@ -298,8 +298,13 @@ export class PostService implements IPostService {
       );
     }
 
-    // 배열 마지막 id를 nextId에 할당
-    const nextId = postArray[postArray.length - 1].id;
+    let nextId;
+    if (postArray.length === 0) {
+      nextId = null;
+    } else {
+      // 배열 마지막 id를 nextId에 할당
+      nextId = postArray[postArray.length - 1].id;
+    }
 
     const pageInfoDto = new PageInfiniteScrollInfoDto(postArray.length, nextId);
 
