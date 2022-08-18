@@ -208,7 +208,10 @@ export class CommentService implements ICommentService {
         `there are no replies to parent comment id ${pageOptionsDto.parentId}`
       );
 
-    const nextId = replyArray[replyArray.length - 1].id;
+    // replyArray길이가 maxResults보다 작다면 nextId는 null, 아니라면 마지막 idx의 id 할당
+    let nextId: number | null;
+    if (replyArray.length < pageOptionsDto.maxResults) nextId = null;
+    else nextId = replyArray[replyArray.length - 1].id;
 
     // 응답 DTO로 변환후 리턴
     const pageInfoDto = new PageInfiniteScrollInfoDto(
