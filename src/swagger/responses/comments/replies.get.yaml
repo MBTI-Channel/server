@@ -63,7 +63,9 @@
                   example: 3
 
 "404":
-  description: 존재하지 않는 (삭제된) 게시글
+  description: 존재하지 않는 (삭제된) 게시글 <br>
+    또는 존재하지 않는 부모 댓글 <br>
+    또는 부모 댓글에 대댓글이 존재하지 않음
   content:
     application/json:
       schema:
@@ -71,4 +73,7 @@
         properties:
           message:
             type: string
-            example: not exists post
+            example:
+              ex1: not exists post
+              ex2: not exists comment
+              ex3: there are no replies to parent comment id 3

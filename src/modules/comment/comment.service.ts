@@ -202,9 +202,16 @@ export class CommentService implements ICommentService {
     const replyArray = await this._commentRepository.findAllReplies(
       pageOptionsDto
     );
+    // 아무런 대댓글 없으면 NotFoundException
+    if (replyArray.length === 0)
+      throw new NotFoundException(
+        `there are no replies to parent comment id ${pageOptionsDto.parentId}`
+      );
 
-    // 배열 마지막 id를 nextId에 할당
-    const nextId = replyArray[replyArray.length - 1].id;
+    // replyArray길이가 maxResults보다 작다면 nextId는 null, 아니라면 마지막 idx의 id 할당
+    let nextId: number | null;
+    if (replyArray.length < pageOptionsDto.maxResults) nextId = null;
+    else nextId = replyArray[replyArray.length - 1].id;
 
     // 응답 DTO로 변환후 리턴
     const pageInfoDto = new PageInfiniteScrollInfoDto(
