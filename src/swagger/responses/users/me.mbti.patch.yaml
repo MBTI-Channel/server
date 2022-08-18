@@ -1,0 +1,45 @@
+"200":
+  description: mbti 업데이트 성공
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          accessToken:
+            type: string
+            example: eyJhbGciOiJIUzI1...
+
+"400":
+  description: 마지막 mbti 수정으로부터 2주가 지나지 않음
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          message:
+            type: string
+            example: mbti update available date has not passed. last updated at :2022-08-17T15:40:42.271Z
+
+"401":
+  description: access token 유효하지 않음 또는 만료됨
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          message:
+            type: string
+            example:
+              ex1: authentication error
+              ex2: access token expired
+
+"409":
+  description: 수정하려는 mbti가 현재 mbti와 동일함
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          message:
+            type: string
+            example: same mbti as now

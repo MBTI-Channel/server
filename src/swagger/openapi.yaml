@@ -31,6 +31,8 @@ paths:
     $ref: "./paths/users/me.yaml"
   /users/me/nickname:
     $ref: "./paths/users/me.nickname.yaml"
+  /users/me/mbti:
+    $ref: "./paths/users/me.mbti.yaml"
   /users/accessToken:
     $ref: "./paths/users/access-token.yaml"
   /users/logout:
