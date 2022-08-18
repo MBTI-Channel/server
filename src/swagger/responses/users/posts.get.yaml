@@ -25,9 +25,6 @@
             items:
               type: object
               properties:
-                isActiveUser:
-                  type: boolean
-                  example: true
                 isMy:
                   type: boolean
                   example: true
