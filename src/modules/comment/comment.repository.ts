@@ -29,7 +29,7 @@ export class CommentRepository implements ICommentRepository {
 
   public async findAllComments(
     pageOptionsDto: GetAllCommentDto
-  ): Promise<Comment[]> {
+  ): Promise<[Comment[], number]> {
     const repository = await this._database.getRepository(Comment);
     const queryBuilder = repository
       .createQueryBuilder("comment")
@@ -59,7 +59,7 @@ export class CommentRepository implements ICommentRepository {
       queryBuilder.addOrderBy(`comment.${pageOptionsDto.order}`, "ASC");
     }
 
-    return queryBuilder.getMany();
+    return queryBuilder.getManyAndCount();
   }
 
   public async findAllReplies(

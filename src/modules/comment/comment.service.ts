@@ -167,13 +167,12 @@ export class CommentService implements ICommentService {
     if (!foundPost || !foundPost.isActive)
       throw new NotFoundException("not exists post");
 
-    const commentArray = await this._commentRepository.findAllComments(
-      pageOptionsDto
-    );
+    const [commentArray, totalCount] =
+      await this._commentRepository.findAllComments(pageOptionsDto);
 
     // 페이지 정보
     const pageInfoDto = new PageInfoDto(
-      foundPost.commentCount,
+      totalCount,
       commentArray.length,
       page,
       maxResults
