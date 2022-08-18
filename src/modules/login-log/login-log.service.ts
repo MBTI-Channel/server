@@ -3,15 +3,15 @@ import { TYPES } from "../../core/types.core";
 import { Logger } from "../../shared/utils/logger.util";
 import { User } from "../user/entity/user.entity";
 import { LoginLog } from "./entity/login-log.entity";
+import { ILoginLogRepository } from "./interfaces/ILogin-log.repository";
 import { ILoginLogService } from "./interfaces/ILogin-log.service";
-import { LoginLogRepository } from "./login-log.repository";
 
 @injectable()
 export class LoginLogService implements ILoginLogService {
   constructor(
     @inject(TYPES.Logger) private readonly _logger: Logger,
     @inject(TYPES.ILoginLogRepository)
-    private readonly _loginLogRepository: LoginLogRepository
+    private readonly _loginLogRepository: ILoginLogRepository
   ) {}
 
   private _log(message: string) {

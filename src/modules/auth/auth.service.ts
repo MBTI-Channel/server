@@ -3,13 +3,13 @@ import { User } from "../user/entity/user.entity";
 import { Logger } from "../../shared/utils/logger.util";
 import { IAuthService } from "./interfaces/IAuth.service";
 import { ITokenPayload } from "./interfaces/ITokenPayload";
+import { IRedisService } from "../../core/database/interfaces/IRedis.service";
+import { IUserRepository } from "../user/interfaces/IUser.repository";
 import { TYPES } from "../../core/types.core";
 import { SignOptions } from "jsonwebtoken";
 import { JwtUtil } from "../../shared/utils/jwt.util";
 import { UnauthorizedException } from "../../shared/errors/all.exception";
-import { UserRepository } from "../user/user.repository";
 import config from "../../config";
-import { IRedisService } from "../../core/database/interfaces/IRedis.service";
 
 @injectable()
 export class AuthService implements IAuthService {
@@ -17,7 +17,7 @@ export class AuthService implements IAuthService {
     @inject(TYPES.Logger) private readonly _logger: Logger,
     @inject(TYPES.JwtUtil) private readonly _jwtUtil: JwtUtil,
     @inject(TYPES.IUserRepository)
-    private readonly _userRepository: UserRepository,
+    private readonly _userRepository: IUserRepository,
     @inject(TYPES.IRedisService) private readonly _redisService: IRedisService
   ) {}
 
