@@ -64,3 +64,15 @@
             updatedAt:
               type: Date
               example: 2022-07-21T17:32:28Z
+
+"404":
+  description: 게시글이 존재하지 않음
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          message:
+            type: string
+            example:
+              ex1: post not found
