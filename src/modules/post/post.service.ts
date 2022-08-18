@@ -394,8 +394,12 @@ export class PostService implements IPostService {
       }
     }
 
-    let nextId;
     if (postArray.length === 0) {
+      throw new NotFoundException(`post not found`);
+    }
+
+    let nextId: number | null;
+    if (postArray.length < pageOptionsDto.maxResults) {
       nextId = null;
     } else {
       // 배열 마지막 id를 nextId에 할당
