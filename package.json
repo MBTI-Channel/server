@@ -11,11 +11,11 @@
     "test": "jest",
     "test:c": "jest --coverage",
     "api-docs": "swagger-cli bundle ./src/swagger/openapi.yaml --outfile src/swagger.yaml --type yaml",
-    "typeorm": "ts-node ./node_modules/typeorm/cli -d src/datasource.ts",
-    "typeorm:create": "npm run typeorm migration:create",
-    "typeorm:generate": "npm run typeorm migration:generate",
-    "typeorm:run": "npm run typeorm migration:run",
-    "typeorm:revert": "npm run typeorm migration:revert"
+    "typeorm": "ts-node ./node_modules/typeorm/cli",
+    "migration:create": "npm run typeorm migration:create",
+    "migration:generate": "npm run typeorm migration:generate -- -d src/datasource.ts",
+    "migration:up": "npm run typeorm migration:run -- -d src/datasource.ts",
+    "migration:down": "npm run typeorm migration:revert -- -d src/datasource.ts"
   },
   "repository": {
     "type": "git",
