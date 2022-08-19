@@ -1,4 +1,5 @@
 import {
+  IsArray,
   IsBoolean,
   IsEnum,
   IsNotEmpty,
@@ -25,4 +26,8 @@ export class CreatePostDto {
   @IsString()
   @IsNotEmpty()
   content: string;
+
+  @IsArray()
+  @IsOptional()
+  imagesUrl: string[];
 }
