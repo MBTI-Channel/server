@@ -41,7 +41,9 @@ export class PostService implements IPostService {
     @inject(TYPES.IDatabaseService)
     private readonly _dbService: IDatabaseService,
     @inject(TYPES.INotificationService)
-    private readonly _notificationService: INotificationService // @inject(TYPES.IFileService) // private readonly _fileService: IFileService
+    private readonly _notificationService: INotificationService,
+    @inject(TYPES.IFileService)
+    private readonly _fileService: IFileService
   ) {}
 
   private _log(message: string) {
@@ -79,6 +81,8 @@ export class PostService implements IPostService {
     );
 
     const createdPost = await this._postRepository.create(postEntity);
+    // file 테이블에 이미지 저장
+    await this._fileService.create(createdPost, imagesUrl);
 
     return new PostResponseDto(createdPost, user);
   }
