@@ -19,6 +19,7 @@ import { surveyModule } from "../modules/survey/survey.module";
 /* shared import */
 import { utilModule } from "../shared/utils/util.module";
 import { apiModule } from "../shared/api/api.module";
+import { fileModule } from "../modules/file/file.module";
 
 const container = new Container({ defaultScope: "Singleton" });
 
@@ -32,6 +33,7 @@ container.load(
   bookmarkMoudle,
   categoryModule,
   commentModule,
+  fileModule,
   likeModule,
   notificationModule,
   postModule,
