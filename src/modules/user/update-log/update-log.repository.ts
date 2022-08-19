@@ -1,6 +1,6 @@
 import { inject, injectable } from "inversify";
-import { IDatabaseService } from "../../core/database/interfaces/IDatabase.service";
-import { TYPES } from "../../core/types.core";
+import { IDatabaseService } from "../../../core/database/interfaces/IDatabase.service";
+import { TYPES } from "../../../core/types.core";
 import { UpdateLog } from "./entity/update-log.entity";
 import { IUpdateLogRepository } from "./interfaces/IUpdate-log.repository";
 

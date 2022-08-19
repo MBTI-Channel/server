@@ -1,5 +1,5 @@
 import { ContainerModule } from "inversify";
-import { TYPES } from "../../core/types.core";
+import { TYPES } from "../../../core/types.core";
 import { ILoginLogRepository } from "./interfaces/ILogin-log.repository";
 import { ILoginLogService } from "./interfaces/ILogin-log.service";
 import { LoginLogRepository } from "./login-log.repository";

@@ -1,7 +1,7 @@
 import { Entity, Column, ManyToOne } from "typeorm";
-import { BaseEntity } from "../../../shared/base.entity";
+import { BaseEntity } from "../../../../shared/base.entity";
 
-import { User } from "../../user/entity/user.entity";
+import { User } from "../../entity/user.entity";
 
 @Entity()
 export class LoginLog extends BaseEntity {

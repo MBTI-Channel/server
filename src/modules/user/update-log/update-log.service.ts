@@ -1,8 +1,8 @@
 import { inject, injectable } from "inversify";
-import { TYPES } from "../../core/types.core";
-import { UpdateLogType } from "../../shared/type.shared";
-import { Logger } from "../../shared/utils/logger.util";
-import { User } from "../user/entity/user.entity";
+import { TYPES } from "../../../core/types.core";
+import { UpdateLogType } from "../../../shared/type.shared";
+import { Logger } from "../../../shared/utils/logger.util";
+import { User } from "../entity/user.entity";
 import { UpdateLog } from "./entity/update-log.entity";
 import { IUpdateLogRepository } from "./interfaces/IUpdate-log.repository";
 import { IUpdateLogService } from "./interfaces/IUpdate-log.service";
@@ -30,9 +30,8 @@ export class UpdateLogService implements IUpdateLogService {
     type: UpdateLogType
   ): Promise<UpdateLog | null> {
     if (type === "mbti")
-      return await this._updateLogRepository.findLastOfTypeMbtiByUserId(
-        userId
-      ); //TODO: 두 메서드 하나로 !
+      return await this._updateLogRepository.findLastOfTypeMbtiByUserId(userId);
+    //TODO: 두 메서드 하나로 !
     // UpdateLogType === nickname
     else
       return await this._updateLogRepository.findLastOfTypeNicknameByUserId(
