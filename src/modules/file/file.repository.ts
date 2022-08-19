@@ -10,8 +10,8 @@ export class FileRepository implements IFileRepository {
     @inject(TYPES.IDatabaseService) private readonly _database: IDatabaseService
   ) {}
 
-  public async create(fileEntity: File): Promise<void> {
+  public async create(fileEntities: File[]): Promise<void> {
     const repository = await this._database.getRepository(File);
-    await repository.save(fileEntity);
+    await repository.save(fileEntities);
   }
 }
