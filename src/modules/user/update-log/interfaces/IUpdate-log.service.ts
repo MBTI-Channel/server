@@ -1,5 +1,5 @@
-import { UpdateLogType } from "../../../shared/type.shared";
-import { User } from "../../user/entity/user.entity";
+import { UpdateLogType } from "../../../../shared/type.shared";
+import { User } from "../../entity/user.entity";
 import { UpdateLog } from "../entity/update-log.entity";
 
 export interface IUpdateLogService {

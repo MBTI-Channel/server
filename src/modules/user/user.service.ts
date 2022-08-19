@@ -23,7 +23,7 @@ import {
 import { Provider } from "../../shared/type.shared";
 import config from "../../config";
 import { Mbti } from "../../shared/enum.shared";
-import { IUpdateLogService } from "../update-log/interfaces/IUpdate-log.service";
+import { IUpdateLogService } from "./update-log/interfaces/IUpdate-log.service";
 
 @injectable()
 export class UserService implements IUserService {

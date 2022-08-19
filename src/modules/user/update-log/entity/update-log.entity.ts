@@ -1,8 +1,8 @@
 import { Entity, Column, ManyToOne } from "typeorm";
-import { BaseEntity } from "../../../shared/base.entity";
-import { UpdateLogType } from "../../../shared/type.shared";
+import { BaseEntity } from "../../../../shared/base.entity";
+import { UpdateLogType } from "../../../../shared/type.shared";
 
-import { User } from "../../user/entity/user.entity";
+import { User } from "../../entity/user.entity";
 
 @Entity()
 export class UpdateLog extends BaseEntity {

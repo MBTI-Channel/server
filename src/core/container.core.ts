@@ -8,8 +8,6 @@ import { middlewareModule } from "../middlewares/middleware.module";
 import { userModule } from "../modules/user/user.module";
 import { postModule } from "../modules/post/post.module";
 import { notificationModule } from "../modules/notifications/notification.module";
-import { loginLogModule } from "../modules/login-log/login-log.module";
-import { updateLogModule } from "../modules/update-log/update-log.module";
 import { likeModule } from "../modules/like/like.module";
 import { commentModule } from "../modules/comment/comment.module";
 import { categoryModule } from "../modules/category/category.module";
@@ -35,8 +33,6 @@ container.load(
   categoryModule,
   commentModule,
   likeModule,
-  loginLogModule,
-  updateLogModule,
   notificationModule,
   postModule,
   reportModule,

@@ -15,7 +15,7 @@ import {
   queryValidator,
 } from "../../middlewares/validator.middleware";
 import { IUserService } from "./interfaces/IUser.service";
-import { ILoginLogService } from "../login-log/interfaces/ILogin-log.service";
+import { ILoginLogService } from "./login-log/interfaces/ILogin-log.service";
 import { IPostService } from "../post/interfaces/IPost.service";
 import { ICommentService } from "../comment/interfaces/IComment.service";
 import { User } from "./entity/user.entity";
