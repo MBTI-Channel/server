@@ -253,8 +253,17 @@ export class PostService implements IPostService {
     let postArray;
     postArray = await this._postRepository.findAllTrends(pageOptionsDto);
 
-    // 배열 마지막 id를 nextId에 할당
-    const nextId = postArray[postArray.length - 1].id;
+    if (postArray.length === 0) {
+      throw new NotFoundException(`post not found`);
+    }
+
+    let nextId: number | null;
+    if (postArray.length < pageOptionsDto.maxResults) {
+      nextId = null;
+    } else {
+      // 배열 마지막 id를 nextId에 할당
+      nextId = postArray[postArray.length - 1].id;
+    }
 
     const pageInfoDto = new PageInfiniteScrollInfoDto(postArray.length, nextId);
 
@@ -298,8 +307,17 @@ export class PostService implements IPostService {
       );
     }
 
-    // 배열 마지막 id를 nextId에 할당
-    const nextId = postArray[postArray.length - 1].id;
+    if (postArray.length === 0) {
+      throw new NotFoundException(`post not found`);
+    }
+
+    let nextId: number | null;
+    if (postArray.length < pageOptionsDto.maxResults) {
+      nextId = null;
+    } else {
+      // 배열 마지막 id를 nextId에 할당
+      nextId = postArray[postArray.length - 1].id;
+    }
 
     const pageInfoDto = new PageInfiniteScrollInfoDto(postArray.length, nextId);
 
@@ -384,8 +402,12 @@ export class PostService implements IPostService {
       }
     }
 
-    let nextId;
     if (postArray.length === 0) {
+      throw new NotFoundException(`post not found`);
+    }
+
+    let nextId: number | null;
+    if (postArray.length < pageOptionsDto.maxResults) {
       nextId = null;
     } else {
       // 배열 마지막 id를 nextId에 할당
