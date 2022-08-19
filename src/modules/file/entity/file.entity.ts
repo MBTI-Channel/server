@@ -1,13 +1,20 @@
-import { Column, Entity, ManyToOne } from "typeorm";
+import { Column, Entity } from "typeorm";
 import { BaseEntity } from "../../../shared/base.entity";
-import { Post } from "../../post/entity/post.entity";
+import { FileTargetType } from "../../../shared/enum.shared";
+import { FileTargetTypeTransformer } from "../helper/file-target-type-transormer";
 
 @Entity()
 export class File extends BaseEntity {
   @Column({
+    type: "text",
     comment: "s3에 담겨 있는 파일 url",
   })
-  fileUrl: string;
+  url: string;
+
+  @Column({
+    comment: "파일 확장자",
+  })
+  extension: string;
 
   @Column({
     default: true,
@@ -16,21 +23,29 @@ export class File extends BaseEntity {
   isActive: boolean;
 
   @Column({
-    comment: "게시글 id",
+    comment: "파일이 업로드 된 타켓 id",
     unsigned: true,
   })
-  postId: number;
+  targetId: number;
 
-  @ManyToOne(() => Post, (post) => post.id, {
-    onDelete: "CASCADE",
+  @Column({
+    type: "tinyint",
+    transformer: new FileTargetTypeTransformer(),
+    comment: "파일이 업로드 될 타겟 종류 [1: user, 2: post, 3: comment]",
   })
-  post: Post;
+  targetType: number | FileTargetType;
 
-  static of(post: Post, fileUrl: string) {
+  static of(
+    targetType: FileTargetType,
+    targetId: number,
+    extension: string,
+    url: string
+  ) {
     const file = new File();
-    file.post = post;
-    file.fileUrl = fileUrl;
-
+    file.targetType = targetType;
+    file.targetId = targetId;
+    file.extension = extension;
+    file.url = url;
     return file;
   }
 }
