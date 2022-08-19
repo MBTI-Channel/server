@@ -48,6 +48,12 @@ export enum ReportTargetType { // TODO: LikeTargetType랑 중복
   COMMENT = "comment",
 }
 
+export enum FileTargetType {
+  USER = "user",
+  POST = "post",
+  COMMENT = "comment",
+}
+
 export enum Mbti {
   ISTJ = "ISTJ",
   ISTP = "ISTP",
