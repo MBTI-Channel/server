@@ -50,6 +50,12 @@ export class Post extends BaseEntity {
   })
   isTrend: boolean;
 
+  @Column({
+    nullable: true,
+    comment: "썸네일 이미지 url",
+  })
+  thumbnail?: string;
+
   @Column({ length: "30", comment: "게시글 제목" })
   title: string;
 
@@ -90,6 +96,7 @@ export class Post extends BaseEntity {
     user: User,
     category: Category,
     isSecret: boolean,
+    thumbnail: string | null,
     title: string,
     content: string,
     postType: PostType
@@ -98,6 +105,7 @@ export class Post extends BaseEntity {
     post.user = user;
     post.category = category;
     post.isSecret = isSecret;
+    post.thumbnail = thumbnail ?? undefined;
     post.title = title;
     post.content = content;
     post.type = postType;
