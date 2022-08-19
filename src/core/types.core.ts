@@ -46,6 +46,9 @@ export const TYPES = {
   /* survey */
   ISurveyService: Symbol.for("ISurveyService"),
   ISurveyRepository: Symbol.for("ISurveyRepository"),
+  /* file */
+  IFileService: Symbol.for("IFileService"),
+  IFileRepository: Symbol.for("IFileRepository"),
   /* middleware */
   GetProviderUserByOauthMiddleware: Symbol.for(
     "GetProviderUserByOauthMiddleware"
