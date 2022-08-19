@@ -16,6 +16,7 @@ import {
 import { Logger } from "../../shared/utils/logger.util";
 import { Category } from "../category/entity/category.entity";
 import { ICategoryRepository } from "../category/interfaces/ICategory.repository";
+import { IFileService } from "../file/interfaces/IFile.service";
 import { INotificationService } from "../notifications/interfaces/INotification.service";
 import { User } from "../user/entity/user.entity";
 import {
@@ -40,7 +41,7 @@ export class PostService implements IPostService {
     @inject(TYPES.IDatabaseService)
     private readonly _dbService: IDatabaseService,
     @inject(TYPES.INotificationService)
-    private readonly _notificationService: INotificationService
+    private readonly _notificationService: INotificationService // @inject(TYPES.IFileService) // private readonly _fileService: IFileService
   ) {}
 
   private _log(message: string) {
@@ -52,6 +53,7 @@ export class PostService implements IPostService {
     title: string,
     content: string,
     categoryName: CategoryName,
+    imagesUrl: string[],
     user: User
   ): Promise<PostResponseDto> {
     this._log(`create start`);
@@ -66,16 +68,18 @@ export class PostService implements IPostService {
     if (category.name === CategoryName.MBTI) {
       postType = PostType.MBTI;
     }
-
     const postEntity = Post.of(
       user,
       category,
       isSecret,
+      imagesUrl ? imagesUrl[0] : null,
       title,
       content,
       postType
     );
+
     const createdPost = await this._postRepository.create(postEntity);
+
     return new PostResponseDto(createdPost, user);
   }
 
