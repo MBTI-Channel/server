@@ -1,7 +1,7 @@
 import { inject, injectable } from "inversify";
 import { TYPES } from "../../core/types.core";
+import { FileTargetType } from "../../shared/enum.shared";
 import { Logger } from "../../shared/utils/logger.util";
-import { Post } from "../post/entity/post.entity";
 import { File } from "./entity/file.entity";
 import { IFileRepository } from "./interfaces/IFile.repository";
 import { IFileService } from "./interfaces/IFile.service";
@@ -17,12 +17,18 @@ export class FileService implements IFileService {
     this._logger.trace(`[FileService] ${message}`);
   }
 
-  public async create(post: Post, filesUrl: string[]): Promise<void> {
+  public async create(
+    targetType: FileTargetType,
+    targetId: number,
+    filesUrl: string[]
+  ): Promise<void> {
     this._log(`create start`);
 
+    let fileEntities: File[] = [];
     filesUrl.map(async (fileUrl) => {
-      const fileEntity = File.of(post, fileUrl);
-      await this._fileRepository.create(fileEntity);
+      const extension = fileUrl.split(".")[1];
+      fileEntities.push(File.of(targetType, targetId, extension, fileUrl));
     });
+    await this._fileRepository.create(fileEntities);
   }
 }

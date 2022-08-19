@@ -51,6 +51,7 @@ export class Post extends BaseEntity {
   isTrend: boolean;
 
   @Column({
+    type: "text",
     nullable: true,
     comment: "썸네일 이미지 url",
   })

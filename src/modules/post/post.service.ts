@@ -2,7 +2,11 @@ import { inject, injectable } from "inversify";
 import { IDatabaseService } from "../../core/database/interfaces/IDatabase.service";
 import { TYPES } from "../../core/types.core";
 import { TREND_LIKE, TREND_VIEW } from "../../shared/constant.shared";
-import { CategoryName, PostType } from "../../shared/enum.shared";
+import {
+  CategoryName,
+  FileTargetType,
+  PostType,
+} from "../../shared/enum.shared";
 import {
   ForbiddenException,
   NotFoundException,
@@ -82,7 +86,11 @@ export class PostService implements IPostService {
 
     const createdPost = await this._postRepository.create(postEntity);
     // file 테이블에 이미지 저장
-    await this._fileService.create(createdPost, imagesUrl);
+    await this._fileService.create(
+      FileTargetType.POST,
+      createdPost.id,
+      imagesUrl
+    );
 
     return new PostResponseDto(createdPost, user);
   }
