@@ -171,8 +171,8 @@ export class PostService implements IPostService {
     if (!hasDecreased) throw new NotFoundException(`not exists post`);
   }
 
-  public async delete(user: User, id: number): Promise<void> {
-    this._log(`delete start`);
+  public async remove(user: User, id: number): Promise<void> {
+    this._log(`remove start`);
     const post = await this._postRepository.findOneById(id);
 
     this._log(`check exists post id ${id}`);
