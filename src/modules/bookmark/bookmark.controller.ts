@@ -45,7 +45,7 @@ export class BookmarkController {
     TYPES.ValidateAccessTokenMiddleware,
     paramsValidator(IdDto)
   )
-  public async delete(
+  public async remove(
     @requestParam() param: IdDto,
     req: Request,
     res: Response
@@ -53,7 +53,7 @@ export class BookmarkController {
     const user = req.user as User;
     const { id } = param;
 
-    await this._bookmarkService.delete(user, id);
+    await this._bookmarkService.remove(user, id);
 
     return res.status(204).json();
   }
