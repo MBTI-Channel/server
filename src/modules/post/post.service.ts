@@ -59,7 +59,7 @@ export class PostService implements IPostService {
     title: string,
     content: string,
     categoryName: CategoryName,
-    imagesUrl: string[],
+    filesUrl: string[],
     user: User
   ): Promise<PostResponseDto> {
     this._log(`create start`);
@@ -78,7 +78,7 @@ export class PostService implements IPostService {
       user,
       category,
       isSecret,
-      imagesUrl ? imagesUrl[0] : null,
+      filesUrl ? filesUrl[0] : null,
       title,
       content,
       postType
@@ -89,7 +89,7 @@ export class PostService implements IPostService {
     await this._fileService.create(
       FileTargetType.POST,
       createdPost.id,
-      imagesUrl
+      filesUrl
     );
 
     return new PostResponseDto(createdPost, user);
