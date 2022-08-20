@@ -306,7 +306,7 @@ export class CommentService implements ICommentService {
   }
 
   public async remove(user: User, id: number): Promise<void> {
-    this._log(`delete start`);
+    this._log(`remove start`);
     // 댓글 존재하는지 확인
     const comment = await this._commentRepository.findOneById(id);
     this._logger.trace(`[CommentService] check exists comment id ${id}`);
