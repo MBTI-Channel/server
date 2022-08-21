@@ -17,13 +17,12 @@ export class FileRepository implements IFileRepository {
     await repository.save(fileEntities);
   }
 
-  public async findFilesId(
+  public async findFilesInfo(
     targetType: FileTargetType,
     targetId: number
-  ): Promise<number[] | null> {
+  ): Promise<File[] | null> {
     const repository = await this._database.getRepository(File);
     return await repository.find({
-      select: ["id"],
       where: { targetType, targetId },
     });
   }

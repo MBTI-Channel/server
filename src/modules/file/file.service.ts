@@ -32,19 +32,33 @@ export class FileService implements IFileService {
     await this._fileRepository.create(fileEntities);
   }
 
+  public async update(
+    targetType: FileTargetType,
+    targetId: number,
+    filesUrl: string[]
+  ): Promise<void> {
+    this._log(`update start`);
+
+    const files = await this._fileRepository.findFilesInfo(
+      targetType,
+      targetId
+    );
+    console.log(files);
+  }
+
   public async remove(
     targetType: FileTargetType,
     targetId: number
   ): Promise<void> {
     this._log(`remove start`);
 
-    const filesId = await this._fileRepository.findFilesId(
+    const files = await this._fileRepository.findFilesInfo(
       targetType,
       targetId
     );
 
-    if (filesId) {
-      await this._fileRepository.remove(filesId);
+    if (files) {
+      await this._fileRepository.remove(files.map((file) => file.id));
     }
   }
 }
