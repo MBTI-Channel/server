@@ -44,6 +44,6 @@ export interface ICommentService {
   increaseLikeCount(id: number): Promise<void>;
   decreaseLikeCount(id: number): Promise<void>;
   update(user: User, id: number, content: string): Promise<CommentResponseDto>;
-  delete(user: User, id: number): Promise<void>;
+  remove(user: User, id: number): Promise<void>;
   isValid(id: number): Promise<boolean>;
 }

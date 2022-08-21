@@ -140,7 +140,7 @@ export class CommentController {
     TYPES.ValidateAccessTokenMiddleware,
     paramsValidator(IdDto)
   )
-  public async delete(
+  public async remove(
     @requestParam() param: IdDto,
     req: Request,
     res: Response
@@ -148,7 +148,7 @@ export class CommentController {
     const user = req.user as User;
     const { id } = param;
 
-    await this._commentService.delete(user, id);
+    await this._commentService.remove(user, id);
 
     return res.status(204).json();
   }

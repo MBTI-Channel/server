@@ -85,8 +85,8 @@ export class BookmarkService implements IBookmarkService {
     );
   }
 
-  public async delete(user: User, id: number): Promise<void> {
-    this._log(`delete start`);
+  public async remove(user: User, id: number): Promise<void> {
+    this._log(`remove start`);
     // 북마크 검증
     const bookmark = await this._bookmarkRepository.findOneById(id);
     if (!bookmark || !bookmark.isActive)

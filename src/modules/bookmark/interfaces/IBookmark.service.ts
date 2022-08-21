@@ -10,5 +10,5 @@ export interface IBookmarkService {
     user: User,
     pageOptionsDto: PageOptionsDto
   ): Promise<PageResponseDto<PageInfoDto, BookmarkPostResponseDto>>;
-  delete(user: User, id: number): Promise<void>;
+  remove(user: User, id: number): Promise<void>;
 }

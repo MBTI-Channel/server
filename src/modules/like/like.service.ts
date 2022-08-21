@@ -81,12 +81,12 @@ export class LikeService implements ILikeService {
     return likeTarget;
   }
 
-  public async createLike(
+  public async create(
     type: string,
     targetId: number,
     user: User
   ): Promise<LikeResponseDto> {
-    this._log("createLike satrt");
+    this._log("create satrt");
 
     // targetId 존재하는지 확인
     const likeTarget = await this._getLikeTarget(type, targetId);
@@ -142,12 +142,12 @@ export class LikeService implements ILikeService {
     }
   }
 
-  public async deleteLike(
+  public async remove(
     type: string,
     targetId: number,
     user: User
   ): Promise<void> {
-    this._log("deleteLike satrt");
+    this._log("remove satrt");
 
     // targetId 존재하는지 확인
     const likeTarget = await this._getLikeTarget(type, targetId);

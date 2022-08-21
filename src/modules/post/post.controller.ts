@@ -71,7 +71,7 @@ export class PostController {
     const user = req.user as User;
     const { id } = param;
 
-    await this._postService.delete(user, id);
+    await this._postService.remove(user, id);
 
     return res.status(204).end();
   }
