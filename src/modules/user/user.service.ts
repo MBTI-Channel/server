@@ -55,9 +55,11 @@ export class UserService implements IUserService {
     this._log(`create start`);
     const userEntitiy = User.of(provider, providerId, gender, ageRange);
     const user = await this._userRepository.create(userEntitiy);
+    this._log(`create successful`);
     return new NeedSignUpResponseDto(user);
   }
 
+  //TODO: 제거
   public async findOneById(id: number) {
     this._log(`findOneById start`);
     const user = await this._userRepository.findOneById(id);
@@ -67,7 +69,7 @@ export class UserService implements IUserService {
 
   public async updateNickname(user: User, nickname: string) {
     this._log(`updateNickname start`);
-    // 닉네임 중복 확인
+
     await this.checkDuplicateNickname(nickname);
 
     // 닉네임 업데이트 후 업데이트된 accessToken 리턴
@@ -82,11 +84,11 @@ export class UserService implements IUserService {
 
   public async updateMbti(user: User, mbti: Mbti) {
     this._log("updateMbti start");
-    // 수정 mbti가 지금 mbti랑 같다면 에러
+
+    this._log("check if the mbti to be updated === the current mbti");
     if (user.mbti === mbti) throw new ConflictException("same mbti as now");
 
-    // mbti 업데이트 기록이 2주 이내라면 수정할 수 없다
-    this._log("is mbti update available?");
+    this._log("check if mbti update is possible"); // mbti 업데이트 기록이 2주 이내라면 수정할 수 없다
     const updateLog = await this._updateLogService.findLastOneByType(
       user.id,
       "mbti"
@@ -96,22 +98,22 @@ export class UserService implements IUserService {
         `mbti update available date has not passed. last updated at :${updateLog.createdAt.toISOString()}`
       );
 
-    // mbti 업데이트 후 업데이트된 accessToken 리턴
-    this._log("mbti update");
     const updatedUser = await this._userRepository.update(user.id, {
       mbti,
     });
-
-    // 업데이트 로그 생성
     await this._updateLogService.create(user, "mbti", user.mbti, mbti);
 
     const accessToken = await this._authService.generateAccessToken(
       updatedUser
     );
+
+    this._log("mbti update successful");
     return new AccessTokenResponseDto(accessToken);
   }
 
-  // mbti 업데이트 기록이 2주 이내라면 false, 아니라면 true 리턴
+  /**
+   * mbti 업데이트 기록이 2주 이내라면 false, 아니라면 true 리턴
+   */
   private _isMbtiUpdateAvailable(updateLogCreatedAt: Date) {
     const msNow = new Date().getTime();
     const msCreatedAt = updateLogCreatedAt.getTime();
@@ -121,7 +123,6 @@ export class UserService implements IUserService {
     return twoWeeks < msDifferenceFromNow ? true : false;
   }
 
-  // 로그인
   public async login(
     id: number,
     providerId: string,
@@ -131,13 +132,11 @@ export class UserService implements IUserService {
 
     const user = await this._userRepository.findOneById(id);
 
-    // err: 존재하지 않는 user id
-    this._log(`check is exists user id`);
+    this._log(`check if user id ${id} exists`);
     if (!user) {
       throw new NotFoundException("not exists user");
     }
 
-    // err: user providerId와 요청 providerId 다름
     this._log(`check user providerId and providerId match`);
     if (user.providerId !== providerId)
       throw new UnauthorizedException("user does not match");
@@ -148,15 +147,15 @@ export class UserService implements IUserService {
       this._authService.generateRefreshToken(refreshKey),
     ]);
 
+    this._log(`user login successful`);
     return new UserTokenResponseDto(user, accessToken, refreshToken);
   }
 
   public async logout(id: number, refreshToken: string, userAgent: string) {
     this._log(`logout start`);
 
-    // redis에 있는 refresh 상태 삭제
     this._log(`check refresh status`);
-    const key = `${id}-${userAgent}`;
+    const key = `${id}-${userAgent}`; //TODO: const refreshKey = this._authService.getRefreshKey(user.id, userAgent);
     const hasAuth = await this._authService.hasRefreshAuth(key, refreshToken);
     if (!hasAuth) {
       //TODO: 디스코드 알림
@@ -166,9 +165,9 @@ export class UserService implements IUserService {
       throw new UnauthorizedException("authentication error");
     }
     await this._authService.removeRefreshKey(key);
+    this._log(`user logout successful`);
   }
 
-  // 닉네임, mbti를 update하여 회원가입 처리한다.
   public async signUp(
     id: number,
     uuid: string,
@@ -176,22 +175,20 @@ export class UserService implements IUserService {
     mbti: string,
     userAgent: string
   ) {
+    this._log(`check if user id ${id} exists`);
     const user = await this._userRepository.findOneById(id);
-    // err: 존재하지 않는 user id
     if (!user) throw new NotFoundException("not exists user");
 
-    // err: user uuid와 요청 uuid 다름
+    this._log(`check if the uuid matches the uuid of the server`);
     if (user.uuid !== uuid)
       throw new UnauthorizedException("user does not match");
 
-    // err: 이미 가입한 상태
+    this._log(`check if user id ${id} is already signed up`);
     if (user.status !== config.user.status.new)
       throw new BadReqeustException("already sign up user");
 
-    // err: 중복 닉네임
     await this.checkDuplicateNickname(nickname);
 
-    // suc: 업데이트 및 토큰 발급
     const updatedUser = await this._userRepository.update(user.id, {
       nickname,
       mbti,
@@ -203,10 +200,10 @@ export class UserService implements IUserService {
       this._authService.generateRefreshToken(refreshKey),
     ]);
 
+    this._log(`user sign up successful`);
     return new UserTokenResponseDto(updatedUser, accessToken, refreshToken);
   }
 
-  // 사용자 상태를 탈퇴 처리한다.
   public async leave(
     id: number,
     refreshToken: string,
@@ -214,9 +211,8 @@ export class UserService implements IUserService {
   ): Promise<void> {
     this._log(`leave start`);
 
-    // redis에 있는 refresh 상태 삭제
     this._log(`check refresh status`);
-    const key = `${id}-${userAgent}`;
+    const key = `${id}-${userAgent}`; //TODO: const refreshKey = this._authService.getRefreshKey(user.id, userAgent);
     const hasAuth = await this._authService.hasRefreshAuth(key, refreshToken);
     if (!hasAuth) {
       //TODO: 디스코드 알림
@@ -227,10 +223,11 @@ export class UserService implements IUserService {
     }
     await this._authService.removeRefreshKey(key);
 
-    this._log(`user leave...`);
     await this._userRepository.update(id, {
       status: config.user.status.withdrawal,
     });
+
+    this._log(`user leave successful`);
   }
 
   public async reissueAccessToken(
@@ -257,20 +254,27 @@ export class UserService implements IUserService {
     return new AccessTokenResponseDto(accessToken);
   }
 
-  // 중복 닉네임이 있는지 확인한다.
   public async checkDuplicateNickname(nickname: string) {
+    this._log(`checkDuplicateNickname start`);
+
     const foundNickname = await this._userRepository.findOneByNickname(
       nickname
     );
     if (foundNickname) throw new ConflictException("already exists nickname");
+
+    this._log(`${nickname} is a available nickname`);
   }
 
-  // user가 유효한지 확인한다.
   public async isValid(id: number) {
-    this._log(`is valid user id? : ${id}`);
+    this._log(`check if user id ${id} is valid`);
     const user = await this._userRepository.findOneStatus(id);
-    if (!user) return false;
-    if (!user.isActive()) return false;
+
+    if (!user || !user.isActive) {
+      this._log(`user id ${id} is not valid`);
+      return false;
+    }
+
+    this._log(`user id ${id} is valid`);
     return true;
   }
 }
