@@ -35,7 +35,7 @@ export class LikeController {
     const { type, targetId } = body;
     const user = req.user as User;
 
-    const data = await this._likeService.createLike(type, targetId, user);
+    const data = await this._likeService.create(type, targetId, user);
 
     return res.status(201).json(data);
   }
@@ -46,7 +46,7 @@ export class LikeController {
     TYPES.ValidateAccessTokenMiddleware,
     queryValidator(DeleteLikeDto)
   )
-  public async deleteLike(
+  public async Ldeleteike(
     @queryParam() query: DeleteLikeDto,
     req: Request,
     res: Response
@@ -54,7 +54,7 @@ export class LikeController {
     const { type, targetId } = query;
     const user = req.user as User;
 
-    await this._likeService.deleteLike(type, targetId, user);
+    await this._likeService.remove(type, targetId, user);
 
     return res.status(204).json();
   }
