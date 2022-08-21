@@ -59,14 +59,6 @@ export class UserService implements IUserService {
     return new NeedSignUpResponseDto(user);
   }
 
-  //TODO: 제거
-  public async findOneById(id: number) {
-    this._log(`findOneById start`);
-    const user = await this._userRepository.findOneById(id);
-    if (!user) return null;
-    return new UserResponseDto(user);
-  }
-
   public async updateNickname(user: User, nickname: string) {
     this._log(`updateNickname start`);
 
