@@ -43,7 +43,28 @@ export class FileService implements IFileService {
       targetType,
       targetId
     );
-    console.log(files);
+
+    let existedFilesUrl: string[] = [];
+    if (files) {
+      files.map((file) => {
+        if (file.isActive) {
+          existedFilesUrl.push(file.url);
+        }
+      });
+    }
+
+    // files에 file이 없으면 새로 생성
+    let newFilesUrl = filesUrl.filter(
+      (file) => !existedFilesUrl.includes(file)
+    );
+
+    // files에는 있는데 file에 없으면 삭제
+    let removeFilesUrl = existedFilesUrl.filter(
+      (file) => !filesUrl.includes(file)
+      // TODO: 삭제 로직 구현 생각..
+    );
+
+    if (newFilesUrl) await this.create(targetType, targetId, newFilesUrl);
   }
 
   public async remove(
