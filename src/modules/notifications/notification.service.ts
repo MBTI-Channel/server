@@ -65,12 +65,10 @@ export class NotificationService implements INotificationService {
         pageOptionsDto
       );
 
-    // 다음 알림 페이지 있는지 확인
-    let nextId = null;
-    if (notificationArray.length === pageOptionsDto.maxResults + 1) {
-      nextId = notificationArray[notificationArray.length - 1].id;
-      notificationArray.pop();
-    }
+    // notificationArray 길이가 maxResults보다 작다면 nextId는 null, 아니라면 마지막 idx의 id 할당
+    let nextId: number | null;
+    if (notificationArray.length < pageOptionsDto.maxResults) nextId = null;
+    else nextId = notificationArray[notificationArray.length - 1].id;
 
     // 응답 DTO로 변환후 리턴
     const pageInfoDto = new PageInfiniteScrollInfoDto(
