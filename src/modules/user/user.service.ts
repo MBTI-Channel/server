@@ -142,10 +142,10 @@ export class UserService implements IUserService {
     if (user.providerId !== providerId)
       throw new UnauthorizedException("user does not match");
 
-    const key = `${user.id}-${userAgent}`;
+    const refreshKey = this._authService.getRefreshKey(user.id, userAgent);
     const [accessToken, refreshToken] = await Promise.all([
       this._authService.generateAccessToken(user),
-      this._authService.generateRefreshToken(key),
+      this._authService.generateRefreshToken(refreshKey),
     ]);
 
     return new UserTokenResponseDto(user, accessToken, refreshToken);
@@ -197,10 +197,10 @@ export class UserService implements IUserService {
       mbti,
       status: config.user.status.normal,
     });
-    const key = `${user.id}-${userAgent}`;
+    const refreshKey = this._authService.getRefreshKey(user.id, userAgent);
     const [accessToken, refreshToken] = await Promise.all([
       this._authService.generateAccessToken(updatedUser),
-      this._authService.generateRefreshToken(key),
+      this._authService.generateRefreshToken(refreshKey),
     ]);
 
     return new UserTokenResponseDto(updatedUser, accessToken, refreshToken);
@@ -240,8 +240,11 @@ export class UserService implements IUserService {
   ) {
     this._log(`reissueAccessToken start`);
     // redis의 정보와 일치하는지 확인
-    const key = `${user.id}-${userAgent}`;
-    const hasAuth = await this._authService.hasRefreshAuth(key, refreshToken);
+    const refreshKey = this._authService.getRefreshKey(user.id, userAgent);
+    const hasAuth = await this._authService.hasRefreshAuth(
+      refreshKey,
+      refreshToken
+    );
     if (!hasAuth) {
       //TODO: 디스코드 알림
       this._logger.warn(
