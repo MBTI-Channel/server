@@ -124,7 +124,7 @@ export class PostController {
     return res.status(200).json(data);
   }
 
-  // 게시글 전체 조회
+  // 특정 카테고리 게시글 전체 조회
   @httpGet("/", TYPES.CheckLoginStatusMiddleware, queryValidator(GetAllPostDto))
   public async getAllPosts(
     @queryParam() query: GetAllPostDto,

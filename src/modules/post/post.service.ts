@@ -183,6 +183,9 @@ export class PostService implements IPostService {
 
     this._log(`remove post id ${id}`);
     await this._postRepository.remove(id);
+
+    this._log(`remove post file`);
+    await this._fileService.remove(FileTargetType.POST, id);
   }
 
   public async getDetail(user: User, id: number): Promise<PostResponseDto> {

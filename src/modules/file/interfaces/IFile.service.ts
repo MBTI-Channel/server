@@ -6,5 +6,5 @@ export interface IFileService {
     targetId: number,
     filesUrl: string[]
   ): Promise<void>;
-  // delete(post: Post, files_url: string[]): Promise<void>;
+  remove(targetType: FileTargetType, targetId: number): Promise<void>;
 }
