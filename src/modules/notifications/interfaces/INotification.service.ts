@@ -13,7 +13,7 @@ export interface INotificationService {
     targetId: number,
     type: NotificationType
   ): Promise<void>;
-  findAll(
+  getAllByUser(
     user: User,
     pageOptionsDto: GetAllNotificationsDto
   ): Promise<

@@ -56,7 +56,10 @@ export class NotificationService implements INotificationService {
   }
 
   // user의 알림 리스트를 조회한다.
-  public async findAll(user: User, pageOptionsDto: GetAllNotificationsDto) {
+  public async getAllByUser(
+    user: User,
+    pageOptionsDto: GetAllNotificationsDto
+  ) {
     this._log(`findAll start`);
 
     const [notificationArray, totalCount] =
