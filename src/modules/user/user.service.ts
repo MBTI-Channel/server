@@ -266,13 +266,8 @@ export class UserService implements IUserService {
   public async isValid(id: number) {
     this._log(`check if user id ${id} is valid`);
     const user = await this._userRepository.findOneStatus(id);
-
-    if (!user || !user.isActive) {
-      this._log(`user id ${id} is not valid`);
-      return false;
-    }
-
-    this._log(`user id ${id} is valid`);
+    if (!user) return false;
+    if (!user.isActive()) return false;
     return true;
   }
 }
