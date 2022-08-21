@@ -29,5 +29,5 @@ export class CreatePostDto {
 
   @IsArray()
   @IsOptional()
-  imagesUrl: string[];
+  filesUrl: string[];
 }
