@@ -159,7 +159,7 @@ export class UserService implements IUserService {
       );
       throw new UnauthorizedException("authentication error");
     }
-    await this._authService.removeRefreshKey(key);
+    await this._authService.removeRefreshKey(refreshKey);
     this._log(`user logout successful`);
   }
 
