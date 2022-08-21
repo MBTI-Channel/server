@@ -86,11 +86,13 @@ export class PostService implements IPostService {
 
     const createdPost = await this._postRepository.create(postEntity);
     // file 테이블에 이미지 저장
-    await this._fileService.create(
-      FileTargetType.POST,
-      createdPost.id,
-      filesUrl
-    );
+    if (filesUrl) {
+      await this._fileService.create(
+        FileTargetType.POST,
+        createdPost.id,
+        filesUrl
+      );
+    }
 
     return new PostResponseDto(createdPost, user);
   }
@@ -351,7 +353,8 @@ export class PostService implements IPostService {
     id: number,
     title: string,
     content: string,
-    isSecret: boolean
+    isSecret: boolean,
+    filesUrl: string[]
   ): Promise<PostResponseDto> {
     this._log(`update start`);
     const post = await this._postRepository.findOneById(id);
