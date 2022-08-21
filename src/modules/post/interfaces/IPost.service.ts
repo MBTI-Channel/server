@@ -18,7 +18,7 @@ export interface IPostService {
     title: string,
     content: string,
     category: CategoryName,
-    imagesUrl: string[],
+    filesUrl: string[],
     user: User
   ): Promise<PostResponseDto>;
   increaseReportCount(id: number): Promise<void>;

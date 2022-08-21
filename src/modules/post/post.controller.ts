@@ -42,7 +42,7 @@ export class PostController {
     req: Request,
     res: Response
   ) {
-    const { category, isSecret, title, content, imagesUrl } = body;
+    const { category, isSecret, title, content, filesUrl } = body;
     const user = req.user as User;
 
     const data = await this._postService.create(
@@ -50,7 +50,7 @@ export class PostController {
       title,
       content,
       category,
-      imagesUrl,
+      filesUrl,
       user
     );
 

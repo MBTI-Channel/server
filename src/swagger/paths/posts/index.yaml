@@ -5,7 +5,8 @@ post:
     (필수) 게시글이 등록될 카테고리 이름 <br>
     isSecret 익명 여부 default - false <br>
     (필수) post 제목 (1~30자) <br>
-    (필수) post 내용
+    (필수) post 내용 <br>
+    filesUrl 게시글에 등록할 파일 s3 url (배열)
   security:
     - bearerAuth: []
   requestBody:
@@ -26,6 +27,9 @@ post:
             content:
               type: string
               example: 저녁 뭐먹을까요..?
+            filesUrl:
+              type: string[]
+              example: ["s3-498fikjnmiu8392.png", s3-dsa879f67d9ah.png]
   responses:
     $ref: "../../responses/posts/index.post.yaml"
 
