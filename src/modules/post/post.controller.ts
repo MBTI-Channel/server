@@ -150,14 +150,15 @@ export class PostController {
   ) {
     const user = req.user as User;
     const { id } = param;
-    const { title, content, isSecret } = body;
+    const { title, content, isSecret, filesUrl } = body;
 
     const data = await this._postService.update(
       user,
       id,
       title,
       content,
-      isSecret
+      isSecret,
+      filesUrl
     );
 
     return res.status(200).json(data);

@@ -370,6 +370,9 @@ export class PostService implements IPostService {
       isSecret,
     });
 
+    // file update
+    await this._fileService.update(FileTargetType.POST, id, filesUrl);
+
     return new PostResponseDto(updatedPost, user);
   }
 

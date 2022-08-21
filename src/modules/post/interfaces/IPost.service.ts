@@ -42,7 +42,8 @@ export interface IPostService {
     id: number,
     title: string,
     content: string,
-    isSecret: boolean
+    isSecret: boolean,
+    filesUrl: string[]
   ): Promise<PostResponseDto>;
   search(
     user: User,
