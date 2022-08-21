@@ -147,8 +147,11 @@ export class UserService implements IUserService {
     this._log(`logout start`);
 
     this._log(`check refresh status`);
-    const key = `${id}-${userAgent}`; //TODO: const refreshKey = this._authService.getRefreshKey(user.id, userAgent);
-    const hasAuth = await this._authService.hasRefreshAuth(key, refreshToken);
+    const refreshKey = this._authService.getRefreshKey(id, userAgent);
+    const hasAuth = await this._authService.hasRefreshAuth(
+      refreshKey,
+      refreshToken
+    );
     if (!hasAuth) {
       //TODO: 디스코드 알림
       this._logger.warn(
@@ -204,8 +207,11 @@ export class UserService implements IUserService {
     this._log(`leave start`);
 
     this._log(`check refresh status`);
-    const key = `${id}-${userAgent}`; //TODO: const refreshKey = this._authService.getRefreshKey(user.id, userAgent);
-    const hasAuth = await this._authService.hasRefreshAuth(key, refreshToken);
+    const refreshKey = this._authService.getRefreshKey(id, userAgent);
+    const hasAuth = await this._authService.hasRefreshAuth(
+      refreshKey,
+      refreshToken
+    );
     if (!hasAuth) {
       //TODO: 디스코드 알림
       this._logger.warn(
@@ -213,7 +219,7 @@ export class UserService implements IUserService {
       );
       throw new UnauthorizedException("authentication error");
     }
-    await this._authService.removeRefreshKey(key);
+    await this._authService.removeRefreshKey(refreshKey);
 
     await this._userRepository.update(id, {
       status: config.user.status.withdrawal,
