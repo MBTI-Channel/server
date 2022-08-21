@@ -15,9 +15,26 @@ patch:
     (필수)id 수정할 게시글 아이디 <br>
     title 수정하고자 하는 게시글 제목 <br>
     content 수정하고자 하는 게시글 내용 <br>
-    isSecret 익명 여부 default - false
+    isSecret 익명 여부 default - false <br>
+    (필수) filesUrl 게시글에 등록할 파일 s3 url (배열)
   security:
     - bearerAuth: []
+  requestBody:
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            title:
+              type: string
+              example: 고민이 있어요
+            content:
+              type: string
+              example: 저녁 뭐먹을까요..?
+            filesUrl:
+              type: string[]
+              example: ["s3-498fikjnmiu8392.png", s3-dsa879f67d9ah.png]
+
   responses:
     $ref: "../../responses/posts/id.patch.yaml"
 

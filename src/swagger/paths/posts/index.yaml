@@ -6,7 +6,7 @@ post:
     isSecret 익명 여부 default - false <br>
     (필수) post 제목 (1~30자) <br>
     (필수) post 내용 <br>
-    filesUrl 게시글에 등록할 파일 s3 url (배열)
+    (필수) filesUrl 게시글에 등록할 파일 s3 url (배열)
   security:
     - bearerAuth: []
   requestBody:
