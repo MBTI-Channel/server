@@ -60,7 +60,7 @@ export class NotificationController {
     res: Response
   ) {
     const user = req.user as User;
-    const data = await this._notificationService.findAll(user, query);
+    const data = await this._notificationService.getAllByUser(user, query);
     return res.status(200).json(data);
   }
 }

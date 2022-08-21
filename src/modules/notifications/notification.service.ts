@@ -29,7 +29,6 @@ export class NotificationService implements INotificationService {
     this._logger.trace(`[NotificationService] ${message}`);
   }
 
-  // targetUser에 의해 userId에게 알림을 생성한다.
   public async createByTargetUser(
     targetUser: User,
     userId: number,
@@ -37,42 +36,42 @@ export class NotificationService implements INotificationService {
     type: NotificationType
   ): Promise<void> {
     this._log(`createByTargetUser start`);
-    //return: 알림대상 user === 알림원인 user
+
+    this._log(`check if user and target user are the same user`);
     if (userId === targetUser.id) {
-      this._log(`createByTargetUser fail - same target user & user`);
+      this._log(`createByTargetUser fail - target user === user`);
       return;
     }
 
+    this._log(`check if target user is valid`);
     const isValidUser = await this._userService.isValid(userId);
-    //return: 없는 || 탈퇴 || 가입처리 안한 user
     if (!isValidUser) {
       this._log(`createByTargetUser fail - isValidUser`);
       return;
     }
 
+    this._log(`create notification successful`);
     const notification = Notification.of(targetUser, userId, targetId, type);
-    this._log(`create notification`);
     await this._notificationRepository.create(notification);
   }
 
-  // user의 알림 리스트를 조회한다.
-  public async findAll(user: User, pageOptionsDto: GetAllNotificationsDto) {
+  public async getAllByUser(
+    user: User,
+    pageOptionsDto: GetAllNotificationsDto
+  ) {
     this._log(`findAll start`);
 
-    const [notificationArray, totalCount] =
+    const [notificationArray, totalCount] = //TODO: pageOptionsDto에 따라 count 달라지므로 수정필요
       await this._notificationRepository.findAllByUserId(
         user.id,
         pageOptionsDto
       );
 
-    // 다음 알림 페이지 있는지 확인
-    let nextId = null;
-    if (notificationArray.length === pageOptionsDto.maxResults + 1) {
-      nextId = notificationArray[notificationArray.length - 1].id;
-      notificationArray.pop();
-    }
+    // notificationArray 길이가 maxResults보다 작다면 nextId는 null, 아니라면 마지막 idx의 id 할당
+    let nextId: number | null;
+    if (notificationArray.length < pageOptionsDto.maxResults) nextId = null;
+    else nextId = notificationArray[notificationArray.length - 1].id;
 
-    // 응답 DTO로 변환후 리턴
     const pageInfoDto = new PageInfiniteScrollInfoDto(
       notificationArray.length,
       nextId
@@ -86,23 +85,22 @@ export class NotificationService implements INotificationService {
 
   public async readOne(user: User, id: number): Promise<void> {
     this._log(`readOne start`);
-    this._log(`exsits notification ? ${id}`);
-    const notification = await this._notificationRepository.findOneById(id);
 
+    this._log(`check if notification id ${id} exists`);
+    const notification = await this._notificationRepository.findOneById(id);
     if (!notification) throw new NotFoundException("not exists notification");
-    this._log(`check authorization`);
+
+    this._log(`check if user has authorization for notification id ${id}`);
     if (notification.userId !== user.id)
       throw new ForbiddenException("authorization error");
 
-    // 이미 읽은 알림
-    this._log(`check already read`);
+    this._log(`check if a notification has already been read`);
     if (notification.readAt)
       throw new BadReqeustException("already read notification");
 
     await this._notificationRepository.update(id, { readAt: new Date() });
   }
 
-  // readAt 업데이트 후 읽은 알림 수를 리턴한다.
   public async readAll(user: User) {
     this._log(`readAll start`);
     return await this._notificationRepository.updateAllUnread(user.id);

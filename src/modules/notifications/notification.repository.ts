@@ -35,7 +35,7 @@ export class NotificationtRepository implements INotificationRepository {
       .andWhere("notification.id >= :startId", {
         startId: pageOptionsDto.startId,
       })
-      .take(pageOptionsDto.maxResults + 1) // nextId를 위한 +1
+      .take(pageOptionsDto.maxResults)
       .orderBy(`notification.createdAt`, "ASC");
 
     if (pageOptionsDto.all)
