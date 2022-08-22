@@ -33,9 +33,6 @@ export class OauthService implements IOauthService {
     return this._apiServiceList[provider];
   }
 
-  /**
-   * provider에 따라 API 서비스로부터 유저 정보를 가져온다.
-   */
   public async getUserInfoByProvider(provider: Provider, authCode: string) {
     const apiService = this._getApiServiceByProvider(provider);
 
