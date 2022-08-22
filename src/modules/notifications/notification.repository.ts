@@ -58,4 +58,9 @@ export class NotificationtRepository implements INotificationRepository {
     } as QueryDeepPartialEntity<Notification>);
     return affected!; // update된 컬럼수
   }
+
+  public async countUnreadByUserId(userId: number): Promise<number> {
+    const repository = await this._database.getRepository(Notification);
+    return await repository.countBy({ userId, readAt: IsNull() });
+  }
 }

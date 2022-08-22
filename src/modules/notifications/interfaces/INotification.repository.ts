@@ -10,5 +10,5 @@ export interface INotificationRepository {
   findOneById(id: number): Promise<Notification>;
   update(id: number, payload: Partial<Notification>): Promise<Notification>;
   updateAllUnread(userId: number): Promise<number>;
-  //countUnreadByUserId(userId:number): Promise<number>;
+  countUnreadByUserId(userId: number): Promise<number>;
 }
