@@ -108,8 +108,8 @@ export class AuthService implements IAuthService {
     return `${userId}-${userAgent}`;
   }
 
-  public async removeRefreshKey(key: string) {
-    this._log(`removeRefreshKey start`);
+  public async removeRefreshStatus(key: string) {
+    this._log(`removeRefreshStatus start`);
     await this._redisService.del(key);
   }
 }

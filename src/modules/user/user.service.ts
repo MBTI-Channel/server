@@ -159,7 +159,7 @@ export class UserService implements IUserService {
       );
       throw new UnauthorizedException("authentication error");
     }
-    await this._authService.removeRefreshKey(refreshKey);
+    await this._authService.removeRefreshStatus(refreshKey);
     this._log(`user logout successful`);
   }
 
@@ -219,7 +219,7 @@ export class UserService implements IUserService {
       );
       throw new UnauthorizedException("authentication error");
     }
-    await this._authService.removeRefreshKey(refreshKey);
+    await this._authService.removeRefreshStatus(refreshKey);
 
     await this._userRepository.update(id, {
       status: config.user.status.withdrawal,

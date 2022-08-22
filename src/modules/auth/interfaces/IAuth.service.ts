@@ -28,5 +28,5 @@ export interface IAuthService {
   /**
    * refresh 상태를 제거합니다.
    */
-  removeRefreshKey(key: string): Promise<void>;
+  removeRefreshStatus(key: string): Promise<void>;
 }
