@@ -251,6 +251,7 @@ export class UserController {
   // 임시 kakao 라우터
   @httpGet("/kakao")
   async kakaoLogin(req: Request, res: Response) {
+    if (process.env.NODE_ENV === "production") return res.status(404).end();
     const url = `https://kauth.kakao.com/oauth/authorize?client_id=${config.kakao.restApiKey}&redirect_uri=${config.kakao.redirectUri}&response_type=code`;
     return res.redirect(url);
   }
@@ -258,6 +259,7 @@ export class UserController {
   // 임시 naver 라우터
   @httpGet("/naver")
   async naverLogin(req: Request, res: Response) {
+    if (process.env.NODE_ENV === "production") return res.status(404).end();
     const url = `https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=${config.naver.clientId}&redirect_uri=${config.naver.redirectUri}&state=${config.naver.randomState}`;
     return res.redirect(url);
   }
@@ -265,6 +267,7 @@ export class UserController {
   // 임시 리다이렉트 라우터
   @httpGet("/redirect")
   async getAuthCode(req: Request, res: Response) {
+    if (process.env.NODE_ENV === "production") return res.status(404).end();
     return res.status(200).json({ code: req.query.code });
   }
 }
