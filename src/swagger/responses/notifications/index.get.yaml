@@ -5,12 +5,12 @@
       schema:
         type: object
         properties:
+          totalUnreadCount:
+            type: integer
+            exmaple: 30
           pageInfo:
             type: object
             properties:
-              totalCounts:
-                type: integer
-                example: 20
               itemsPerPage:
                 type: integer
                 example: 30
