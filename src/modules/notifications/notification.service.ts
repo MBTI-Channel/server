@@ -61,7 +61,7 @@ export class NotificationService implements INotificationService {
   ) {
     this._log(`findAll start`);
 
-    const [notificationArray, totalCount] = //TODO: pageOptionsDto에 따라 count 달라지므로 수정필요
+    const notificationArray = //TODO: pageOptionsDto에 따라 count 달라지므로 수정필요
       await this._notificationRepository.findAllByUserId(
         user.id,
         pageOptionsDto
