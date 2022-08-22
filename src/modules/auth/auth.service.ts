@@ -26,6 +26,7 @@ export class AuthService implements IAuthService {
   }
 
   public async generateAccessToken(user: User) {
+    this._log(`generateAccessToken start`);
     const { id, nickname, mbti, isAdmin, createdAt } = user;
     const payload: ITokenPayload = {
       id,
@@ -43,6 +44,7 @@ export class AuthService implements IAuthService {
   }
 
   public async generateRefreshToken(refreshStatusKey: string) {
+    this._log(`generateRefreshToken start`);
     const payload: ITokenPayload = {};
     const options: SignOptions = {
       expiresIn: config.jwt.refreshTokenExpiresIn,
@@ -55,9 +57,6 @@ export class AuthService implements IAuthService {
     return refreshToken;
   }
 
-  /**
-   * payload의 데이터가 이상이 없는지 확인하는 함수
-   */
   public async validateUserWithToken(
     id: number,
     nickname: string,
@@ -67,34 +66,30 @@ export class AuthService implements IAuthService {
 
     const user = await this._userRepository.findOneById(id);
 
-    // 존재하지않는 user id
-    if (!user) {
-      this._logger.warn(`[AuthService] not exists user id : ${id}`);
-      throw new UnauthorizedException("authentication error");
-    }
+    this._log(`check if the user id ${id} exists in the server`);
+    if (!user) throw new UnauthorizedException("authentication error");
 
-    // status가 normal이 아닌 user
-    if (user.status !== config.user.status.normal) {
-      this._logger.warn(`[AuthService] not normal status user id : ${id}`);
+    this._log(`check if the user status is normal`);
+    if (user.status !== config.user.status.normal)
       throw new UnauthorizedException("authentication error");
-    }
 
-    // access token payload와 db의 user 정보 불일치
-    if (user.mbti !== mbti || user.nickname !== nickname) {
-      this._logger.warn(
-        `[AuthService] access token payload and database user info does not match`
-      );
+    this._log(`check if payload matches server's user info`);
+    if (user.mbti !== mbti || user.nickname !== nickname)
       throw new UnauthorizedException("authentication error");
-    }
   }
 
   public async hasRefreshAuth(refreshStatusKey: string, refreshToken: string) {
     this._log(`hasRefreshAuth start`);
     const redisRefreshToken = await this._redisService.get(refreshStatusKey);
-    // 일치하는 key 없음
-    if (!redisRefreshToken) return false;
-    // value가 같지 않음
-    if (redisRefreshToken !== refreshToken) return false;
+
+    if (!redisRefreshToken) {
+      this._log(`no matching refreshStatusKey found`);
+      return false;
+    }
+    if (redisRefreshToken !== refreshToken) {
+      this._log(`refresh token does not match server refresh token`);
+      return false;
+    }
     return true;
   }
 
@@ -102,8 +97,7 @@ export class AuthService implements IAuthService {
     refreshStatusKey: string,
     refreshToken: string
   ) {
-    this._log(`setTokenInRedis start`);
-
+    this._log(`_setTokenInRedis : ${refreshStatusKey} : ${refreshToken}`);
     await this._redisService.set(refreshStatusKey, refreshToken);
   }
 
