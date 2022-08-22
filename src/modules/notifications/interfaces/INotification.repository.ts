@@ -6,9 +6,9 @@ export interface INotificationRepository {
   findAllByUserId(
     userId: number,
     pageOptionsDto: GetAllNotificationsDto
-  ): Promise<[Notification[], number]>;
+  ): Promise<Notification[]>;
   findOneById(id: number): Promise<Notification>;
   update(id: number, payload: Partial<Notification>): Promise<Notification>;
   updateAllUnread(userId: number): Promise<number>;
-  //countUnreadByUserId(userId:number): Promise<number>;
+  countUnreadByUserId(userId: number): Promise<number>;
 }

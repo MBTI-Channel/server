@@ -27,7 +27,7 @@ export class NotificationtRepository implements INotificationRepository {
   public async findAllByUserId(
     userId: number,
     pageOptionsDto: GetAllNotificationsDto
-  ): Promise<[Notification[], number]> {
+  ): Promise<Notification[]> {
     const repository = await this._database.getRepository(Notification);
     const queryBuilder = repository
       .createQueryBuilder("notification")
@@ -41,7 +41,7 @@ export class NotificationtRepository implements INotificationRepository {
     if (pageOptionsDto.all)
       queryBuilder.andWhere("notification.readAt IS NULL");
 
-    return queryBuilder.getManyAndCount();
+    return queryBuilder.getMany();
   }
 
   public async update(id: number, payload: Partial<Notification>) {
@@ -57,5 +57,10 @@ export class NotificationtRepository implements INotificationRepository {
       readAt: new Date(),
     } as QueryDeepPartialEntity<Notification>);
     return affected!; // update된 컬럼수
+  }
+
+  public async countUnreadByUserId(userId: number): Promise<number> {
+    const repository = await this._database.getRepository(Notification);
+    return await repository.countBy({ userId, readAt: IsNull() });
   }
 }

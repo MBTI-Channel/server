@@ -12,7 +12,11 @@ import {
   ForbiddenException,
   NotFoundException,
 } from "../../shared/errors/all.exception";
-import { GetAllNotificationsDto, NotificationResponseDto } from "./dto";
+import {
+  GetAllNotificationsDto,
+  NotificationPageResponseDto,
+  NotificationResponseDto,
+} from "./dto";
 import { PageInfiniteScrollInfoDto, PageResponseDto } from "../../shared/page";
 
 @injectable()
@@ -59,9 +63,25 @@ export class NotificationService implements INotificationService {
     user: User,
     pageOptionsDto: GetAllNotificationsDto
   ) {
-    this._log(`findAll start`);
+    this._log(`getAllByUser start`);
 
-    const [notificationArray, totalCount] = //TODO: pageOptionsDto에 따라 count 달라지므로 수정필요
+    const totalUnreadCount =
+      await this._notificationRepository.countUnreadByUserId(user.id);
+
+    // totalUnreadCount가 0이면 조회하지않고 바로 응답
+    if (totalUnreadCount === 0) {
+      this._log(`totalUnreadCountt is 0, so return immediately`);
+      return new NotificationPageResponseDto(
+        totalUnreadCount,
+        {
+          itemsPerPage: 0,
+          nextId: null,
+        },
+        []
+      );
+    }
+
+    const notificationArray =
       await this._notificationRepository.findAllByUserId(
         user.id,
         pageOptionsDto
@@ -77,7 +97,8 @@ export class NotificationService implements INotificationService {
       nextId
     );
 
-    return new PageResponseDto(
+    return new NotificationPageResponseDto(
+      totalUnreadCount,
       pageInfoDto,
       notificationArray.map((e) => new NotificationResponseDto(e))
     );
