@@ -8,7 +8,7 @@ export interface IAuthService {
   /**
    * 새 refresh token을 발급합니다.
    */
-  generateRefreshToken(key: string): Promise<string>;
+  generateRefreshToken(refreshStatusKey: string): Promise<string>;
   /**
    * token 정보와 서버의 user 정보를 비교하여 검증합니다.
    */
@@ -20,7 +20,10 @@ export interface IAuthService {
   /**
    * refresh 권한이 있는지 확인합니다.
    */
-  hasRefreshAuth(key: string, refreshToken: string): Promise<boolean>;
+  hasRefreshAuth(
+    refreshStatusKey: string,
+    refreshToken: string
+  ): Promise<boolean>;
   /**
    * userId와 userAgent로 refresh 상태 key를 받습니다.
    */

@@ -42,7 +42,7 @@ export class AuthService implements IAuthService {
     return accessToken;
   }
 
-  public async generateRefreshToken(key: string) {
+  public async generateRefreshToken(refreshStatusKey: string) {
     const payload: ITokenPayload = {};
     const options: SignOptions = {
       expiresIn: config.jwt.refreshTokenExpiresIn,
@@ -51,7 +51,7 @@ export class AuthService implements IAuthService {
     const refreshToken = this._jwtUtil.sign(payload, options);
 
     // redis에 refresh token 저장
-    await this._setTokenInRedis(key, refreshToken);
+    await this._setTokenInRedis(refreshStatusKey, refreshToken);
     return refreshToken;
   }
 
@@ -88,9 +88,9 @@ export class AuthService implements IAuthService {
     }
   }
 
-  public async hasRefreshAuth(key: string, refreshToken: string) {
+  public async hasRefreshAuth(refreshStatusKey: string, refreshToken: string) {
     this._log(`hasRefreshAuth start`);
-    const redisRefreshToken = await this._redisService.get(key);
+    const redisRefreshToken = await this._redisService.get(refreshStatusKey);
     // 일치하는 key 없음
     if (!redisRefreshToken) return false;
     // value가 같지 않음
@@ -98,18 +98,21 @@ export class AuthService implements IAuthService {
     return true;
   }
 
-  private async _setTokenInRedis(key: string, refreshToken: string) {
+  private async _setTokenInRedis(
+    refreshStatusKey: string,
+    refreshToken: string
+  ) {
     this._log(`setTokenInRedis start`);
 
-    await this._redisService.set(key, refreshToken);
+    await this._redisService.set(refreshStatusKey, refreshToken);
   }
 
   public getRefreshStatusKey(userId: number, userAgent: string): string {
     return `${userId}-${userAgent}`;
   }
 
-  public async removeRefreshStatus(key: string) {
+  public async removeRefreshStatus(refreshStatusKey: string) {
     this._log(`removeRefreshStatus start`);
-    await this._redisService.del(key);
+    await this._redisService.del(refreshStatusKey);
   }
 }
