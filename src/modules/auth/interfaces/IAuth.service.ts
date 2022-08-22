@@ -22,9 +22,9 @@ export interface IAuthService {
    */
   hasRefreshAuth(key: string, refreshToken: string): Promise<boolean>;
   /**
-   * userId와 userAgent로 refresh key를 생성합니다.
+   * userId와 userAgent로 refresh 상태 key를 받습니다.
    */
-  getRefreshKey(userId: number, userAgent: string): string;
+  getRefreshStatusKey(userId: number, userAgent: string): string;
   /**
    * refresh 상태를 제거합니다.
    */

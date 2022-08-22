@@ -133,7 +133,7 @@ export class UserService implements IUserService {
     if (user.providerId !== providerId)
       throw new UnauthorizedException("user does not match");
 
-    const refreshKey = this._authService.getRefreshKey(user.id, userAgent);
+    const refreshKey = this._authService.getRefreshStatusKey(user.id, userAgent);
     const [accessToken, refreshToken] = await Promise.all([
       this._authService.generateAccessToken(user),
       this._authService.generateRefreshToken(refreshKey),
@@ -147,7 +147,7 @@ export class UserService implements IUserService {
     this._log(`logout start`);
 
     this._log(`check refresh status`);
-    const refreshKey = this._authService.getRefreshKey(id, userAgent);
+    const refreshKey = this._authService.getRefreshStatusKey(id, userAgent);
     const hasAuth = await this._authService.hasRefreshAuth(
       refreshKey,
       refreshToken
@@ -189,7 +189,7 @@ export class UserService implements IUserService {
       mbti,
       status: config.user.status.normal,
     });
-    const refreshKey = this._authService.getRefreshKey(user.id, userAgent);
+    const refreshKey = this._authService.getRefreshStatusKey(user.id, userAgent);
     const [accessToken, refreshToken] = await Promise.all([
       this._authService.generateAccessToken(updatedUser),
       this._authService.generateRefreshToken(refreshKey),
@@ -207,7 +207,7 @@ export class UserService implements IUserService {
     this._log(`leave start`);
 
     this._log(`check refresh status`);
-    const refreshKey = this._authService.getRefreshKey(id, userAgent);
+    const refreshKey = this._authService.getRefreshStatusKey(id, userAgent);
     const hasAuth = await this._authService.hasRefreshAuth(
       refreshKey,
       refreshToken
@@ -235,7 +235,7 @@ export class UserService implements IUserService {
   ) {
     this._log(`reissueAccessToken start`);
     // redis의 정보와 일치하는지 확인
-    const refreshKey = this._authService.getRefreshKey(user.id, userAgent);
+    const refreshKey = this._authService.getRefreshStatusKey(user.id, userAgent);
     const hasAuth = await this._authService.hasRefreshAuth(
       refreshKey,
       refreshToken

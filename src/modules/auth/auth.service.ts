@@ -104,7 +104,7 @@ export class AuthService implements IAuthService {
     await this._redisService.set(key, refreshToken);
   }
 
-  public getRefreshKey(userId: number, userAgent: string): string {
+  public getRefreshStatusKey(userId: number, userAgent: string): string {
     return `${userId}-${userAgent}`;
   }
 
