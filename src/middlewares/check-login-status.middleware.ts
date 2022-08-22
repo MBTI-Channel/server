@@ -35,8 +35,9 @@ export class CheckLoginStatus extends BaseMiddleware {
       if (header && header.startsWith(AUTH_TYPE))
         accessToken = header.split(" ")[1];
 
-      // accessToken이 없다면 미로그인 상태. next 호출
-      if (!accessToken) {
+      // accessToken이 없거나 "null"이라면 미로그인 상태이므로 next를 호출한다.
+      // 프론트에서 로그인 안해도 인증 헤더가 넘어옵니다 (Authorization : Bearer null)
+      if (!accessToken || accessToken === "null") {
         this._log(`not logged in. call next`);
         return next();
       }
