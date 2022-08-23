@@ -14,5 +14,5 @@ export interface IUserRepository {
     providerId: string
   ): Promise<User[]>;
   findOneStatus(id: number): Promise<User | null>;
-  update(id: number, payload: Partial<User>): Promise<User>;
+  update(id: number, payload: Partial<User>): Promise<boolean>;
 }
