@@ -64,13 +64,16 @@ export class UserService implements IUserService {
 
     await this.checkDuplicateNickname(nickname);
 
-    // 닉네임 업데이트 후 업데이트된 accessToken 리턴
-    const updatedUser = await this._userRepository.update(user.id, {
+    this._log(`check if the update request was successful`);
+    const hasUpdated = await this._userRepository.update(user.id, {
       nickname,
     });
-    const accessToken = await this._authService.generateAccessToken(
-      updatedUser
-    );
+    if (!hasUpdated) throw new NotFoundException("not exists user"); // TODO: update 실패 디스코드 알림
+
+    // access token 재발급을 위해 user에 update한 닉네임 재할당
+    user.nickname = nickname;
+    const accessToken = await this._authService.generateAccessToken(user);
+
     return new AccessTokenResponseDto(accessToken);
   }
 
@@ -90,14 +93,16 @@ export class UserService implements IUserService {
         `mbti update available date has not passed. last updated at :${updateLog.createdAt.toISOString()}`
       );
 
-    const updatedUser = await this._userRepository.update(user.id, {
+    this._log(`check if the update request was successful`);
+    const hasUpdated = await this._userRepository.update(user.id, {
       mbti,
     });
+    if (!hasUpdated) throw new NotFoundException("not exists user"); // TODO: update 실패 디스코드 알림
+
     await this._updateLogService.create(user, "mbti", user.mbti, mbti);
 
-    const accessToken = await this._authService.generateAccessToken(
-      updatedUser
-    );
+    user.mbti = mbti; // access token 재발급을 위해 user에 update한 mbti 재할당
+    const accessToken = await this._authService.generateAccessToken(user);
 
     this._log("mbti update successful");
     return new AccessTokenResponseDto(accessToken);
@@ -133,7 +138,10 @@ export class UserService implements IUserService {
     if (user.providerId !== providerId)
       throw new UnauthorizedException("user does not match");
 
-    const refreshKey = this._authService.getRefreshStatusKey(user.id, userAgent);
+    const refreshKey = this._authService.getRefreshStatusKey(
+      user.id,
+      userAgent
+    );
     const [accessToken, refreshToken] = await Promise.all([
       this._authService.generateAccessToken(user),
       this._authService.generateRefreshToken(refreshKey),
@@ -184,19 +192,29 @@ export class UserService implements IUserService {
 
     await this.checkDuplicateNickname(nickname);
 
-    const updatedUser = await this._userRepository.update(user.id, {
+    this._log(`check if the update request was successful`);
+    const hasUpdated = await this._userRepository.update(user.id, {
       nickname,
       mbti,
       status: config.user.status.normal,
     });
-    const refreshKey = this._authService.getRefreshStatusKey(user.id, userAgent);
+    if (!hasUpdated) throw new NotFoundException("not exists user"); // TODO: update 실패 디스코드 알림
+
+    const refreshKey = this._authService.getRefreshStatusKey(
+      user.id,
+      userAgent
+    );
+
+    this._log(`get updated(signed up) user`);
+    const updatedUser = await this._userRepository.findOneById(id);
+
     const [accessToken, refreshToken] = await Promise.all([
-      this._authService.generateAccessToken(updatedUser),
+      this._authService.generateAccessToken(updatedUser!),
       this._authService.generateRefreshToken(refreshKey),
     ]);
 
     this._log(`user sign up successful`);
-    return new UserTokenResponseDto(updatedUser, accessToken, refreshToken);
+    return new UserTokenResponseDto(updatedUser!, accessToken, refreshToken);
   }
 
   public async leave(
@@ -235,7 +253,10 @@ export class UserService implements IUserService {
   ) {
     this._log(`reissueAccessToken start`);
     // redis의 정보와 일치하는지 확인
-    const refreshKey = this._authService.getRefreshStatusKey(user.id, userAgent);
+    const refreshKey = this._authService.getRefreshStatusKey(
+      user.id,
+      userAgent
+    );
     const hasAuth = await this._authService.hasRefreshAuth(
       refreshKey,
       refreshToken
