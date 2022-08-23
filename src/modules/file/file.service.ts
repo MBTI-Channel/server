@@ -32,19 +32,54 @@ export class FileService implements IFileService {
     await this._fileRepository.create(fileEntities);
   }
 
+  public async update(
+    targetType: FileTargetType,
+    targetId: number,
+    filesUrl: string[]
+  ): Promise<void> {
+    this._log(`update start`);
+
+    const files = await this._fileRepository.findFilesInfo(
+      targetType,
+      targetId
+    );
+
+    let existedFilesUrl: string[] = [];
+    if (files) {
+      files.map((file) => {
+        if (file.isActive) {
+          existedFilesUrl.push(file.url);
+        }
+      });
+    }
+
+    // files에 file이 없으면 새로 생성
+    let newFilesUrl = filesUrl.filter(
+      (file) => !existedFilesUrl.includes(file)
+    );
+
+    // files에는 있는데 file에 없으면 삭제
+    let removeFilesUrl = existedFilesUrl.filter(
+      (file) => !filesUrl.includes(file)
+      // TODO: 삭제 로직 구현 생각..
+    );
+
+    if (newFilesUrl) await this.create(targetType, targetId, newFilesUrl);
+  }
+
   public async remove(
     targetType: FileTargetType,
     targetId: number
   ): Promise<void> {
     this._log(`remove start`);
 
-    const filesId = await this._fileRepository.findFilesId(
+    const files = await this._fileRepository.findFilesInfo(
       targetType,
       targetId
     );
 
-    if (filesId) {
-      await this._fileRepository.remove(filesId);
+    if (files) {
+      await this._fileRepository.remove(files.map((file) => file.id));
     }
   }
 }

@@ -6,5 +6,10 @@ export interface IFileService {
     targetId: number,
     filesUrl: string[]
   ): Promise<void>;
+  update(
+    targetType: FileTargetType,
+    targetId: number,
+    filesUrl: string[]
+  ): Promise<void>;
   remove(targetType: FileTargetType, targetId: number): Promise<void>;
 }

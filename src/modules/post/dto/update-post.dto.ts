@@ -1,4 +1,11 @@
-import { IsBoolean, IsOptional, IsString, Length } from "class-validator";
+import {
+  IsArray,
+  IsBoolean,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  Length,
+} from "class-validator";
 
 export class UpdatePostDto {
   @IsString()
@@ -13,4 +20,8 @@ export class UpdatePostDto {
   @IsBoolean()
   @IsOptional()
   isSecret: boolean;
+
+  @IsArray()
+  @IsNotEmpty()
+  filesUrl: string[];
 }

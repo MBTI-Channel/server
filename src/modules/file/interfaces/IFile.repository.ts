@@ -3,9 +3,9 @@ import { File } from "../entity/file.entity";
 
 export interface IFileRepository {
   create(fileEntity: File[]): Promise<void>;
-  findFilesId(
+  findFilesInfo(
     targetType: FileTargetType,
     targetId: number
-  ): Promise<number[] | null>;
+  ): Promise<File[] | null>;
   remove(filesId: number[]): Promise<void>;
 }

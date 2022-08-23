@@ -28,6 +28,6 @@ export class CreatePostDto {
   content: string;
 
   @IsArray()
-  @IsOptional()
+  @IsNotEmpty()
   filesUrl: string[];
 }
