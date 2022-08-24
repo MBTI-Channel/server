@@ -52,11 +52,13 @@ export class UserRepository implements IUserRepository {
     });
   }
 
-  public async update(id: number, payload: Partial<User>): Promise<User> {
+  public async update(id: number, payload: Partial<User>): Promise<boolean> {
     const repository = await this._database.getRepository(User);
-    const updatedUser = await repository
-      .update(id, payload as QueryDeepPartialEntity<User>)
-      .then(async () => await repository.findOne({ where: { id } }));
-    return updatedUser;
+    const result = await repository.update(
+      id,
+      payload as QueryDeepPartialEntity<User>
+    );
+    if (result.affected == 1) return true;
+    return false;
   }
 }
