@@ -44,7 +44,7 @@ export interface IPostService {
     content: string,
     isSecret: boolean,
     filesUrl: string[]
-  ): Promise<PostResponseDto>;
+  ): Promise<number>;
   search(
     user: User,
     pageOptionsDto: SearchPostDto
