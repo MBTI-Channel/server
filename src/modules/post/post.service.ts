@@ -2,6 +2,7 @@ import { inject, injectable } from "inversify";
 import { IDatabaseService } from "../../core/database/interfaces/IDatabase.service";
 import { TYPES } from "../../core/types.core";
 import { TREND_LIKE, TREND_VIEW } from "../../shared/constant.shared";
+import { IdDto } from "../../shared/dto/id.dto";
 import {
   CategoryName,
   FileTargetType,
@@ -354,7 +355,7 @@ export class PostService implements IPostService {
     content: string,
     isSecret: boolean,
     filesUrl: string[]
-  ): Promise<PostResponseDto> {
+  ): Promise<number> {
     this._log(`update start`);
     const post = await this._postRepository.findOneById(id);
 
@@ -365,7 +366,7 @@ export class PostService implements IPostService {
     if (post.userId !== user.id)
       throw new ForbiddenException("authorization error");
 
-    const updatedPost = await this._postRepository.update(id, {
+    const hasUpdated = await this._postRepository.update(id, {
       title,
       content,
       isSecret,
@@ -374,7 +375,7 @@ export class PostService implements IPostService {
     // file update
     await this._fileService.update(FileTargetType.POST, id, filesUrl);
 
-    return new PostResponseDto(updatedPost, user);
+    return id;
   }
 
   public async search(

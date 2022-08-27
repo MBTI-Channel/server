@@ -25,7 +25,7 @@ export interface IPostRepository {
     categoryId: number,
     mbti: string
   ): Promise<Post[]>;
-  update(id: number, payload: Partial<Post>): Promise<Post>;
+  update(id: number, payload: Partial<Post>): Promise<boolean>;
   findAllByUserId(
     pageOptionsDto: GetMyPostsDto,
     userId: number

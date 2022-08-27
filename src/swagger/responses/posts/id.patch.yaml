@@ -5,57 +5,9 @@
       schema:
         type: object
         properties:
-          id:
+          updatedId:
             type: integer
             example: 23
-          type:
-            type: integer
-            example: 1
-          categoryId:
-            type: integer
-            example: 3
-          isActive:
-            type: boolean
-            example: true
-          isMy:
-            type: boolean
-            example: true
-          userId:
-            type: integer
-            example: 42
-          userMbti:
-            type: string
-            example: ENFP
-          userNickname:
-            type: string
-            example: 지나가는 나그네
-          isSecret:
-            type: boolean
-            example: false
-          title:
-            type: string
-            example: 고민이 있어요
-          content:
-            type: string
-            example: 오늘 저녁 뭐먹지..?
-          viewCount:
-            type: integer
-            example: 333
-          commentCount:
-            type: integer
-            example: 5
-          likesCount:
-            type: integer
-            example: 6
-          reportCount:
-            type: integer
-            example: 2
-          createdAt:
-            type: Date
-            example: 2022-07-21T17:32:28Z
-          updatedAt:
-            type: Date | null
-            example: null
 
 "401":
   description: access token 유효하지 않음

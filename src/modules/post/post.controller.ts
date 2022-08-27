@@ -152,7 +152,7 @@ export class PostController {
     const { id } = param;
     const { title, content, isSecret, filesUrl } = body;
 
-    const data = await this._postService.update(
+    const updatedId = await this._postService.update(
       user,
       id,
       title,
@@ -161,6 +161,6 @@ export class PostController {
       filesUrl
     );
 
-    return res.status(200).json(data);
+    return res.status(200).json({ updatedId });
   }
 }
