@@ -12,7 +12,7 @@ export interface ICommentRepository {
     pageOptionsDto: GetAllByUserDto,
     userId: number
   ): Promise<[Comment[], number]>;
-  update(id: number, content: Partial<Comment>): Promise<Comment>;
+  update(id: number, content: Partial<Comment>): Promise<boolean>;
   increaseReportCount(id: number): Promise<boolean>;
   increaseReplyCount(id: number): Promise<boolean>;
   increaseLikeCount(id: number): Promise<boolean>;
