@@ -208,11 +208,15 @@ export class PostRepository implements IPostRepository {
       .getManyAndCount();
   }
 
-  public async update(id: number, payload: Partial<Post>): Promise<Post> {
+  public async update(id: number, payload: Partial<Post>): Promise<boolean> {
     const repository = await this._database.getRepository(Post);
-    return await repository
-      .update(id, payload as QueryDeepPartialEntity<Post>)
-      .then(async () => await repository.findOne({ where: { id } }));
+    const result = await repository.update(
+      id,
+      payload as QueryDeepPartialEntity<Post>
+    );
+
+    if (result.affected) return true;
+    return false;
   }
 
   // 내 MBTI 게시판에서 search
