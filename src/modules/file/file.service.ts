@@ -78,7 +78,7 @@ export class FileService implements IFileService {
       targetId
     );
 
-    if (files) {
+    if (files && files.length > 0) {
       await this._fileRepository.remove(files.map((file) => file.id));
     }
   }
