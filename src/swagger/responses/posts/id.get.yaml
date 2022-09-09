@@ -56,6 +56,12 @@
           updatedAt:
             type: Date | null
             example: null
+          isUserLike:
+            type: boolean
+            example: false
+          isUserBookmark:
+            type: boolean
+            example: false
 
 "403":
   description: mbti 카테고리 게시글의 mbti와 user 의 mbti와 다른 경우
