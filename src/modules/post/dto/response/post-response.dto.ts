@@ -1,6 +1,6 @@
-import { PostType } from "../../../shared/enum.shared";
-import { User } from "../../user/entity/user.entity";
-import { Post } from "../entity/post.entity";
+import { PostType } from "../../../../shared/enum.shared";
+import { User } from "../../../user/entity/user.entity";
+import { Post } from "../../entity/post.entity";
 
 export class PostResponseDto {
   id: number;
