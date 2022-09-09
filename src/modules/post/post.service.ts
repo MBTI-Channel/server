@@ -2,10 +2,10 @@ import { inject, injectable } from "inversify";
 import { IDatabaseService } from "../../core/database/interfaces/IDatabase.service";
 import { TYPES } from "../../core/types.core";
 import { TREND_LIKE, TREND_VIEW } from "../../shared/constant.shared";
-import { IdDto } from "../../shared/dto/id.dto";
 import {
   CategoryName,
   FileTargetType,
+  LikeTargetType,
   PostType,
 } from "../../shared/enum.shared";
 import {
@@ -19,9 +19,11 @@ import {
   PageInfoDto,
 } from "../../shared/page";
 import { Logger } from "../../shared/utils/logger.util";
+import { IBookmarkRepository } from "../bookmark/interfaces/IBookmark.repository";
 import { Category } from "../category/entity/category.entity";
 import { ICategoryRepository } from "../category/interfaces/ICategory.repository";
 import { IFileService } from "../file/interfaces/IFile.service";
+import { ILikeRepository } from "../like/interfaces/ILike.repository";
 import { INotificationService } from "../notifications/interfaces/INotification.service";
 import { User } from "../user/entity/user.entity";
 import {
@@ -30,6 +32,7 @@ import {
   PostResponseDto,
   SearchPostDto,
   GetTrendDto,
+  PostDetailResponseDto,
 } from "./dto";
 import { Post } from "./entity/post.entity";
 import { IPostRepository } from "./interfaces/IPost.repository";
@@ -48,7 +51,11 @@ export class PostService implements IPostService {
     @inject(TYPES.INotificationService)
     private readonly _notificationService: INotificationService,
     @inject(TYPES.IFileService)
-    private readonly _fileService: IFileService
+    private readonly _fileService: IFileService,
+    @inject(TYPES.ILikeRepository)
+    private readonly _likeRepository: ILikeRepository,
+    @inject(TYPES.IBookmarkRepository)
+    private readonly _bookmarkRepository: IBookmarkRepository
   ) {}
 
   private _log(message: string) {
@@ -190,7 +197,10 @@ export class PostService implements IPostService {
     await this._fileService.remove(FileTargetType.POST, id);
   }
 
-  public async getDetail(user: User, id: number): Promise<PostResponseDto> {
+  public async getDetail(
+    user: User,
+    id: number
+  ): Promise<PostDetailResponseDto> {
     this._log(`getDetail start`);
     const post = await this._postRepository.findOneById(id);
 
@@ -234,7 +244,27 @@ export class PostService implements IPostService {
       }
     }
 
-    return new PostResponseDto(post, user);
+    let isUserLike = false;
+    let isUserBookmark = false;
+
+    if (user) {
+      // like 한 게시글인지 확인
+      const like = await this._likeRepository.findOneByTarget(
+        user.id,
+        post.id,
+        1
+      );
+      if (like && like.isActive) isUserLike = true;
+
+      // 북마크 한 게시글인지 확인
+      const bookmark = await this._bookmarkRepository.findOneByUserAndPost(
+        post.id,
+        user.id
+      );
+      if (bookmark && bookmark.isActive) isUserBookmark = true;
+    }
+
+    return new PostDetailResponseDto(post, user, isUserLike, isUserBookmark);
   }
 
   public async isValid(id: number): Promise<boolean> {
