@@ -10,6 +10,7 @@ import {
   GetAllPostDto,
   GetTrendDto,
   SearchPostDto,
+  PostDetailResponseDto,
 } from "../dto";
 
 export interface IPostService {
@@ -26,7 +27,7 @@ export interface IPostService {
   increaseLikeCount(id: number): Promise<void>;
   decreaseLikeCount(id: number): Promise<void>;
   remove(user: User, id: number): Promise<void>;
-  getDetail(user: User, id: number): Promise<PostResponseDto>;
+  getDetail(user: User, id: number): Promise<PostDetailResponseDto>;
   isValid(id: number): Promise<boolean>;
   getMyPosts(user: User, pageOptionsDto: GetMyPostsDto): Promise<any>; // TODO: 리턴타입, postService.getUserPosts로
   getTrends(
